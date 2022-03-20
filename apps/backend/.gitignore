@@ -1,0 +1,6 @@
+logs/**
+!logs
+
+coverage
+.env*
+!.env.project

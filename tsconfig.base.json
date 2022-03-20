@@ -1,0 +1,27 @@
+{
+  "compilerOptions": {
+    "strict": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "esModuleInterop": true,
+    "forceConsistentCasingInFileNames": true,
+    "noEmit": true,
+    "allowJs": true,
+    "moduleResolution": "node",
+    "isolatedModules": true,
+    "incremental": true
+  },
+  "exclude": [
+    "node_modules",
+    ".yarn",
+    ".git",
+    ".dev",
+    ".github",
+    ".husky",
+    ".vscode",
+    "dist",
+    "dist*",
+    "**/dist/*",
+    "**/node_modules/*"
+  ]
+}

@@ -1,0 +1,11 @@
+{
+  "extends": ["../../.eslintrc.json"],
+  "overrides": [
+    {
+      "files": ["src/api/routes/**/*.ts"],
+      "rules": {
+        "tsdoc/syntax": ["off"]
+      }
+    }
+  ]
+}

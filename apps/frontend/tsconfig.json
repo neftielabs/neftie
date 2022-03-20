@@ -1,0 +1,26 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5",
+    "lib": ["dom", "dom.iterable", "esnext"],
+    "module": "esnext",
+    "jsx": "preserve",
+    "baseUrl": ".",
+    "sourceMap": true,
+    "skipLibCheck": true,
+    "paths": {
+      "components/*": ["src/components/*"],
+      "hooks/*": ["src/hooks/*"],
+      "lib/*": ["src/lib/*"],
+      "types/*": ["src/types/*"],
+      "utils/*": ["src/utils/*"],
+      "stores/*": ["src/stores/*"],
+      "styles/*": ["src/styles/*"],
+      "assets/*": ["src/assets/*"],
+      "context/*": ["src/context/*"]
+    }
+  },
+  "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
+  "exclude": ["node_modules", "scripts", ".next"],
+  "types": ["src/types"]
+}

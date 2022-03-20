@@ -1,0 +1,7 @@
+**/node_modules
+**/docs
+**/dist
+**/tests
+**/jest.config.js
+**/next-env.d.ts
+**/prisma/generated

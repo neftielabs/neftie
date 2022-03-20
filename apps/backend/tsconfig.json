@@ -1,0 +1,35 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es6",
+    "module": "commonjs",
+    "sourceMap": true,
+    "noEmit": false,
+    "outDir": "dist",
+    "rootDir": "src",
+    "lib": ["esnext"],
+    "incremental": true,
+    "esModuleInterop": true,
+    "declaration": true,
+    "baseUrl": ".",
+    "paths": {
+      "loaders/*": ["src/loaders/*"],
+      "config/*": ["src/config/*"],
+      "utils/*": ["src/utils/*"],
+      "modules/*": ["src/modules/*"],
+      "api/*": ["src/api/*"],
+      "types/*": ["src/types/*"],
+      "errors/*": ["src/errors/*"]
+    }
+  },
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/prisma"
+    }
+  ],
+  "include": ["src/**/*", ".env"],
+  "exclude": ["node_modules", "logs", "dist", "public"]
+}
