@@ -60,7 +60,7 @@ export const Footer: React.FC<FooterProps> = () => {
   ];
 
   return (
-    <Box tw="w-full bg-brand-black py-10">
+    <Box tw="w-full bg-brand-black py-10 text-brand-white">
       <Box tw="container">
         <Flex column tw="divide-y divide-gray-800">
           <Flex tw="pb-4 gap-15">

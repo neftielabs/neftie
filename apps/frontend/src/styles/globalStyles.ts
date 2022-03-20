@@ -27,7 +27,7 @@ const appStyles = {
     "--color-brand-black": "#0D0D0D",
 
     "font-size": "14px",
-    color: "var(--color-brand-white)",
+    color: "var(--color-brand-black)",
   },
   html: {
     "-webkit-font-smoothing": "antialiased",
