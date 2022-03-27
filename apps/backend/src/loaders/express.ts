@@ -86,7 +86,7 @@ export const expressLoader = (app: express.Application) => {
 
   // Parse cookies
 
-  app.use(cookieParser(config.keys.cookie));
+  app.use(cookieParser(config.cookies.secret));
 
   // Global rate limiter
 

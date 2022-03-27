@@ -12,7 +12,15 @@ export const config = {
     server: env.SERVER_ROOT,
     client: env.CLIENT_ROOT,
   },
-  keys: {
-    cookie: env.COOKIE_SIGN_KEY,
+  cookies: {
+    _prefix: "@neftie",
+    secret: env.COOKIE_SECRET,
+  },
+  tokens: {
+    access: {
+      key: "@neftie/at",
+      secret: env.ACCESS_TOKEN_SECRET,
+      expires: "6d",
+    },
   },
 };

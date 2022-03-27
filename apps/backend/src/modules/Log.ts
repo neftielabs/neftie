@@ -30,6 +30,13 @@ export default class Log {
   }
 
   /**
+   * Setter for the function only
+   */
+  public setTargetFunction(v: string) {
+    this.function = v;
+  }
+
+  /**
    * Log an error to the Winston transport.
    *
    * Note: this uses the `warn` level.

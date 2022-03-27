@@ -20,6 +20,14 @@
       "context/*": ["src/context/*"]
     }
   },
+  "references": [
+    {
+      "path": "../../packages/common"
+    },
+    {
+      "path": "../../packages/api-client"
+    }
+  ],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],
   "exclude": ["node_modules", "scripts", ".next"],
   "types": ["src/types"]

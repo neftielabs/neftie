@@ -33,6 +33,9 @@
     "be": "yarn workspace @neftie/backend",
     "cm": "yarn workspace @neftie/common",
     "pr": "yarn workspace @neftie/prisma",
+    "ac": "yarn workspace @neftie/api-client",
+    "_cli": "yarn workspace @neftie/cli",
+    "cli": "yarn _cli cli",
     "foreach": "yarn workspaces foreach -ptv --exclude 'neftie'"
   }
 }

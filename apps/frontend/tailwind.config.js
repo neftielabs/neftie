@@ -174,6 +174,7 @@ module.exports = {
       0: "0px",
       0.2: "2px",
       0.3: "3px",
+      0.5: "5px",
     },
   },
   variants: {

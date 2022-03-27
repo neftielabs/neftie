@@ -11,6 +11,11 @@
     "composite": true,
     "lib": ["dom", "ES6"]
   },
+  "references": [
+    {
+      "path": "../prisma"
+    }
+  ],
   "include": ["src"],
   "exclude": ["node_modules", "dist", "src/**/*.test.ts"]
 }

@@ -15,9 +15,7 @@ const Container = styled(Box, {
   },
 });
 
-interface LoaderProps extends React.ComponentProps<typeof Container> {
-  // containerProps: React.ComponentProps<typeof Container>
-}
+interface LoaderProps extends React.ComponentProps<typeof Container> {}
 
 export const Loader: React.FC<LoaderProps> = ({
   centered = false,
@@ -32,8 +30,9 @@ export const Loader: React.FC<LoaderProps> = ({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        tw="w-2 h-2 animate-spin text-brand-white animation-duration[1.05s] animation-timing-function[cubic-bezier(.39,.6,.81,.58)]"
+        tw="w-2 h-2 animate-spin animation-duration[1.05s] animation-timing-function[cubic-bezier(.39,.6,.81,.58)]"
         viewBox="0 0 34 33.1"
+        fill="currentColor"
       >
         <path
           fill="currentColor"

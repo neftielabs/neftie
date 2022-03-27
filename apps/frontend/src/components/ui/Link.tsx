@@ -29,7 +29,8 @@ const sharedStyles = {
 const LinkElement = styled("a", sharedStyles);
 const DivElement = styled(Box, sharedStyles);
 
-interface AnchorLinkProps extends React.ComponentProps<typeof LinkElement> {
+export interface AnchorLinkProps
+  extends React.ComponentProps<typeof LinkElement> {
   active?: boolean;
   target?: string;
   nextLinkProps?: NextLinkProps;

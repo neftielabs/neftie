@@ -1,14 +1,7 @@
-import { typedObjectKeys } from "@neftie/common";
-import { healthController } from "api/controllers";
+import * as controllerGroups from "api/controllers";
 import { Route, router as typeraRouter } from "typera-express";
 import { Generic } from "typera-express/response";
-
-/**
- * Controllers to create routes from
- */
-const controllers = {
-  ...healthController,
-};
+import { typedObjectKeys } from "@neftie/common";
 
 /**
  * Generate an express router from all
@@ -17,8 +10,11 @@ const controllers = {
 const generateRouter = () => {
   const routeArr: Route<Generic>[] = [];
 
-  typedObjectKeys(controllers).forEach((controller) => {
-    routeArr.push(controllers[controller]);
+  typedObjectKeys(controllerGroups).forEach((controllerGroup) => {
+    const group = controllerGroups[controllerGroup];
+    typedObjectKeys(group).forEach((controller) => {
+      routeArr.push(group[controller]);
+    });
   });
 
   return typeraRouter(...routeArr).handler();

@@ -1,7 +1,10 @@
 import { rateLimitService } from "api/services";
+import { registerLimiter } from "api/services/rate-limit.service";
 import RateLimitError from "errors/RateLimitError";
 import express from "express";
 import Log from "modules/Log";
+import RateLimiter from "modules/rate-limiters/RateLimiter";
+import { Middleware } from "typera-express";
 
 const { globalLimiter } = rateLimitService;
 
@@ -14,7 +17,7 @@ export const global = (
   res: express.Response,
   next: express.NextFunction
 ) => {
-  globalLimiter
+  return globalLimiter
     .consume(req.ip)
     .then(() => next())
     .catch((err) => {
@@ -30,3 +33,60 @@ export const global = (
       throw new RateLimitError(res, err.msBeforeNext);
     });
 };
+
+/**
+ * Register rate limiter.
+ * Limits the number of registers per ip
+ */
+export const register: Middleware.Middleware<unknown, never> = async (ctx) => {
+  const ipAddress = ctx.req.ip;
+  const key = await registerLimiter.get(ipAddress);
+
+  let msBeforeNext = 0;
+
+  if (
+    key !== null &&
+    key.consumedPoints > registerLimiter.config.maxRegisters
+  ) {
+    msBeforeNext = key.msBeforeNext;
+  }
+
+  if (msBeforeNext > 0) {
+    // Block current request
+    registerLimiter.logLimited(ctx.req);
+    throw new RateLimitError(ctx.res, msBeforeNext);
+  }
+
+  // Request can continue and the endpoint will take care
+  // of consuming points on successful signup
+
+  return Middleware.next();
+};
+
+/**
+ * Placeholder middleware that applies any given
+ * rate limiter without any extra processing.
+ *
+ * @param keyResolver - A callback function that receives the Express request obejct
+ * and must return a string to be used as the rate limiter key. Default key is the IP Address.
+ */
+export const apply =
+  (
+    rt: RateLimiter,
+    keyResolver?: (req: express.Request) => string
+  ): Middleware.Middleware<unknown, never> =>
+  (ctx) =>
+    rt
+      .consume(keyResolver ? keyResolver(ctx.req) : ctx.req.ip)
+      .then(() => Middleware.next())
+      .catch((err) => {
+        if (err instanceof Error) {
+          const log = new Log();
+          log.setTargets("rateLimitMiddleware", `apply@${rt.limiterName}`);
+          log.all(err);
+          throw err;
+        }
+
+        rt.logLimited(ctx.req);
+        throw new RateLimitError(ctx.res, err.msBeforeNext);
+      });

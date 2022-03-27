@@ -21,5 +21,6 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
    * Secrets
    */
 
-  COOKIE_SIGN_KEY: yup.string().required(),
+  COOKIE_SECRET: yup.string().required(),
+  ACCESS_TOKEN_SECRET: yup.string().required(),
 });

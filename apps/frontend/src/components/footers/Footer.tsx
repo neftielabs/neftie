@@ -40,13 +40,13 @@ export const Footer: React.FC<FooterProps> = () => {
     {
       heading: "Discover",
       items: [
-        ["All services", ""],
-        ["Trending now", ""],
+        ["All services", "/"],
+        ["Trending now", "/"],
       ],
     },
     {
       heading: "Categories",
-      items: [["Art", ""]],
+      items: [["Art", "/"]],
     },
     {
       heading: "Company",

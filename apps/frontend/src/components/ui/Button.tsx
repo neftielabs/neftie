@@ -8,7 +8,7 @@ const ButtonComponent = styled("button", {
   ...tw`flex items-center justify-center disabled:cursor-not-allowed transition-all relative`,
   variants: {
     theme: {
-      gray: tw`bg-gray-150 text-gray-700 hover:bg-gray-200`,
+      gray: tw`bg-gray-150 text-gray-800 hover:bg-gray-200`,
       black: tw`bg-brand-black text-brand-white hover:bg-gray-800 disabled:bg-gray-300`,
     },
     shape: {
@@ -24,7 +24,7 @@ const ButtonComponent = styled("button", {
       base: tw`text-base`,
       "15": tw`text-15`,
       md: tw`text-md`,
-      lg: tw`text-md`,
+      lg: tw`text-lg`,
     },
     sharp: {
       true: {},
@@ -47,37 +47,54 @@ interface ButtonProps extends React.ComponentProps<typeof ButtonComponent> {
   isLoading?: boolean;
   loader?: React.ReactElement;
   animated?: boolean;
+  raw?: false | undefined;
 }
 
-export const Button: React.FC<ButtonProps> = ({
-  isLoading = false,
-  loader,
-  animated = true,
-  children,
-  ...props
-}) => {
-  const loaderComponent = loader || <Loader absoluteCentered />;
+interface RawButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+  raw: true;
+}
+
+export const Button: React.FC<ButtonProps | RawButtonProps> = (props) => {
+  if ("raw" in props && props.raw === true) {
+    const { raw, children, ...buttonProps } = props;
+
+    return <button {...buttonProps}>{children}</button>;
+  }
+
+  const {
+    isLoading = false,
+    loader,
+    animated = true,
+    children,
+    ...buttonProps
+  } = props;
+
+  const loaderComponent = loader || (
+    <Loader tw="text-brand-white" absoluteCentered />
+  );
 
   return (
-    <ButtonComponent {...props}>
-      {animated ? (
-        <>
-          <Box
-            tw="opacity-0 transition-opacity"
-            css={isLoading ? tw`opacity-100` : {}}
-          >
-            {loaderComponent}
-          </Box>
-          <Box
-            tw="opacity-100 transition-opacity w-full"
-            css={isLoading ? tw`opacity-0` : {}}
-          >
-            {children}
-          </Box>
-        </>
-      ) : (
-        <>{isLoading ? loaderComponent : children}</>
-      )}
-    </ButtonComponent>
+    <>
+      <ButtonComponent {...buttonProps}>
+        {animated ? (
+          <>
+            <Box
+              tw="opacity-0 transition-opacity"
+              css={isLoading ? tw`opacity-100` : {}}
+            >
+              {loaderComponent}
+            </Box>
+            <Box
+              tw="opacity-100 transition-opacity w-full"
+              css={isLoading ? tw`opacity-0` : {}}
+            >
+              {children}
+            </Box>
+          </>
+        ) : (
+          <>{isLoading ? loaderComponent : children}</>
+        )}
+      </ButtonComponent>
+    </>
   );
 };
