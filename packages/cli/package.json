@@ -6,7 +6,7 @@
   "devDependencies": {
     "@types/node": "17.0.21",
     "@types/yargs": "17.0.10",
-    "chalk": "4.1.2",
+    "chalk": "5.0.1",
     "commander": "9.1.0",
     "eslint": "8.11.0",
     "ts-node": "10.7.0",
