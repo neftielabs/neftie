@@ -24,7 +24,7 @@
   "dependencies": {
     "@neftie/prisma": "0.0.0",
     "rimraf": "3.0.2",
-    "typera-express": "2.4.3",
+    "typera-express": "2.4.4",
     "yup": "0.32.11"
   }
 }
