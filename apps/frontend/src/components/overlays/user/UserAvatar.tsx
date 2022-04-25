@@ -18,10 +18,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   const [, disconnect] = useAccount();
 
   return (
-    <Box
-      tw="rounded-full text-white shadow-lg relative border-0.3 border-white"
-      onClick={() => disconnect()}
-    >
+    <Box tw="rounded-full text-white relative" onClick={() => disconnect()}>
       <Avatar
         avatarId={4}
         tw="transition-opacity"

@@ -1,4 +1,4 @@
-import { UserSafe, authSchema } from "@neftie/common";
+import { authSchema } from "@neftie/common";
 import { rateLimitMiddleware } from "api/middleware";
 import { withAuth } from "api/middleware/auth.middleware";
 import { withBody } from "api/middleware/validation.middleware";
@@ -63,7 +63,7 @@ export const verifySignature = createController(
       .use(rateLimitMiddleware.register)
       .handler(async (ctx) => {
         if (!ctx.auth.nonce) {
-          throw new AppError(...httpResponse("BAD_REQUEST"));
+          throw new AppError(httpResponse("BAD_REQUEST"));
         }
 
         const verifyRes = await authService.verifyWalletSignature({
@@ -73,19 +73,14 @@ export const verifySignature = createController(
         });
 
         if (!verifyRes.success) {
-          throw new AppError(...httpResponse("BAD_REQUEST"));
+          throw new AppError(httpResponse("BAD_REQUEST"));
         }
 
         // Lookup user
+        let user = await userProvider.getByAddress(verifyRes.data.address);
 
-        let user: UserSafe | null = null;
-        const existingUser = await userProvider.getByPublicKey(
-          verifyRes.data.address
-        );
-
-        if (!existingUser) {
-          // Register new user
-
+        if (!user) {
+          // Check if it has to be ratelimited
           const rateLimitResult =
             await rateLimitService.registerLimiter.onSuccessfulRegister(
               ctx.req.ip
@@ -95,17 +90,18 @@ export const verifySignature = createController(
             throw new RateLimitError(ctx.res, rateLimitResult.msBeforeNext);
           }
 
+          // Register new user
+
           user = await userService.registerUser(verifyRes.data.address);
-        } else {
-          user = userService.toSafeUser(existingUser);
         }
 
         // Generate token
         const accessToken = tokenService.generateAccessToken({
           userId: user.id,
         });
+
         authService.setClientToken(ctx.res, accessToken);
 
-        return Response.ok({ user });
+        return Response.ok({ user: userService.toSafeUser(user) });
       })
 );

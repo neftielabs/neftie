@@ -1,16 +1,16 @@
+import * as Sentry from "@sentry/node";
+import * as Tracing from "@sentry/tracing";
+import { errorMiddleware, rateLimitMiddleware } from "api/middleware";
+import { loggingMiddleware } from "api/middleware/logging.middleware";
+import { v1Router } from "api/routes/v1.routes";
 import compression from "compression";
+import { config } from "config/main";
+import cookieParser from "cookie-parser";
+import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import hpp from "hpp";
-import cors from "cors";
-import { config } from "config/main";
-import cookieParser from "cookie-parser";
-import { loggingMiddleware } from "api/middleware/logging.middleware";
-import * as Sentry from "@sentry/node";
-import * as Tracing from "@sentry/tracing";
 import { isProd } from "utils/constants";
-import { errorMiddleware, rateLimitMiddleware } from "api/middleware";
-import { v1Router } from "api/routes/v1.routes";
 
 export const expressLoader = (app: express.Application) => {
   /**
@@ -47,6 +47,7 @@ export const expressLoader = (app: express.Application) => {
    */
 
   app.set("trust proxy", true);
+  app.use(express.static("public"));
 
   /**
    *

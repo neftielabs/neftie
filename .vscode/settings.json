@@ -1,0 +1,25 @@
+{
+  "typescript.tsdk": "node_modules/typescript/lib",
+  "todo-tree.tree.scanMode": "workspace only",
+  "todo-tree.general.tags": ["#todo", "#fix", "#bug"],
+  "todo-tree.highlights.customHighlight": {
+    "#bug": {
+      "icon": "bug",
+      "background": "#474419",
+      "foreground": "#CED420",
+      "rulerColour": "#F4FA3E"
+    },
+    "#todo": {
+      "icon": "tasklist",
+      "background": "#15293D",
+      "foreground": "#8EB7F5",
+      "rulerColour": "#43BDFA"
+    },
+    "#fix": {
+      "icon": "tools",
+      "background": "#4F1428",
+      "foreground": "#F58E8E",
+      "rulerColour": "#F59E3B"
+    }
+  }
+}

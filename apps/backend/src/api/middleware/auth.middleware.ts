@@ -51,7 +51,7 @@ export function withAuth<T extends AuthMode>(
 
     if (!accessToken && mode === "required") {
       Logger.debug("[Auth] Token not found and was required");
-      throw new AppError(...httpResponse("UNAUTHORIZED"));
+      throw new AppError(httpResponse("UNAUTHORIZED"));
     } else if (accessToken) {
       try {
         const tokenPayload = await tokenService.verifyAccessToken(accessToken);
@@ -64,7 +64,7 @@ export function withAuth<T extends AuthMode>(
             },
           };
         } else if (!tokenPayload.userId && mode === "required") {
-          throw new AppError(...httpResponse("UNAUTHORIZED"));
+          throw new AppError(httpResponse("UNAUTHORIZED"));
         }
 
         result = {
@@ -76,7 +76,7 @@ export function withAuth<T extends AuthMode>(
 
         if (mode === "required" || mode === "present") {
           Logger.debug(`[Auth] Token verify error and mode ${mode}`);
-          throw new AppError(...httpResponse("UNAUTHORIZED"));
+          throw new AppError(httpResponse("UNAUTHORIZED"));
         }
 
         result = { auth: {} };

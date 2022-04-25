@@ -26,7 +26,10 @@ const appStyles = {
     "--color-brand-white": "#F4F4F5",
     "--color-brand-black": "#0D0D0D",
 
-    "font-size": "14px",
+    "--color-gradient-pink": "#FF0F7B",
+    "--color-gradient-orange": "#F89B29",
+
+    "font-size": "15px",
     color: "var(--color-brand-black)",
   },
   html: {

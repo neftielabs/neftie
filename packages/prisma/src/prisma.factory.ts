@@ -10,20 +10,25 @@
  */
 
 import { PrismaClient } from "@prisma/client";
+import { WithExclude } from "prisma-exclude/dist/types";
+
+type CustomClient = PrismaClient & {
+  $exclude: ReturnType<WithExclude>["$exclude"];
+};
 
 // eslint-disable-next-line init-declarations
 declare let global: {
-  PRISMA: Record<string, PrismaClient> | undefined;
+  PRISMA: Record<string, CustomClient> | undefined;
 };
 
 export class PrismaFactory {
-  private static instances?: Record<string, PrismaClient>;
+  private static instances?: Record<string, CustomClient>;
   private constructor() {}
 
   static getInstance(
     key: string,
-    clientGenerator: () => PrismaClient
-  ): PrismaClient {
+    clientGenerator: () => CustomClient
+  ): CustomClient {
     if (process.env.NODE_ENV === "production") {
       if (!PrismaFactory.instances?.[key]) {
         PrismaFactory.instances ??= {};

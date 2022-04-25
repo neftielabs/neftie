@@ -12,7 +12,7 @@ import { httpResponse } from "utils/http";
  */
 export const notFound: express.Handler = ({ originalUrl }, res, next) => {
   Logger.warn(`Route not found - ${originalUrl}`);
-  return next(new AppError(...httpResponse("NOT_FOUND")));
+  return next(new AppError(httpResponse("NOT_FOUND")));
 };
 
 /**

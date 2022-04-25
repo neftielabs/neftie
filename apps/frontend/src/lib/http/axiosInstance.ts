@@ -1,5 +1,5 @@
 import axios, { AxiosError, AxiosInstance } from "axios";
-import { ApiError } from "lib/ApiError";
+import { ApiError } from "lib/http/ApiError";
 import { API_BASEURL } from "lib/constants/app";
 
 /**

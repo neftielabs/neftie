@@ -28,7 +28,7 @@ export const useWallet = () => {
     let nonce = "";
 
     try {
-      nonce = await client.query.auth.getNonce();
+      nonce = await client.query.getNonce();
     } catch {
       disconnect();
       return {
@@ -56,7 +56,7 @@ export const useWallet = () => {
     }
 
     try {
-      const verifyResult = await client.mutation.auth.verifyMessage({
+      const verifyResult = await client.mutation.verifyMessage({
         message,
         signature: signResult.data,
       });
@@ -70,8 +70,8 @@ export const useWallet = () => {
     }
   }, [
     accountData?.address,
-    client.mutation.auth,
-    client.query.auth,
+    client.mutation,
+    client.query,
     disconnect,
     networkData.chain?.id,
     setUser,

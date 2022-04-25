@@ -1,5 +1,5 @@
 import { captureException } from "@sentry/node";
-import { CaptureContext } from "@sentry/node/node_modules/@sentry/types";
+// import { CaptureContext } from
 import Logger from "modules/Logger/Logger";
 
 /**
@@ -9,17 +9,17 @@ import Logger from "modules/Logger/Logger";
  */
 export default class Log {
   private section = "";
-  private function?: string;
+  private element?: string;
 
   /**
-   * Set the current section and function in code.
+   * Set the current section and element in code.
    * Useful to better target errors where stacks might not
    * correctly locate the origin of the issue.
-   * Also used as tags for Sentry.
+   * Mainly used as tags for Sentry.
    */
   public setTargets(section: string, func?: string) {
     this.section = section;
-    this.function = func;
+    this.element = func;
   }
 
   /**
@@ -30,10 +30,10 @@ export default class Log {
   }
 
   /**
-   * Setter for the function only
+   * Setter for the element only
    */
-  public setTargetFunction(v: string) {
-    this.function = v;
+  public setTargetElement(v: string) {
+    this.element = v;
   }
 
   /**
@@ -44,9 +44,7 @@ export default class Log {
   public winston(error: any, meta?: Record<string, unknown>) {
     const data = {
       section: this.section,
-      function: this.function
-        ? `${this.section} > ${this.function}`
-        : undefined,
+      element: this.element ? `${this.section} > ${this.element}` : undefined,
       ...meta,
     };
 
@@ -67,11 +65,11 @@ export default class Log {
     section: string,
     func?: string,
     extra?: Record<string, unknown>
-  ): CaptureContext {
+  ) {
     return {
       tags: {
         section,
-        function: func,
+        element: func,
       },
       extra,
     };
@@ -97,7 +95,7 @@ export default class Log {
       formattedError,
       this.getSentryMeta(
         this.section,
-        this.function ? `${this.section} > ${this.function}` : undefined,
+        this.element ? `${this.section} > ${this.element}` : undefined,
         stringify ? { data: JSON.stringify(meta, null, 2) } : meta
       )
     );

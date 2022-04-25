@@ -29,11 +29,25 @@ export type RouteManifest = {
   };
 
   /**
-   * User
+   * Authorized user
    */
   "/me": {
     get: {
       response: [Response.Ok<{ user: UserSafe | null }>];
+    };
+  };
+  "/me/upload": {
+    post: {
+      response: [Response.Created];
+    };
+  };
+
+  /**
+   * Users
+   */
+  "/users/:username": {
+    get: {
+      response: [Response.Ok<{ user: UserSafe }>];
     };
   };
 };

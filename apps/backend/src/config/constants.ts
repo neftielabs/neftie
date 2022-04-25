@@ -9,3 +9,4 @@ export const BASE_DOMAIN: string = process.env.BASE_DOMAIN!;
 export const NODE_ENV: string = process.env.NODE_ENV!;
 export const COOKIE_SECRET: string = process.env.COOKIE_SECRET!;
 export const ACCESS_TOKEN_SECRET: string = process.env.ACCESS_TOKEN_SECRET!;
+export const UPLOADS_PATH: string = process.env.UPLOADS_PATH!;

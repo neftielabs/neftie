@@ -13,6 +13,9 @@ const withBundleAnalyzer = isProd
 
 const baseConfig = {
   reactStrictMode: true,
+  images: {
+    domains: ["images.unsplash.com", "localhost"],
+  },
 };
 
 const sentryWebpackPluginOptions = {
