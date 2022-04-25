@@ -10,19 +10,28 @@ export default class AppError extends Error {
 
   /**
    * Creates an App error.
-   *
-   * @param message - Error message
-   * @param statusCode - HTTP status code of error
    */
+  constructor(message: [string, number]);
+  constructor(message: string, statusCode: number);
   constructor(
-    message: string,
-    statusCode: number = httpStatus.INTERNAL_SERVER_ERROR
+    message: string | [string, number],
+    statusCode = httpStatus.INTERNAL_SERVER_ERROR
   ) {
-    super(message);
+    let httpMessage = "";
+    let httpCode = statusCode;
+
+    if (Array.isArray(message)) {
+      httpMessage = message[0];
+      httpCode = message[1];
+    } else {
+      httpMessage = message;
+    }
+
+    super(httpMessage);
     Object.setPrototypeOf(this, AppError.prototype);
 
-    this.statusCode = statusCode;
-    this.status = String(statusCode).startsWith("4") ? "fail" : "error";
+    this.statusCode = httpCode;
+    this.status = String(httpCode).startsWith("4") ? "fail" : "error";
 
     // Flag to determine if it is a trusted error (ie. thrown manually)
     this.isOperational = true;

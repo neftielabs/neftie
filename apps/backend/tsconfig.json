@@ -19,7 +19,8 @@
       "modules/*": ["src/modules/*"],
       "api/*": ["src/api/*"],
       "types/*": ["src/types/*"],
-      "errors/*": ["src/errors/*"]
+      "errors/*": ["src/errors/*"],
+      "resources/*": ["src/resources/*"]
     }
   },
   "references": [

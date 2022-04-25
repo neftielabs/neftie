@@ -16,6 +16,7 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
     .string()
     .oneOf(["development", "production", "test"])
     .required(),
+  UPLOADS_PATH: yup.string().required(),
 
   /**
    * Secrets

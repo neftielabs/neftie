@@ -15,8 +15,15 @@ interface AuthProviderProps {
  * in store, we empty the user forcing to log in again.
  */
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser, hasFetched, isFetching, fetchUser] = useUserStore(
-    (s) => [s.user, s.setUser, s.hasFetchedUser, s.isFetchingUser, s.fetchUser]
+  const [user, setUser, hasFetched, isFetching, fetchUser, set] = useUserStore(
+    (s) => [
+      s.user,
+      s.setUser,
+      s.hasFetchedUser,
+      s.isFetchingUser,
+      s.fetchUser,
+      s.set,
+    ]
   );
   const [{ data: connectData }] = useConnect();
 
@@ -36,7 +43,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     } else if (user && !connectData.connected) {
       setUser(null);
     }
-  }, [connectData.connected, fetchUser, hasFetched, isFetching, setUser, user]);
+  }, [
+    connectData.connected,
+    fetchUser,
+    hasFetched,
+    isFetching,
+    set,
+    setUser,
+    user,
+  ]);
 
   return <>{children}</>;
 };

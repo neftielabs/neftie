@@ -1,5 +1,5 @@
 import { AxiosInstance } from "axios";
-import axiosInstance from "lib/axiosInstance";
+import axiosInstance from "lib/http/axiosInstance";
 import React, { useMemo } from "react";
 
 export const AxiosContext = React.createContext<AxiosInstance>(axiosInstance);

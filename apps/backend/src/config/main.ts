@@ -23,4 +23,7 @@ export const config = {
       expires: "6d",
     },
   },
+  files: {
+    uploadsPath: env.UPLOADS_PATH,
+  },
 };

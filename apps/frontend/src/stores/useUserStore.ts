@@ -1,6 +1,6 @@
 import { apiClient } from "@neftie/api-client";
 import { UserSafe } from "@neftie/common";
-import axiosInstance from "lib/axiosInstance";
+import axiosInstance from "lib/http/axiosInstance";
 import create from "zustand";
 import { combine } from "zustand/middleware";
 
@@ -24,7 +24,7 @@ export const useUserStore = create(
          * Fetches the current user from the API.
          * Note: doesn't set the user, returns the promise
          */
-        requestUser: async () => await client.query.user.getMe(),
+        requestUser: async () => await client.query.getMe(),
 
         /**
          * Fetches the current user from the API and updates
@@ -34,7 +34,7 @@ export const useUserStore = create(
           set({ isFetchingUser: true });
 
           try {
-            const { user } = await client.query.user.getMe();
+            const { user } = await client.query.getMe();
             set({ user });
             return !!user;
           } catch {

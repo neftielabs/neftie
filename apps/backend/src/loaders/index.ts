@@ -2,6 +2,7 @@
 import express from "express";
 import { envLoader } from "loaders/env";
 import { expressLoader } from "loaders/express";
+import { prismaLoader } from "loaders/prisma";
 import Logger from "modules/Logger/Logger";
 
 /**
@@ -17,6 +18,12 @@ export default async (expressApp: express.Application) => {
    */
   await envLoader();
   Logger.info("⚡ Env variables validated");
+
+  /**
+   * Test database connection
+   */
+  await prismaLoader();
+  Logger.info("⚡ Postgres loaded and connected");
 
   /**
    * Load all Express middlewares, routes,
