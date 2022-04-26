@@ -1323,6 +1323,15 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@neftie/subgraph@workspace:packages/subgraph":
+  version: 0.0.0-use.local
+  resolution: "@neftie/subgraph@workspace:packages/subgraph"
+  dependencies:
+    "@graphprotocol/graph-cli": 0.29.0
+    "@graphprotocol/graph-ts": 0.26.0
+  languageName: unknown
+  linkType: soft
+
 "@next/bundle-analyzer@npm:12.1.1":
   version: 12.1.1
   resolution: "@next/bundle-analyzer@npm:12.1.1"
@@ -14189,20 +14198,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"neftie-rinkeby@workspace:packages/subgraph":
-  version: 0.0.0-use.local
-  resolution: "neftie-rinkeby@workspace:packages/subgraph"
-  dependencies:
-    "@graphprotocol/graph-cli": 0.29.0
-    "@graphprotocol/graph-ts": 0.26.0
-  languageName: unknown
-  linkType: soft
-
 "neftie@workspace:.":
   version: 0.0.0-use.local
   resolution: "neftie@workspace:."
   dependencies:
-    "@graphprotocol/graph-cli": 0.29.0
     "@typescript-eslint/eslint-plugin": 5.17.0
     "@typescript-eslint/parser": 5.17.0
     eslint: 8.13.0

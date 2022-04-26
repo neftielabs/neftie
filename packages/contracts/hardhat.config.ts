@@ -12,7 +12,6 @@ const { ETHERSCAN_API_KEY, ALCHEMY_URL, PRIVATE_KEY, COINMARKETCAP_KEY } =
   process.env;
 
 const config: HardhatUserConfig = {
-  defaultNetwork: "rinkeby",
   solidity: {
     version: "0.8.4",
     settings: {
