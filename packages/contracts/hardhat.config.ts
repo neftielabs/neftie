@@ -50,7 +50,6 @@ const config: HardhatUserConfig = {
   },
   paths: {
     sources: "src",
-    // root: "src",
   },
 };
 

@@ -29,6 +29,9 @@
     },
     {
       "path": "../../packages/prisma"
+    },
+    {
+      "path": "../../packages/contracts"
     }
   ],
   "include": ["src/**/*", ".env"],

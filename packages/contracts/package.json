@@ -9,7 +9,9 @@
     "test:coverage": "hardhat coverage",
     "lint": "eslint \"**/*.{js,ts}\" && solhint src/**/*.sol",
     "format": "prettier --check \"./src/**/*.{js,ts,sol}\"",
-    "clean": "rimraf -rf .openzeppelin artifacts cache coverage typechain coverage.json"
+    "clean": "rimraf -rf .openzeppelin artifacts cache coverage typechain coverage.json dist tsconfig.tsbuildinfo",
+    "hh": "hardhat",
+    "build": "yarn clean && yarn compile && tsc"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "2.0.5",

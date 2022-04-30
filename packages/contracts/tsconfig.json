@@ -1,12 +1,16 @@
 {
+  "extends": "../../tsconfig.base.json",
   "compilerOptions": {
-    "target": "es2018",
+    "target": "es5",
     "module": "commonjs",
-    "strict": true,
-    "esModuleInterop": true,
+    "declaration": true,
+    "sourceMap": true,
     "outDir": "dist",
-    "declaration": true
+    "rootDir": ".",
+    "composite": true,
+    "lib": ["dom", "ES6"],
+    "noEmit": false
   },
-  "include": ["./scripts", "./test", "./typechain"],
+  "include": ["index.ts", "typechain"],
   "files": ["./hardhat.config.ts"]
 }

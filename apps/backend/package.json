@@ -15,6 +15,7 @@
   "dependencies": {
     "@godaddy/terminus": "4.10.2",
     "@neftie/common": "0.0.0",
+    "@neftie/contracts": "0.0.0",
     "@neftie/prisma": "0.0.0",
     "@sentry/node": "6.19.2",
     "@sentry/tracing": "6.19.2",

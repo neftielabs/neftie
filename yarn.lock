@@ -1157,6 +1157,7 @@ __metadata:
     "@dotenv/cli": 2.2.2
     "@godaddy/terminus": 4.10.2
     "@neftie/common": 0.0.0
+    "@neftie/contracts": 0.0.0
     "@neftie/prisma": 0.0.0
     "@sentry/node": 6.19.2
     "@sentry/tracing": 6.19.2
@@ -1230,7 +1231,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@neftie/contracts@workspace:packages/contracts":
+"@neftie/contracts@0.0.0, @neftie/contracts@workspace:packages/contracts":
   version: 0.0.0-use.local
   resolution: "@neftie/contracts@workspace:packages/contracts"
   dependencies:
