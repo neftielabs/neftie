@@ -3,15 +3,17 @@
   "private": true,
   "version": "0.0.0",
   "scripts": {
-    "codegen": "graph codegen",
+    "clean": "rimraf -rf build generated",
+    "codegen": "yarn clean && graph codegen",
     "build": "graph build",
-    "deploy": "graph deploy --node https://api.thegraph.com/deploy/ neftielabs/neftie-rinkeby",
-    "create-local": "graph create --node http://localhost:8020/ neftielabs/neftie-rinkeby",
-    "remove-local": "graph remove --node http://localhost:8020/ neftielabs/neftie-rinkeby",
-    "deploy-local": "graph deploy --node http://localhost:8020/ --ipfs http://localhost:5001 neftielabs/neftie-rinkeby"
+    "predeploy": "yarn codegen",
+    "deploy:goerli": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-rinkeby ./subgraph.yaml"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.29.0",
     "@graphprotocol/graph-ts": "0.26.0"
+  },
+  "devDependencies": {
+    "rimraf": "3.0.2"
   }
 }

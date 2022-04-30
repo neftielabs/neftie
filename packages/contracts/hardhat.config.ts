@@ -8,8 +8,13 @@ import "@nomiclabs/hardhat-etherscan";
 import "@openzeppelin/hardhat-upgrades";
 import "@nomiclabs/hardhat-waffle";
 
-const { ETHERSCAN_API_KEY, ALCHEMY_URL, PRIVATE_KEY, COINMARKETCAP_KEY } =
-  process.env;
+const {
+  ETHERSCAN_API_KEY,
+  ALCHEMY_URL,
+  ADMIN_PRIVATE_KEY,
+  SELLER_PRIVATE_KEY,
+  COINMARKETCAP_KEY,
+} = process.env;
 
 const config: HardhatUserConfig = {
   solidity: {
@@ -28,9 +33,12 @@ const config: HardhatUserConfig = {
     coinmarketcap: COINMARKETCAP_KEY,
   },
   networks: {
-    rinkeby: {
+    goerli: {
       url: ALCHEMY_URL,
-      accounts: [`0x${String(PRIVATE_KEY)}`],
+      accounts: [
+        `0x${String(ADMIN_PRIVATE_KEY)}`,
+        `0x${String(SELLER_PRIVATE_KEY)}`,
+      ],
     },
   },
   etherscan: {
@@ -42,6 +50,7 @@ const config: HardhatUserConfig = {
   },
   paths: {
     sources: "src",
+    // root: "src",
   },
 };
 

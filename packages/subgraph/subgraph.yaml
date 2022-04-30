@@ -3,27 +3,58 @@ schema:
   file: ./schema.graphql
 dataSources:
   - kind: ethereum
-    name: NeftieCore
-    network: rinkeby
+    name: ListingFactory
+    network: goerli
     source:
-      address: "0xf9ac1b92523dc0d12fe76e0b2baefef8c20d3684"
-      abi: NeftieCore
+      address: "0xb65a229393c34336e3b9D10BF27E0C339FD4a2f3"
+      abi: ListingFactory
+      startBlock: 6783481
     mapping:
       kind: ethereum/events
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - AdminChanged
-        - BeaconUpgraded
-        - Upgraded
+        - Listing
       abis:
-        - name: NeftieCore
-          file: ./abis/NeftieCore.json
+        - name: ListingFactory
+          file: ../contracts/artifacts/src/ListingFactory.sol/ListingFactory.json
       eventHandlers:
-        - event: AdminChanged(address,address)
-          handler: handleAdminChanged
-        - event: BeaconUpgraded(indexed address)
-          handler: handleBeaconUpgraded
-        - event: Upgraded(indexed address)
-          handler: handleUpgraded
-      file: ./src/mapping.ts
+        - event: ListingCreated(indexed address,indexed address,string,uint256,uint256,uint256,uint256,uint256)
+          handler: handleListingCreated
+      file: ./src/mappings/listingFactory.ts
+
+templates:
+  - kind: ethereum/contract
+    name: Listing
+    network: goerli
+    source:
+      abi: Listing
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - todo
+      abis:
+        - name: Listing
+          file: ../contracts/artifacts/src/Listing.sol/Listing.json
+      eventHandlers:
+        - event: OrderPlaced(indexed bytes32,indexed address,uint8,uint256,uint256)
+          handler: handleOrderPlaced
+        - event: OrderApproved(indexed bytes32)
+          handler: handleOrderApproved
+        - event: OrderDismissed(indexed bytes32,address)
+          handler: handleOrderDismissed
+        - event: OrderCancelled(indexed bytes32,address,uint256)
+          handler: handleOrderCancelled
+        - event: OrderDelivered(indexed bytes32,uint256)
+          handler: handleOrderDelivered
+        - event: RevisionRequested(indexed bytes32)
+          handler: handleRevisionRequested
+        - event: Tip(indexed bytes32,uint256)
+          handler: handleTip
+        - event: FundsWithdrawn(indexed bytes32)
+          handler: handleFundsWithdrawn
+        - event: BondFeeWithdrawn(indexed bytes32)
+          handler: handleBondFeeWithdrawn
+      file: ./src/mappings/listing.ts

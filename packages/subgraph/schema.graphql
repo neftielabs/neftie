@@ -1,6 +1,96 @@
-type ExampleEntity @entity {
+type Client @entity {
+  "The client address"
   id: ID!
-  count: BigInt!
-  previousAdmin: Bytes! # address
-  newAdmin: Bytes! # address
+}
+
+enum OrderStatus {
+  PLACED
+  DISMISSED
+  ONGOING
+  CANCELLED
+  DELIVERED
+  COMPLETED
+}
+
+type Tip @entity {
+  "Transaction hash of the event"
+  id: String!
+
+  "The order it belongs to"
+  order: Order!
+
+  "The unix timestamp when the tip was sent"
+  timestamp: BigInt!
+
+  "The total amount in Eth (minus the cut)"
+  amount: BigInt!
+}
+
+type Order @entity {
+  "The order id"
+  id: Bytes!
+
+  "The listing it belongs to"
+  listing: Listing!
+
+  "The creator of the order, aka the client"
+  client: Client!
+
+  "The current order status"
+  status: OrderStatus!
+
+  "The unix timestamp when the order started"
+  startedAt: BigInt!
+
+  "The unix timestamp when the order was delivered"
+  deliveredAt: BigInt!
+
+  "The unix timestamp when the order was completed"
+  completedAt: BigInt!
+
+  "The unix timestamp when the order was cancelled"
+  cancelledAt: BigInt!
+
+  "The number of revisions left"
+  revisionsLeft: Int!
+
+  "All tips sent by the client"
+  tips: [Tip!]!
+
+  "If the order is currently under revision"
+  underRevision: Boolean!
+
+  "If the bond fee has been withdrawn by the seller"
+  bondFeeWithdrawn: Boolean!
+}
+
+type Seller @entity {
+  "The address"
+  id: ID!
+}
+
+type Listing @entity {
+  "The contract address"
+  id: ID!
+
+  "The seller that created the listing"
+  seller: Seller!
+
+  "The title of the listing"
+  title: String!
+
+  "The price of the listing"
+  price: BigInt!
+
+  "The bond fee"
+  bondFee: BigInt!
+
+  "The number of delivery days"
+  deliveryDays: BigInt!
+
+  "The number of revisions"
+  revisions: BigInt!
+
+  "Orders"
+  orders: [Order!]!
 }

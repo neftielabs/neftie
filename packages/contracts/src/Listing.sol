@@ -45,6 +45,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
     uint256 startedAt;
     uint256 deliveredAt;
     uint256 completedAt;
+    uint256 cancelledAt;
     uint256 revisionsLeft;
     uint256 tips;
     bool underRevision;
@@ -114,7 +115,13 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * @notice When an order is placed and is waiting for
    * the seller approval
    */
-  event OrderPlaced(bytes32 indexed orderId, address indexed client);
+  event OrderPlaced(
+    bytes32 indexed orderId,
+    address indexed client,
+    OrderStatus status,
+    uint256 startedAt,
+    uint256 revisionsLeft
+  );
 
   /**
    * @notice When an order is approved by the seller
@@ -129,12 +136,16 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice When an order is cancelled
    */
-  event OrderCancelled(bytes32 indexed orderId, address author);
+  event OrderCancelled(
+    bytes32 indexed orderId,
+    address author,
+    uint256 cancelledAt
+  );
 
   /**
    * @notice When an order is delivered
    */
-  event OrderDelivered(bytes32 indexed orderId);
+  event OrderDelivered(bytes32 indexed orderId, uint256 deliveredAt);
 
   /**
    * @notice When a revision is requested
@@ -285,14 +296,22 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
 
     // Save order
 
+    uint256 current = block.timestamp;
+
     orders[orderId].client = payable(msg.sender);
     orders[orderId].status = OrderStatus.PLACED;
-    orders[orderId].startedAt = block.timestamp;
+    orders[orderId].startedAt = current;
     orders[orderId].revisionsLeft = listing.revisions;
     orders[orderId].underRevision = false;
     orders[orderId].bondFeeWithdrawn = false;
 
-    emit OrderPlaced(orderId, msg.sender);
+    emit OrderPlaced(
+      orderId,
+      msg.sender,
+      OrderStatus.PLACED,
+      current,
+      listing.revisions
+    );
   }
 
   /**
@@ -342,6 +361,9 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   {
     orders[_orderId].status = OrderStatus.CANCELLED;
 
+    uint256 cancelledAt = block.timestamp;
+    orders[_orderId].cancelledAt = cancelledAt;
+
     if (msg.sender == seller || isOrderPastDue(_orderId)) {
       // Order was cancelled by seller or was past due
       _refundClient(_orderId);
@@ -354,7 +376,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
       _sendToVault(penalty);
     }
 
-    emit OrderCancelled(_orderId, msg.sender);
+    emit OrderCancelled(_orderId, msg.sender, cancelledAt);
   }
 
   /**
@@ -370,10 +392,12 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
     onlyStatus(_orderId, OrderStatus.ONGOING)
   {
     orders[_orderId].status = OrderStatus.DELIVERED;
-    orders[_orderId].deliveredAt = block.timestamp;
     orders[_orderId].underRevision = false;
 
-    emit OrderDelivered(_orderId);
+    uint256 deliveredAt = block.timestamp;
+    orders[_orderId].deliveredAt = deliveredAt;
+
+    emit OrderDelivered(_orderId, deliveredAt);
   }
 
   /**
@@ -444,6 +468,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
       );
 
       orders[_orderId].status = OrderStatus.COMPLETED;
+      orders[_orderId].completedAt = block.timestamp;
 
       uint256 orderFee = (listing.price * ORDER_FEE) / 100;
       seller.sendValue((listing.price - orderFee) + orders[_orderId].tips);
