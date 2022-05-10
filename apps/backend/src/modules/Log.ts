@@ -1,6 +1,6 @@
 import { captureException } from "@sentry/node";
 // import { CaptureContext } from
-import Logger from "modules/Logger/Logger";
+import logger from "modules/Logger/Logger";
 
 /**
  * Utility class to log to multiple transports
@@ -49,12 +49,12 @@ export default class Log {
     };
 
     if (error instanceof Error) {
-      Logger.warn(error.message, {
+      logger.warn(error.message, {
         error,
         ...data,
       });
     } else {
-      Logger.warn(error, { data });
+      logger.warn(error, { data });
     }
   }
 

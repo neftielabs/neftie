@@ -1,3 +1,4 @@
+import { Listing } from "@neftie/prisma";
 import { Response } from "typera-express";
 import { UserSafe } from "../models/user";
 /**
@@ -48,6 +49,23 @@ export type RouteManifest = {
   "/users/:username": {
     get: {
       response: [Response.Ok<{ user: UserSafe }>];
+    };
+  };
+
+  /**
+   * Listings
+   */
+  "/listings": {
+    post: {
+      response: [
+        Response.Created<{ listing: Listing }>,
+        Response.Ok<{ listing: Listing | null }>
+      ];
+    };
+  };
+  "/listings/:address/verify": {
+    get: {
+      response: [Response.Ok<string>, Response.NotFound];
     };
   };
 };

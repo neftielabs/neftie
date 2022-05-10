@@ -7,15 +7,27 @@ import * as env from "config/constants";
 export const config = {
   env: env.NODE_ENV,
   port: +env.PORT,
+
+  /**
+   * Known URLs
+   */
   roots: {
     base: env.BASE_DOMAIN,
     server: env.SERVER_ROOT,
     client: env.CLIENT_ROOT,
   },
+
+  /**
+   * Cookies global config
+   */
   cookies: {
     _prefix: "@neftie",
     secret: env.COOKIE_SECRET,
   },
+
+  /**
+   * Auth/service token configuration
+   */
   tokens: {
     access: {
       key: "@neftie/at",
@@ -23,7 +35,20 @@ export const config = {
       expires: "6d",
     },
   },
-  files: {
-    uploadsPath: env.UPLOADS_PATH,
+
+  /**
+   * 3rd party configuration
+   */
+  external: {
+    aws: {
+      region: env.AWS_REGION,
+      credentials: {
+        accessKeyId: env.AWS_ACCESS_KEY,
+        secretAccessKey: env.AWS_SECRET_KEY,
+      },
+    },
+    thegraph: {
+      endpoint: env.THEGRAPH_ENDPOINT,
+    },
   },
 };

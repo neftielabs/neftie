@@ -1,4 +1,4 @@
-import Logger from "modules/Logger/Logger";
+import logger from "modules/Logger/Logger";
 import { IRateLimiterOptions, RateLimiterMemory } from "rate-limiter-flexible";
 import express from "express";
 
@@ -20,7 +20,7 @@ export default class RateLimiter<
   }
 
   public logLimited(req: express.Request) {
-    Logger.info(
+    logger.info(
       `[RateLimiter - ${this.limiterName}] Limited ip ${req.ip} on '${req.url}'`
     );
   }

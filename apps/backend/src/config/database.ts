@@ -1,5 +1,5 @@
 import { PrismaClient, PrismaFactory } from "@neftie/prisma";
-import Logger from "modules/Logger/Logger";
+import logger from "modules/Logger/Logger";
 import { withExclude } from "prisma-exclude";
 import { isProd } from "utils/constants";
 
@@ -34,7 +34,7 @@ export const prisma = PrismaFactory.getInstance("db-main", () => {
   if (isProd) {
     // Log queries using the db level
     client.$on("query", (e) => {
-      Logger.log("db", `Query: ${e.query} (took ${e.duration}ms)`);
+      logger.log("db", `Query: ${e.query} (took ${e.duration}ms)`);
     });
   }
 

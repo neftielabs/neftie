@@ -26,6 +26,9 @@
     },
     {
       "path": "../../packages/api-client"
+    },
+    {
+      "path": "../../packages/contracts"
     }
   ],
   "include": ["next-env.d.ts", "**/*.ts", "**/*.tsx"],

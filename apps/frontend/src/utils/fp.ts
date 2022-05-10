@@ -10,3 +10,5 @@ export const ifTrue = <F, S>(f: F, s: S) =>
 export const onlyTrue = <F>(f: F) => ifTrue(f, undefined);
 
 export const everyTrue = every(isTrue);
+
+export const noop = () => {};

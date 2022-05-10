@@ -43,13 +43,14 @@ const ButtonComponent = styled("button", {
     text: {
       sm: tw`text-sm`,
       base: tw`text-base`,
+      13: tw`text-13`,
       "14": tw`text-14`,
       md: tw`text-md`,
       lg: tw`text-lg`,
     },
     sharp: {
       true: {},
-      false: tw`rounded-12`,
+      false: tw`rounded-full`,
     },
     bold: {
       true: tw`font-bold`,
@@ -108,7 +109,10 @@ export const Button: React.FC<ButtonProps | RawButtonProps> = (props) => {
 
   return (
     <>
-      <ButtonComponent {...buttonProps}>
+      <ButtonComponent
+        disabled={buttonProps.disabled || isLoading}
+        {...buttonProps}
+      >
         {animated ? (
           <>
             <Box

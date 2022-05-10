@@ -29,6 +29,11 @@ const appStyles = {
     "--color-gradient-pink": "#FF0F7B",
     "--color-gradient-orange": "#F89B29",
 
+    "--color-error": "#ea0027",
+    "--color-error-lighter": "#ffdbe1",
+
+    "--color-success": "#16c116",
+
     "font-size": "15px",
     color: "var(--color-brand-black)",
   },

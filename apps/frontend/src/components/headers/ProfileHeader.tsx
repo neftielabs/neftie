@@ -32,7 +32,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
       />
 
       <Banner
-        imageUrl={user.banner.url}
+        imageUri={user.banner.url}
         tw="mt-2 p-3 h-30"
         edit={onlyTrue({
           onClick: () => uploadBannerRef.current?.click(),

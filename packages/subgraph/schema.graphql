@@ -13,7 +13,7 @@ enum OrderStatus {
 }
 
 type Tip @entity {
-  "Transaction hash of the event"
+  "tx hash + '-' + event logIndex"
   id: String!
 
   "The order it belongs to"

@@ -18,6 +18,7 @@ export const Text = styled(Box, {
       gray700: tw`text-gray-700`,
       gray800: tw`text-gray-800`,
       gray900: tw`text-gray-900`,
+      error: tw`text-error`,
     },
     size: {
       11: tw`text-11`,

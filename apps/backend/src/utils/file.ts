@@ -1,17 +1,25 @@
-import { config } from "config/main";
+import { UploadedFile } from "express-fileupload";
+import path from "path";
 
-export const stripExtension = (filename: string) => {
-  const lastIndex = filename.lastIndexOf(".");
+export const isImage = (filename: string) => {
+  const extension = path.extname(filename);
 
-  if (lastIndex === -1) {
-    return null;
+  if (!extension || ["jpg", "jpeg", "gif", "png"].includes(extension)) {
+    return {
+      success: false,
+      extension,
+    };
   }
 
-  return filename.slice(lastIndex + 1);
+  return {
+    success: true,
+    extension,
+  };
 };
 
-export const isImageExtension = (extension: string) =>
-  ["jpg", "jpeg", "gif", "png"].includes(extension);
-
-export const stripHostFromUpload = (filename: string) =>
-  filename.replace(config.roots.server, "");
+export const isValidSingleFile = (
+  file: UploadedFile | UploadedFile[] | undefined,
+  size: number
+): file is UploadedFile => {
+  return !!file && !Array.isArray(file) && file.size <= size && !file.truncated;
+};

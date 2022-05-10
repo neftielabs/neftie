@@ -1,8 +1,9 @@
 import { Page } from "components/Page";
 import { Box } from "components/ui/Box";
+import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
+import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
-import Image from "next/image";
 import React from "react";
 
 interface HomePageProps {}
@@ -10,7 +11,25 @@ interface HomePageProps {}
 const HomePage: React.FC<HomePageProps> = () => {
   return (
     <Page>
-      <Box tw="mt-3 mb-10 container">
+      <Box tw="py-10">
+        <Container as={Flex} justifyBetween>
+          <Text size="3xl" weight="medium">
+            Discover talented digital artists
+          </Text>
+          <Box tw="mr-6">
+            <Flex
+              column
+              tw="rounded-12 overflow-hidden h-40 w-40 border border-gray-100 shadow-lg"
+            >
+              <Box tw="w-full h-full bg-gray-100 relative">
+                <Image src="https://i.imgur.com/ifpzELr.jpeg" alt="" />
+              </Box>
+              <Box tw="px-1.5 py-2">@loremipsum</Box>
+            </Flex>
+          </Box>
+        </Container>
+      </Box>
+      {/* <Box tw="mt-3 mb-10 container">
         <Box tw="rounded-12 h-40 relative overflow-hidden bg-black p-7">
           <Box
             tw="absolute right-1 top-1 px-1 py-0.5 text-white rounded-md font-bold text-sm z-50"
@@ -21,13 +40,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Text color="white" weight="bold" size="3xl" tw="relative z-30">
             Find the talent you&apos;re looking for
           </Text>
-          <Image
-            css={{ zIndex: 0, opacity: 0.7 }}
-            src="/_ign_plh/nft.jpg"
-            alt=""
-            layout="fill"
-            objectFit="cover"
-          />
+
         </Box>
         <Box tw="mt-5">
           <Text weight="bolder" size="xl" color="gray800">
@@ -36,12 +49,7 @@ const HomePage: React.FC<HomePageProps> = () => {
           <Flex justifyBetween tw="mt-2">
             <Flex column tw="rounded-12 border border-gray-150 overflow-hidden">
               <Box tw="relative w-full h-10">
-                <Image
-                  src="/_ign_plh/nft.jpg"
-                  layout="fill"
-                  objectFit="cover"
-                  alt=""
-                />
+
               </Box>
               <Box tw="px-2 mt-2">
                 <Text align="left" weight="bold">
@@ -52,7 +60,7 @@ const HomePage: React.FC<HomePageProps> = () => {
             </Flex>
           </Flex>
         </Box>
-      </Box>
+      </Box> */}
     </Page>
   );
 };

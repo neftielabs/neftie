@@ -3,7 +3,7 @@ import { ALCHEMY_KEY } from "lib/constants/app";
 import { Connector, chain } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
-const supportedChains = [chain.ropsten, chain.mainnet];
+const supportedChains = [chain.goerli, chain.mainnet];
 
 /**
  * Check if the used chain is within our
@@ -18,7 +18,7 @@ const isChainSupported = (chainId?: number) => {
  */
 export const connectors = [
   new InjectedConnector({
-    chains: [chain.ropsten, chain.mainnet],
+    chains: supportedChains,
     options: {
       shimDisconnect: true,
     },

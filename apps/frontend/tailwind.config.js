@@ -135,6 +135,13 @@ module.exports = {
         pink: "var(--color-gradient-pink)",
         orange: "var(--color-gradient-orange)",
       },
+      error: {
+        DEFAULT: "var(--color-error)",
+        lighter: "var(--color-error-lighter)",
+      },
+      success: {
+        DEFAULT: "var(--color-success)",
+      },
     },
     spacing: {
       0: "0px",

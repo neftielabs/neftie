@@ -1,7 +1,7 @@
 import { Middleware } from "typera-express";
 import express from "express";
 import { config } from "config/main";
-import Logger from "modules/Logger/Logger";
+import logger from "modules/Logger/Logger";
 import AppError from "errors/AppError";
 import { httpResponse } from "utils/http";
 import { tokenService } from "api/services";
@@ -50,7 +50,7 @@ export function withAuth<T extends AuthMode>(
     };
 
     if (!accessToken && mode === "required") {
-      Logger.debug("[Auth] Token not found and was required");
+      logger.debug("[Auth] Token not found and was required");
       throw new AppError(httpResponse("UNAUTHORIZED"));
     } else if (accessToken) {
       try {
@@ -71,11 +71,11 @@ export function withAuth<T extends AuthMode>(
           auth: tokenPayload,
         };
       } catch (error) {
-        Logger.debug(`[Auth] Error verifying access token`);
-        Logger.debug(error);
+        logger.debug(`[Auth] Error verifying access token`);
+        logger.debug(error);
 
         if (mode === "required" || mode === "present") {
-          Logger.debug(`[Auth] Token verify error and mode ${mode}`);
+          logger.debug(`[Auth] Token verify error and mode ${mode}`);
           throw new AppError(httpResponse("UNAUTHORIZED"));
         }
 

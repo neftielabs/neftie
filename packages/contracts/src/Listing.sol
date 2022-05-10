@@ -158,9 +158,9 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   event Tip(bytes32 indexed orderId, uint256 amount);
 
   /**
-   * @notice When the seller withdraws funds from the contract
+   * @notice When the seller withdraws funds from an order
    */
-  event FundsWithdrawn(bytes32 indexed orderId);
+  event OrderWithdrawn(bytes32 indexed orderId);
 
   /**
    * @notice When the client withdraws the bond fee
@@ -474,7 +474,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
       seller.sendValue((listing.price - orderFee) + orders[_orderId].tips);
       _sendToVault(orderFee);
 
-      emit FundsWithdrawn(_orderId);
+      emit OrderWithdrawn(_orderId);
     } else {
       require(
         orders[_orderId].status == OrderStatus.DELIVERED ||

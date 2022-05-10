@@ -1,5 +1,5 @@
 import { NeftieIcon } from "components/assets/NeftieIcon";
-import { AuthHeader } from "components/headers/AuthHeader";
+import { UserHeader } from "components/headers/UserHeader";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
@@ -11,7 +11,7 @@ import { styled } from "stitches.config";
 import tw from "twin.macro";
 
 const HeaderContainer = styled(Box, {
-  ...tw`hidden md:flex top-0 left-0 w-full h-7 bg-white`,
+  ...tw`hidden md:flex top-0 left-0 w-full h-7 bg-white border-b border-gray-100`,
   zIndex: 10,
 });
 
@@ -33,11 +33,14 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = () => {
             ))}
           </Flex>
         </Flex>
-        <Flex itemsCenter tw="gap-1">
-          <Flex center tw="w-3.5 h-3.5 border border-gray-150 rounded-full">
+        <Flex itemsCenter tw="gap-1.5">
+          <Flex center tw="w-3.5 h-3.5 border border-gray-200 rounded-full">
             <IoFileTray size="18" tw="text-gray-400" />
           </Flex>
-          <AuthHeader />
+          <Flex center tw="w-3.5 h-3.5 border border-gray-200 rounded-full">
+            <IoFileTray size="18" tw="text-gray-400" />
+          </Flex>
+          <UserHeader />
         </Flex>
       </Flex>
     </HeaderContainer>

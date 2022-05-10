@@ -6,13 +6,12 @@ export const routes = {
   privacyPolicy: "/privacy-policy", // tbd
   termsOfService: "/terms", // tbd
 
-  /**
-   * Users
-   */
   user: (u: string) => ({
     work: `/${u}/work`,
     reviews: `/${u}/reviews`,
     services: `/${u}/services`,
     about: `/${u}/about`,
   }),
+
+  create: "/create",
 };

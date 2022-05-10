@@ -33,7 +33,6 @@ export const SignMessageModal: React.FC<SignMessageModalProps> = () => {
       </Text>
       <Button
         size="lg"
-        text="15"
         tw="mt-3 mx-auto w-2/3"
         isLoading={isLoading}
         onClick={() => signMessage()}

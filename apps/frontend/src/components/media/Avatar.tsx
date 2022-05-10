@@ -12,11 +12,14 @@ const AvatarComponent = styled(Box, {
       md: tw`border-0.3 border-white`,
     },
     size: {
+      xs: tw`w-2.5 h-2.5`,
+      sm: tw`w-3.5 h-3.5`,
       xl: tw`w-13 h-13`,
     },
   },
   defaultVariants: {
     border: "none",
+    size: "sm",
   },
 });
 

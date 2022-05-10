@@ -69,7 +69,7 @@ export function handleOrderDelivered(event: OrderDelivered): void {
 }
 
 export function handleTip(event: Tip): void {
-  const tipId = event.transaction.hash.toHex();
+  const tipId = `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
   const tip = getTipEntity(tipId);
   tip.amount = weiToEth(event.params.amount);
   tip.order = event.params.orderId;

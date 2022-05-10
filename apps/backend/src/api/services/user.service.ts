@@ -1,11 +1,11 @@
 import { UserSafe, range, typedObjectKeys } from "@neftie/common";
 import { User } from "@neftie/prisma";
 import { userProvider } from "api/providers";
-import { cryptoService, fileService } from "api/services";
-import fileUpload from "express-fileupload";
-import Logger from "modules/Logger/Logger";
+import { UploadedFile } from "express-fileupload";
+import { mediaBucket } from "modules/aws/s3-instances";
+import { withLog } from "modules/Log";
 import usernames from "resources/misc/usernames.json";
-import { isImageExtension, stripExtension } from "utils/file";
+import { isImage } from "utils/file";
 
 /**
  * Transforms a user object into a client-safe one
@@ -122,49 +122,53 @@ export async function getUser(
 }
 
 /**
- * Upload/update an avatar or banner
+ * Handles profile avatar and banner uploads.
  */
-export const handleAssetUpload = async (
-  userId: string,
-  file: fileUpload.UploadedFile,
-  type: "avatar" | "banner"
-) => {
-  const extension = stripExtension(file.name);
+export const handleProfileUpload = withLog(
+  async (
+    log,
+    data: {
+      userId: string;
+      file: UploadedFile;
+      entity: "avatar" | "banner";
+    }
+  ) => {
+    log.setTargets("userService", "handleProfileUpload");
 
-  if (!extension || !isImageExtension(extension)) {
-    return null;
-  }
+    const { userId, file, entity } = data;
 
-  const filename = cryptoService.generateRandomString(16);
-
-  const user = await userProvider.getById(userId);
-
-  if (!user) {
-    return null;
-  }
-
-  try {
-    const assetUrl = await fileService.writeUpload(
-      file,
-      extension,
-      filename,
-      type,
-      user[type === "avatar" ? "avatarUrl" : "bannerUrl"]
-    );
-
-    if (type === "avatar") {
-      await userProvider.update(userId, {
-        avatarUrl: assetUrl,
-      });
-    } else if (type === "banner") {
-      await userProvider.update(userId, {
-        bannerUrl: assetUrl,
-      });
+    const user = await userProvider.getById(userId);
+    if (!user) {
+      return null;
     }
 
-    return true;
-  } catch (error) {
-    Logger.debug(error);
+    const isImageResult = isImage(file.name);
+    if (!isImageResult.success) {
+      return null;
+    }
+
+    const previousAssetKey = `${entity}Url` as const;
+    const previousAsset = user[previousAssetKey];
+
+    try {
+      const result = await mediaBucket.upload({
+        file: file.data,
+        directory: `u/${entity}s`,
+        extension: isImageResult.extension,
+        previousFile: previousAsset || undefined,
+      });
+
+      if (result) {
+        await userProvider.update(user.id, {
+          [previousAssetKey]: result.key,
+        });
+
+        return true;
+      }
+    } catch (error) {
+      log.all(error);
+    }
+
     return null;
   }
-};
+);

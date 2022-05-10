@@ -10,6 +10,8 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = () => {
   const { setActiveModal } = useModalStore();
 
   return (
-    <Button onClick={() => setActiveModal(Modal.auth)}>Connect wallet</Button>
+    <Button size="sm" text="13" onClick={() => setActiveModal(Modal.auth)}>
+      Connect wallet
+    </Button>
   );
 };

@@ -2,7 +2,7 @@ import { captureException } from "@sentry/node";
 import AppError from "errors/AppError";
 import express from "express";
 import httpStatus from "http-status";
-import Logger from "modules/Logger/Logger";
+import logger from "modules/Logger/Logger";
 import { isProd } from "utils/constants";
 import { convertToSafeError, exitProcess } from "utils/errror";
 import { httpResponse } from "utils/http";
@@ -11,7 +11,7 @@ import { httpResponse } from "utils/http";
  * Catch 404 errors and forward them to the handler
  */
 export const notFound: express.Handler = ({ originalUrl }, res, next) => {
-  Logger.warn(`Route not found - ${originalUrl}`);
+  logger.warn(`Route not found - ${originalUrl}`);
   return next(new AppError(httpResponse("NOT_FOUND")));
 };
 
@@ -28,7 +28,7 @@ export const unhandledRejection = (
   reason: Error,
   promise: Promise<unknown>
 ) => {
-  Logger.warn("Unhandled Rejection at Promise", { reason, promise });
+  logger.warn("Unhandled Rejection at Promise", { reason, promise });
   captureException(reason);
 };
 
@@ -51,7 +51,7 @@ export const unhandledRejection = (
  */
 export const uncaughtException = (err: Error) => {
   captureException(err);
-  Logger.error(err);
+  logger.error(err);
   exitProcess();
 };
 
@@ -112,7 +112,7 @@ export const finalErrorHandler = (
   // Error during development
 
   if (!isProd) {
-    Logger.warn(err);
+    logger.warn(err);
     return handleErrorDev(err, req, res, next);
   }
 
@@ -140,7 +140,7 @@ export const finalErrorHandler = (
   /**
    * Log unknown errors
    */
-  if (!err.isOperational) Logger.warn(err);
+  if (!err.isOperational) logger.warn(err);
 
   // Convert error to instance of AppError
 

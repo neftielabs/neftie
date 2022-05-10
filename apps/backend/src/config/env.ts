@@ -16,7 +16,6 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
     .string()
     .oneOf(["development", "production", "test"])
     .required(),
-  UPLOADS_PATH: yup.string().required(),
 
   /**
    * Secrets
@@ -24,4 +23,12 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
 
   COOKIE_SECRET: yup.string().required(),
   ACCESS_TOKEN_SECRET: yup.string().required(),
+
+  /**
+   * 3rd party
+   */
+  AWS_REGION: yup.string().required(),
+  AWS_ACCESS_KEY: yup.string().required(),
+  AWS_SECRET_KEY: yup.string().required(),
+  THEGRAPH_ENDPOINT: yup.string().required(),
 });

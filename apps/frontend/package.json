@@ -12,8 +12,10 @@
     "env:sync": "env2ts --in .env --out src/lib/constants/env.ts"
   },
   "dependencies": {
+    "@hookform/resolvers": "2.8.8",
     "@neftie/api-client": "0.0.0",
     "@neftie/common": "0.0.0",
+    "@neftie/contracts": "0.0.0",
     "@react-hookz/web": "13.1.0",
     "@sentry/nextjs": "6.19.2",
     "@stitches/react": "1.2.7",
@@ -21,6 +23,7 @@
     "axios": "0.26.1",
     "ethers": "5.6.2",
     "form-data": "4.0.0",
+    "formik": "2.2.9",
     "fp-ts": "2.11.9",
     "fp-ts-std": "0.13.1",
     "monocle-ts": "2.3.12",
@@ -29,6 +32,7 @@
     "nprogress": "0.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
+    "react-dropzone": "14.0.1",
     "react-icons": "4.3.1",
     "react-query": "3.34.19",
     "sharp": "0.30.3",
