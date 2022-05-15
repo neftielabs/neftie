@@ -1,5 +1,6 @@
 import { Listing } from "@neftie/prisma";
 import { Response } from "typera-express";
+import { ListingMinimal } from "../models";
 import { UserSafe } from "../models/user";
 /**
  * Collection of all the routes, their available
@@ -19,13 +20,23 @@ export type RouteManifest = {
    * Auth
    */
   "/auth/nonce": {
-    get: {
+    post: {
       response: [Response.Ok<string>];
     };
   };
-  "/auth/verify": {
+  "/auth/connect": {
     post: {
-      response: [Response.Ok<{ user: UserSafe }>];
+      response: [Response.Ok<{ token: string; user: UserSafe }>];
+    };
+  };
+  "/auth/token": {
+    post: {
+      response: [Response.Ok<{ token: string; user: UserSafe }>];
+    };
+  };
+  "/auth/disconnect": {
+    post: {
+      response: [Response.NoContent];
     };
   };
 
@@ -46,7 +57,7 @@ export type RouteManifest = {
   /**
    * Users
    */
-  "/users/:username": {
+  "/users/:addressOrUsername": {
     get: {
       response: [Response.Ok<{ user: UserSafe }>];
     };
@@ -65,7 +76,12 @@ export type RouteManifest = {
   };
   "/listings/:address/verify": {
     get: {
-      response: [Response.Ok<string>, Response.NotFound];
+      response: [Response.Ok<ListingMinimal>, Response.NotFound];
+    };
+  };
+  "/listings/user/:address": {
+    get: {
+      response: [Response.Ok];
     };
   };
 };

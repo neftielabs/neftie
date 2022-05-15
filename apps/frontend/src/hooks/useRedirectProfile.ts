@@ -16,11 +16,13 @@ export const useRedirectProfile = (user: UserSafe) => {
 
   const tabRedirect = useCallback(
     (username: string) => {
+      if (!username) return;
+
       const currentTab = getCurrentTab();
 
       if (!currentTab) {
         // Redirect to default tab
-        replace(routes.user(username).work, undefined, { shallow: true });
+        replace(routes.user(username).listings, undefined, { shallow: true });
         return;
       }
 

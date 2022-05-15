@@ -53,8 +53,8 @@ templates:
           handler: handleRevisionRequested
         - event: Tip(indexed bytes32,uint256)
           handler: handleTip
-        - event: FundsWithdrawn(indexed bytes32)
-          handler: handleFundsWithdrawn
+        - event: OrderWithdrawn(indexed bytes32)
+          handler: handleOrderWithdrawn
         - event: BondFeeWithdrawn(indexed bytes32)
           handler: handleBondFeeWithdrawn
       file: ./src/mappings/listing.ts

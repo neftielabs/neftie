@@ -23,7 +23,7 @@ type Tip @entity {
   timestamp: BigInt!
 
   "The total amount in Eth (minus the cut)"
-  amount: BigInt!
+  amount: BigDecimal!
 }
 
 type Order @entity {
@@ -55,7 +55,7 @@ type Order @entity {
   revisionsLeft: Int!
 
   "All tips sent by the client"
-  tips: [Tip!]!
+  tips: [Tip!]! @derivedFrom(field: "order")
 
   "If the order is currently under revision"
   underRevision: Boolean!
@@ -67,6 +67,9 @@ type Order @entity {
 type Seller @entity {
   "The address"
   id: ID!
+
+  "Listings"
+  listings: [Listing!]! @derivedFrom(field: "seller")
 }
 
 type Listing @entity {
@@ -80,10 +83,10 @@ type Listing @entity {
   title: String!
 
   "The price of the listing"
-  price: BigInt!
+  price: BigDecimal!
 
   "The bond fee"
-  bondFee: BigInt!
+  bondFee: BigDecimal!
 
   "The number of delivery days"
   deliveryDays: BigInt!
@@ -92,5 +95,5 @@ type Listing @entity {
   revisions: BigInt!
 
   "Orders"
-  orders: [Order!]!
+  orders: [Order!]! @derivedFrom(field: "listing")
 }

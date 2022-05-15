@@ -13,7 +13,7 @@ import { NoticeBox } from "components/alerts/NoticeBox";
 import { Container } from "components/ui/Container";
 
 interface NewListingProps {
-  user: UserSafe | null;
+  user?: UserSafe;
   formikState: FormikProps<
     Asserts<typeof listingSchema["createOnChainListing"]>
   >;
@@ -136,7 +136,7 @@ export const NewListing: React.FC<NewListingProps> = ({
             </Flex>
           </Box>
           <Box tw="w-2/5">
-            <ListingPreview user={user} listing={formikState.values} />
+            <ListingPreview listing={formikState.values} />
           </Box>
         </Flex>
       ) : null}

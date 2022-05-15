@@ -5,7 +5,6 @@ import { Call } from "../types";
 export const meMethods = (call: Call) => ({
   mutation: {},
   query: {
-    getMe: () => call("/me", "get"),
     uploadAsset: (
       data: Asserts<typeof meSchema["fileUpload"]> & { file: FormData }
     ) => {

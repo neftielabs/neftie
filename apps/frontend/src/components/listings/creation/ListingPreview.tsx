@@ -1,4 +1,3 @@
-import { UserSafe, listingSchema } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
 import { LikePill } from "components/pills/LikePill";
@@ -7,33 +6,61 @@ import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
-import React from "react";
+import { useTypedQuery } from "hooks/http/useTypedQuery";
+import { useGetUser } from "hooks/queries/useGetUser";
+import React, { useEffect, useState } from "react";
 import { FiStar } from "react-icons/fi";
+import tw from "twin.macro";
 import { noop } from "utils/fp";
-import { Asserts } from "yup";
 
-interface ListingPreviewProps {
-  user: UserSafe;
-  listing:
-    | Asserts<typeof listingSchema["createOnChainListing"]>
-    | Asserts<typeof listingSchema["createListing"]>;
-}
+type ListingPreviewArgs = {
+  coverUrl?: string;
+  title: string;
+  description?: string;
+  price: string | number;
+};
 
-export const ListingPreview: React.FC<ListingPreviewProps> = ({
-  user,
-  listing,
-}) => {
-  const isMinimalListing = !("description" in listing);
+type ListingPreviewProps =
+  | {
+      listing: ListingPreviewArgs;
+    }
+  | {
+      address: string;
+    };
+
+export const ListingPreview: React.FC<ListingPreviewProps> = (props) => {
+  const { user } = useGetUser({ currentUser: true });
+  const [listing, setListing] = useState<ListingPreviewArgs>();
+  const { data } = useTypedQuery(
+    "verifyListingExists",
+    {
+      enabled: "address" in props,
+    },
+    "address" in props ? [props.address] : undefined
+  );
+
+  useEffect(() => {
+    if ("listing" in props) {
+      setListing(props.listing);
+    } else if ("address" in props && props.address && data) {
+      setListing(data);
+    }
+  }, [data, listing, props]);
+
+  if (!user || !listing) {
+    return null;
+  }
 
   return (
     <Flex
       column
-      tw="w-full border border-gray-100 rounded-12 overflow-hidden sticky top-3 shadow-xl"
+      tw="w-full border border-gray-100 rounded-12 overflow-hidden shadow-xl"
+      css={"address" in props ? {} : tw`sticky top-3`}
     >
-      {!isMinimalListing ? (
+      {listing.coverUrl !== undefined ? (
         <Box tw="h-15 w-full bg-gray-100">
-          {listing.coverUri ? (
-            <Image src={listing.coverUri} alt="" />
+          {listing.coverUrl ? (
+            <Image src={listing.coverUrl} alt="" />
           ) : (
             <ImagePlaceholder />
           )}
@@ -47,9 +74,9 @@ export const ListingPreview: React.FC<ListingPreviewProps> = ({
           tw="border-b border-gray-100 px-3 pb-2"
         >
           <Flex tw="gap-1" itemsCenter>
-            <Avatar avatarUrl={user.avatar.url} size="xs" />
+            <Avatar avatarUrl={user?.avatar.url} size="xs" />
             <Text weight="medium" size="14">
-              {user.username}
+              {user?.username}
             </Text>
           </Flex>
           <Flex itemsCenter tw="text-gray-500">
@@ -67,9 +94,9 @@ export const ListingPreview: React.FC<ListingPreviewProps> = ({
           <Text size="md" tw="mt-2">
             {listing.title || "I will..."}
           </Text>
-          {!isMinimalListing ? (
+          {!listing.description ? (
             <Text size="14" color="gray600" tw="mt-1">
-              {listing.description || ""}
+              {listing.description}
             </Text>
           ) : null}
 

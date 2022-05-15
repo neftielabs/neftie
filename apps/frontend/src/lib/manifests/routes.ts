@@ -7,11 +7,20 @@ export const routes = {
   termsOfService: "/terms", // tbd
 
   user: (u: string) => ({
+    index: `/${u}`,
     work: `/${u}/work`,
     reviews: `/${u}/reviews`,
-    services: `/${u}/services`,
+    listings: `/${u}/listings`,
     about: `/${u}/about`,
   }),
 
   create: "/create",
+
+  connect: "/connect",
+  connectNext: (next: string) => `/connect?next=${encodeURIComponent(next)}`,
+
+  listing: (address: string) => ({
+    index: `/l/${address}`,
+    edit: `/l/${address}`,
+  }),
 };

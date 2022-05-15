@@ -8,7 +8,7 @@ import { useModalStore } from "stores/useModalStore";
 interface SignMessageModalProps {}
 
 export const SignMessageModal: React.FC<SignMessageModalProps> = () => {
-  const { requestSignature, isLoading } = useWallet();
+  const [isLoading, requestSignature] = useWallet();
   const [error, setError] = useState("");
   const { closeModal } = useModalStore();
 

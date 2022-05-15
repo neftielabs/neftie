@@ -1,5 +1,4 @@
 import { Page } from "components/Page";
-import { useUser } from "hooks/useUser";
 import { listingSchema } from "@neftie/common";
 import React, { useCallback, useState } from "react";
 import { useCreateListing } from "hooks/contracts/useCreateListing";
@@ -8,20 +7,34 @@ import { Asserts } from "yup";
 import { constTrue } from "fp-ts/lib/function";
 import { NewListing } from "components/listings/creation/NewListing";
 import { useListingCreated } from "hooks/contracts/useListingCreated";
+import { ListingPreview } from "components/listings/creation/ListingPreview";
+import { PageComponent } from "types/tsx";
+import { useGetUser } from "hooks/queries/useGetUser";
+import { Button } from "components/ui/Button";
+import { Flex } from "components/ui/Flex";
+import { Link } from "components/ui/Link";
 
 interface CreatePageProps {}
 
-const CreatePage: React.FC<CreatePageProps> = () => {
-  const [user] = useUser();
-  const { mutateAsync: createListing } = useCreateListing();
-  const [{ status }, handleListingCreated] = useListingCreated();
+const CreatePage: PageComponent<CreatePageProps> = () => {
   const [txHash, setTxHash] = useState<string>();
+
+  const { user } = useGetUser({ currentUser: true });
+  const { mutateAsync: createListing } = useCreateListing();
+  const [{ status, address: listingAddress }, handleListingCreated] =
+    useListingCreated();
 
   const handleSubmit = useCallback(
     async (data: Asserts<typeof listingSchema["createOnChainListing"]>) => {
       const { address, tx } = await createListing(data);
+
       setTxHash(tx.hash);
       handleListingCreated(address);
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
     },
     [createListing, handleListingCreated]
   );
@@ -41,15 +54,25 @@ const CreatePage: React.FC<CreatePageProps> = () => {
           },
         }}
         transaction={{
-          status: "pending",
+          status,
           hash: txHash,
           pending: {
             title: "Creating listing",
             subtitle: "Waiting for the transaction confirmation, hold tight!",
           },
           confirmed: {
-            title: "Listing created",
-            subtitle: "",
+            title: "Listing created!",
+            subtitle: "You can now add more details and start receiving orders",
+            component: (
+              <Flex column itemsCenter tw="w-3/4 gap-4">
+                <ListingPreview address={listingAddress} />
+                <Link href="">
+                  <Button type="button" spring size="lg">
+                    Edit listing
+                  </Button>
+                </Link>
+              </Flex>
+            ),
           },
         }}
         screens={[
@@ -59,5 +82,7 @@ const CreatePage: React.FC<CreatePageProps> = () => {
     </Page>
   );
 };
+
+CreatePage.requiresAuth = true;
 
 export default CreatePage;

@@ -8,7 +8,7 @@ import { styleUtils } from "utils/style";
 import { useAccount } from "wagmi";
 
 interface UserAvatarProps {
-  user: UserSafe | null;
+  user?: UserSafe | null;
   isLoading?: boolean;
 }
 

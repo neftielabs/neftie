@@ -24,8 +24,10 @@ const extractTokenFromCookies = (req: express.Request) => {
 };
 
 type AuthMode = "required" | "optional" | "present";
-type AuthRequired = { auth: { userId: string; nonce?: string } };
-type AuthOptional = { auth: { userId?: string; nonce?: string } };
+type AuthRequired = { auth: { token: string; userId: string; nonce?: string } };
+type AuthOptional = {
+  auth: { token?: string; userId?: string; nonce?: string };
+};
 
 type WithAuth<T extends AuthMode> = T extends "optional" | "present"
   ? Middleware.Middleware<AuthOptional, never>
@@ -45,44 +47,76 @@ export function withAuth<T extends AuthMode>(
 ): Middleware.Middleware<AuthRequired | AuthOptional, never> {
   return async (ctx) => {
     const accessToken = extractTokenFromCookies(ctx.req);
-    let result: AuthRequired | AuthOptional = {
-      auth: {},
-    };
+
+    /**
+     * If auth mode is "required" and token isn't there,
+     * deny access to resources
+     */
 
     if (!accessToken && mode === "required") {
-      logger.debug("[Auth] Token not found and was required");
-      throw new AppError(httpResponse("UNAUTHORIZED"));
-    } else if (accessToken) {
-      try {
-        const tokenPayload = await tokenService.verifyAccessToken(accessToken);
+      logger.debug("[AuthMiddleware] Token not found");
+      throw new AppError(httpResponse("BAD_REQUEST"));
+    } else if (!accessToken) {
+      /**
+       * If auth mode is not "required" and token isn't there,
+       * early return
+       */
 
-        if (tokenPayload.userId && mode === "required") {
-          result = {
-            auth: {
-              userId: tokenPayload.userId,
-              nonce: tokenPayload.nonce,
-            },
-          };
-        } else if (!tokenPayload.userId && mode === "required") {
-          throw new AppError(httpResponse("UNAUTHORIZED"));
-        }
-
-        result = {
-          auth: tokenPayload,
-        };
-      } catch (error) {
-        logger.debug(`[Auth] Error verifying access token`);
-        logger.debug(error);
-
-        if (mode === "required" || mode === "present") {
-          logger.debug(`[Auth] Token verify error and mode ${mode}`);
-          throw new AppError(httpResponse("UNAUTHORIZED"));
-        }
-
-        result = { auth: {} };
-      }
+      return Middleware.next({ auth: {} });
     }
 
-    return Middleware.next(result);
+    /**
+     * Token exists from this point onwards, perform
+     * validation and enforce rules based on auth mode
+     */
+
+    try {
+      const { userId, nonce } = await tokenService.verifyAccessToken(
+        accessToken
+      );
+
+      /**
+       * If user id is not in the decoded payload and
+       * auth mode is "required", deny access
+       */
+
+      if (!userId && mode === "required") {
+        logger.debug("[AuthMiddleware] No userId in token payload");
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * All checks have passed and we can safely return
+       * the decoded payload
+       */
+
+      return Middleware.next({
+        auth: {
+          userId,
+          nonce,
+          token: accessToken,
+        },
+      });
+    } catch (error) {
+      logger.debug("[AuthMiddleware] Error verifying access token");
+      logger.debug(error);
+
+      /**
+       * If an error occurred while decoding the token
+       * and mode is either "required" or "present",
+       * deny access
+       */
+
+      if (["required", "present"].includes(mode)) {
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * Mode is "optional", which doesn't require a valid
+       * access token
+       */
+
+      return Middleware.next({ auth: {} });
+    }
   };
 }

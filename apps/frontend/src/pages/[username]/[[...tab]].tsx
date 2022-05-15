@@ -1,12 +1,12 @@
 import { ProfileHeader } from "components/headers/ProfileHeader";
 import { Page } from "components/Page";
 import { ProfileTabs } from "components/tabs/ProfileTabs";
-import { useUser } from "hooks/useUser";
+import { useAuth } from "hooks/useAuth";
 import { serverClient } from "lib/http/serverClient";
 import { handleStaticProps } from "lib/server/handleStaticProps";
 import { GetStaticPaths } from "next";
 import React from "react";
-import { PageComponent } from "types/page";
+import { PageComponent } from "types/tsx";
 
 export const getStaticProps = handleStaticProps(async (ctx) => {
   const username = ctx.params?.username;
@@ -24,6 +24,7 @@ export const getStaticProps = handleStaticProps(async (ctx) => {
       props: {
         user,
       },
+      revalidate: 60 * 15, // refresh every 15 minutes
     };
   } catch {}
 
@@ -38,10 +39,10 @@ export const getStaticPaths: GetStaticPaths = () => {
 };
 
 const AccountPage: PageComponent<typeof getStaticProps> = ({ serverProps }) => {
-  const [currentUser] = useUser();
-  const accountUser = serverProps.user;
-  const isCurrentUser = accountUser.address === currentUser?.address;
-  const user = isCurrentUser ? currentUser : accountUser;
+  const [, , { connectedAddress }] = useAuth();
+
+  const user = serverProps.user;
+  const isCurrentUser = user.address === connectedAddress;
 
   return (
     <Page title={`@${user.username}` || user.address}>

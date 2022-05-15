@@ -92,6 +92,7 @@ export const all = new DailyRotateFile({
  * Console transport
  */
 export const consoleCommon = new winston.transports.Console({
+  level: "debug",
   format: winston.format.combine(
     ...(isProd
       ? [

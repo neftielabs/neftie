@@ -3,7 +3,7 @@ import { useQuery } from "react-query";
 import { UseTypedQuery } from "types/api";
 
 /**
- * Wrapper for the useQuery, to only use api-client defined
+ * Wrapper for useQuery, to only use api-client defined
  * methods while infering the return type of the call.
  *
  * Originally written in {@link https://github.com/benawad/dogehouse}

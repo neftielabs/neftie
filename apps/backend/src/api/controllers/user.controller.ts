@@ -9,21 +9,23 @@ import { httpResponse } from "utils/http";
  * Get a user by its address or username
  */
 export const getUserByUsername = createController(
-  "/users/:username",
+  "/users/:addressOrUsername",
   "get",
   (route) =>
     route.use().handler(async (ctx) => {
-      const { username } = ctx.routeParams;
+      const { addressOrUsername } = ctx.routeParams;
 
       let user: UserSafe | null = null;
 
-      if (isValidAddress(username)) {
+      if (isValidAddress(addressOrUsername)) {
+        // entity is address
         user = await userService.getUser({
-          address: username,
+          address: addressOrUsername,
         });
       } else {
+        // entity might be username
         user = await userService.getUser({
-          username,
+          username: addressOrUsername,
         });
       }
 

@@ -3,7 +3,7 @@ import { useState } from "react";
 import { TransactionStatus } from "types/tx";
 
 export const useListingCreated = (): [
-  { status: TransactionStatus },
+  { status: TransactionStatus; address: string },
   (a: string) => void
 ] => {
   const [status, setStatus] = useState<TransactionStatus>("idle");
@@ -25,5 +25,5 @@ export const useListingCreated = (): [
     setStatus("pending");
   };
 
-  return [{ status }, handleListingCreated];
+  return [{ status, address }, handleListingCreated];
 };

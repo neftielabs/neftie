@@ -52,7 +52,7 @@ export const useCreateListing = (
     );
 
     return {
-      address: predictedAddress,
+      address: predictedAddress.toLowerCase(),
       tx,
     };
   }, options);

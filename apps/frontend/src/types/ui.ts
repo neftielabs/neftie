@@ -4,5 +4,5 @@ export enum ProfileTab {
   work = "Work",
   about = "About",
   reviews = "Reviews",
-  services = "Services",
+  listings = "Listings",
 }

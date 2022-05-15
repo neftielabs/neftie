@@ -4,7 +4,7 @@ import { DEFAULT_TITLE } from "lib/constants/seo";
 import Head from "next/head";
 import React from "react";
 
-interface PageProps {
+export interface PageProps {
   title?: string;
   description?: string;
 }
