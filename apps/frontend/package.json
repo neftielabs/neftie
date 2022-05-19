@@ -54,8 +54,6 @@
     "env2ts": "1.4.0",
     "eslint": "8.13.0",
     "eslint-config-next": "12.1.1",
-    "eslint-import-resolver-typescript": "2.7.1",
-    "eslint-plugin-import": "2.26.0",
     "postcss": "8.4.12",
     "tailwindcss": "2.2.19",
     "twin.macro": "2.8.2",

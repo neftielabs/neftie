@@ -1,12 +1,13 @@
-import {
+import type React from "react";
+
+import type {
   GetServerSideProps,
   GetStaticProps,
   InferGetServerSidePropsType,
   InferGetStaticPropsType,
   NextPage,
 } from "next";
-import { AppProps } from "next/app";
-import React from "react";
+import type { AppProps } from "next/app";
 
 export type PageComponent<
   T extends GetServerSideProps | GetStaticProps | { [key: string]: any }

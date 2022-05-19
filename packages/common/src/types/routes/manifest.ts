@@ -1,7 +1,8 @@
-import { Response } from "typera-express";
-import { ListingFull, ListingPreview } from "../models";
-import { UserSafe } from "../models/user";
-import { Paginated } from "../utils";
+import type { Response } from "typera-express";
+
+import type { ListingFull, ListingPreview } from "../models";
+import type { UserSafe } from "../models/user";
+import type { Paginated } from "../utils";
 
 /**
  * Collection of all the routes, their available

@@ -1,4 +1,5 @@
-import { Contract, Overrides } from "ethers";
+import type { Contract, Overrides } from "ethers";
+
 import { GAS_MARGIN } from "lib/constants/web3";
 
 /**

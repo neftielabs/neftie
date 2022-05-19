@@ -1,5 +1,9 @@
 import React, { useEffect, useState } from "react";
 
+import { FiStar } from "react-icons/fi";
+import tw from "twin.macro";
+
+import type { ListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
 import { LikePill } from "components/pills/LikePill";
@@ -10,11 +14,7 @@ import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
 import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useGetUser } from "hooks/queries/useGetUser";
-import { FiStar } from "react-icons/fi";
-import tw from "twin.macro";
 import { noop } from "utils/fp";
-
-import { ListingPreview } from "@neftie/common";
 
 type ListingPreviewMinimal = Omit<
   ListingPreview,

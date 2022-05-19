@@ -1,12 +1,13 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { useField } from "formik";
+import { useDropzone } from "react-dropzone";
+
 import { FileDropBox } from "components/forms/file-drop/FileDropBox";
 import { FileDropPreview } from "components/forms/file-drop/FileDropPreview";
 import { Label } from "components/forms/Label";
 import { Box } from "components/ui/Box";
 import { Text } from "components/ui/Text";
-import { useField } from "formik";
-import { useDropzone } from "react-dropzone";
 
 interface FileDropProps {
   label?: string;

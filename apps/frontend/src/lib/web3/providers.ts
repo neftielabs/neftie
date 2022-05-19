@@ -1,5 +1,6 @@
 import { providers } from "ethers";
-import { Connector, chain } from "wagmi";
+import type { Connector } from "wagmi";
+import { chain } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
 
 import { ALCHEMY_KEY } from "lib/constants/app";

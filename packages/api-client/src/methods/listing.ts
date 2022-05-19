@@ -1,4 +1,4 @@
-import { Call } from "../types";
+import type { Call } from "../types";
 
 export const listingMethods = (call: Call) => ({
   mutation: {},

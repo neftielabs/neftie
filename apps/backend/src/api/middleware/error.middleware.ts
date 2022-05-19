@@ -1,7 +1,8 @@
 import { captureException } from "@sentry/node";
-import AppError from "errors/AppError";
-import express from "express";
+import type express from "express";
 import httpStatus from "http-status";
+
+import AppError from "errors/AppError";
 import logger from "modules/Logger/Logger";
 import { isProd } from "utils/constants";
 import { convertToSafeError, exitProcess } from "utils/errror";

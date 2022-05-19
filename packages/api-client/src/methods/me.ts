@@ -1,6 +1,8 @@
-import { meSchema } from "@neftie/common";
-import { Asserts } from "yup";
-import { Call } from "../types";
+import type { Asserts } from "yup";
+
+import type { meSchema } from "@neftie/common";
+
+import type { Call } from "../types";
 
 export const meMethods = (call: Call) => ({
   mutation: {},

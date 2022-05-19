@@ -1,8 +1,10 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { expect } from "chai";
-import { BigNumber, ContractTransaction } from "ethers";
+import type { ContractTransaction } from "ethers";
+import { BigNumber } from "ethers";
 import { ethers } from "hardhat";
-import { NeftieCore } from "../typechain";
+
+import type { NeftieCore } from "../typechain";
 import { contracts } from "./helpers";
 
 describe("NeftieCore", () => {

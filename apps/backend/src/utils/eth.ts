@@ -1,5 +1,7 @@
+import type { AxiosResponse } from "axios";
+import axios from "axios";
+
 import { date } from "@neftie/common";
-import axios, { AxiosResponse } from "axios";
 import { config } from "config/main";
 import Log from "modules/Log";
 import logger from "modules/Logger/Logger";

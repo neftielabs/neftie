@@ -1,11 +1,13 @@
 import React from "react";
 
+import type { FormikConfig, FormikProps } from "formik";
+import { Form, Formik } from "formik";
+import { guard } from "fp-ts-std/Function";
+import type { Predicate } from "fp-ts/lib/Predicate";
+
 import { TransactionConfirmed } from "components/layout/transactions/TransactionConfirmed";
 import { TransactionPending } from "components/layout/transactions/TransactionPending";
-import { Form, Formik, FormikConfig, FormikProps } from "formik";
-import { guard } from "fp-ts-std/Function";
-import { Predicate } from "fp-ts/lib/Predicate";
-import { TransactionStatus } from "types/tx";
+import type { TransactionStatus } from "types/tx";
 
 interface TransactionLayoutProps<T> {
   formikProps: FormikConfig<T>;

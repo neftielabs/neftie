@@ -1,9 +1,10 @@
-import { ListingFull, ListingPreview, isValidAddress } from "@neftie/common";
+import type { ListingFull, ListingPreview } from "@neftie/common";
+import { isValidAddress } from "@neftie/common";
 import { listingProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
 import logger from "modules/Logger/Logger";
 import { subgraphProvider } from "modules/subgraph-client";
-import { Pagination } from "types/helpers";
+import type { Pagination } from "types/helpers";
 import { areAddressesEqual } from "utils/address";
 
 /**

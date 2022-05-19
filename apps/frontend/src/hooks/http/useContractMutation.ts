@@ -1,5 +1,6 @@
-import { Signer } from "ethers";
-import { UseMutationOptions, useMutation } from "react-query";
+import type { Signer } from "ethers";
+import type { UseMutationOptions } from "react-query";
+import { useMutation } from "react-query";
 import { useSigner } from "wagmi";
 
 type InjectSigner<D> = D & { signer: Signer };

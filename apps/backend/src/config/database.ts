@@ -1,6 +1,7 @@
+import { withExclude } from "prisma-exclude";
+
 import { PrismaClient, PrismaFactory } from "@neftie/prisma";
 import logger from "modules/Logger/Logger";
-import { withExclude } from "prisma-exclude";
 import { toChecksum } from "utils/address";
 import { isProd } from "utils/constants";
 

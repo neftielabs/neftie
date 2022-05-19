@@ -1,6 +1,7 @@
-import { config } from "config/main";
 import { GraphQLClient } from "graphql-request";
+
 import { getSdk } from "@neftie/subgraph";
+import { config } from "config/main";
 
 const { endpoint } = config.external.subgraph;
 

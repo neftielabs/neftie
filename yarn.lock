@@ -3556,8 +3556,6 @@ __metadata:
     env2ts: 1.4.0
     eslint: 8.13.0
     eslint-config-next: 12.1.1
-    eslint-import-resolver-typescript: 2.7.1
-    eslint-plugin-import: 2.26.0
     ethers: 5.6.2
     form-data: 4.0.0
     formik: 2.2.9
@@ -17370,6 +17368,8 @@ __metadata:
     "@typescript-eslint/eslint-plugin": 5.17.0
     "@typescript-eslint/parser": 5.17.0
     eslint: 8.13.0
+    eslint-import-resolver-typescript: 2.7.1
+    eslint-plugin-import: 2.26.0
     eslint-plugin-tsdoc: 0.2.14
     eslint-plugin-unused-imports: 2.0.0
     husky: 7.0.4

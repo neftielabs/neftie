@@ -1,6 +1,8 @@
+import type express from "express";
+import type { IRateLimiterOptions } from "rate-limiter-flexible";
+import { RateLimiterMemory } from "rate-limiter-flexible";
+
 import logger from "modules/Logger/Logger";
-import { IRateLimiterOptions, RateLimiterMemory } from "rate-limiter-flexible";
-import express from "express";
 
 export default class RateLimiter<
   T = Record<string, never>

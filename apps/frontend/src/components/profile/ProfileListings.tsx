@@ -1,12 +1,13 @@
 import React, { useEffect, useRef } from "react";
 
 import { useIntersectionObserver } from "@react-hookz/web";
+import tw from "twin.macro";
+
 import { ListingCard } from "components/cards/ListingCard";
 import { Box } from "components/ui/Box";
 import { Grid } from "components/ui/Grid";
 import { Loader } from "components/ui/Loader";
 import { useTypedInfQuery } from "hooks/http/useTypedInfQuery";
-import tw from "twin.macro";
 
 interface ProfileListingsProps {
   sellerAddress: string;

@@ -1,6 +1,7 @@
-import { RouteManifest } from "./manifest";
-import { Route } from "typera-express";
-import { Response as TResponse } from "typera-common";
+import type { Response as TResponse } from "typera-common";
+import type { Route } from "typera-express";
+
+import type { RouteManifest } from "./manifest";
 export type { RouteManifest };
 
 /**

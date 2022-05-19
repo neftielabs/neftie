@@ -1,5 +1,9 @@
 import { useEffect } from "react";
 
+import { useRouter } from "next/router";
+import type { Connector } from "wagmi";
+import { useConnect } from "wagmi";
+
 import { WalletProvider } from "components/buttons/WalletProvider";
 import { CardLayout } from "components/layout/CardLayout";
 import { Page } from "components/Page";
@@ -8,11 +12,9 @@ import { Text } from "components/ui/Text";
 import { useAuth } from "hooks/useAuth";
 import { useGetIntendedPath } from "hooks/useGetIntendedPath";
 import { routes } from "lib/manifests/routes";
-import { useRouter } from "next/router";
 import { useModalStore } from "stores/useModalStore";
 import { Modal } from "types/modals";
-import { PageComponent } from "types/tsx";
-import { Connector, useConnect } from "wagmi";
+import type { PageComponent } from "types/tsx";
 
 const ConnectPage: PageComponent<never> = () => {
   const { push } = useRouter();

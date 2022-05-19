@@ -1,3 +1,6 @@
+import { generateNonce } from "siwe";
+import { Response, applyMiddleware } from "typera-express";
+
 import { authSchema } from "@neftie/common";
 import { authMiddleware, rateLimitMiddleware } from "api/middleware";
 import { withBody } from "api/middleware/validation.middleware";
@@ -12,8 +15,6 @@ import AppError from "errors/AppError";
 import RateLimitError from "errors/RateLimitError";
 import { createController } from "modules/controller";
 import logger from "modules/Logger/Logger";
-import { generateNonce } from "siwe";
-import { Response, applyMiddleware } from "typera-express";
 import { httpResponse } from "utils/http";
 
 const strictLimited = applyMiddleware(

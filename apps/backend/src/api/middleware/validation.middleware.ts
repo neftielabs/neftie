@@ -11,11 +11,12 @@
  * @see https://github.com/jquense/yup
  */
 
-import AppError from "errors/AppError";
 import httpStatus from "http-status";
 import { Middleware } from "typera-express";
-import { AnyObjectSchema, Asserts } from "yup";
-import { ValidateOptions } from "yup/lib/types";
+import type { AnyObjectSchema, Asserts } from "yup";
+import type { ValidateOptions } from "yup/lib/types";
+
+import AppError from "errors/AppError";
 
 const defaultValidationOptions: ValidateOptions = {
   stripUnknown: true,

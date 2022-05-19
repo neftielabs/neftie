@@ -1,8 +1,9 @@
 import React from "react";
 
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 import { styleUtils } from "utils/style";
 
 const Container = styled(Box, {

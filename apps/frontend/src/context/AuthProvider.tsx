@@ -1,12 +1,14 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
-import { useAccount } from "wagmi";
-import { useToken } from "hooks/useToken";
-import { useTypedMutation } from "hooks/http/useTypedMutation";
+
 import { useRouter } from "next/router";
-import { routes } from "lib/manifests/routes";
+import { useAccount } from "wagmi";
+
+import { WaitForAuth } from "components/layout/WaitForAuth";
+import { useTypedMutation } from "hooks/http/useTypedMutation";
+import { useToken } from "hooks/useToken";
 import { useWallet } from "hooks/useWallet";
 import { logger } from "lib/logger/instance";
-import { WaitForAuth } from "components/layout/WaitForAuth";
+import { routes } from "lib/manifests/routes";
 import { isTruthy, someTrue } from "utils/fp";
 
 export const AuthContext = React.createContext<{

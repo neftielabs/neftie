@@ -1,8 +1,9 @@
+import { Response, applyMiddleware } from "typera-express";
+
 import { isValidAddress } from "@neftie/common";
 import { authMiddleware, filterMiddleware } from "api/middleware";
 import { listingService } from "api/services";
 import { createController, createReusableController } from "modules/controller";
-import { Response, applyMiddleware } from "typera-express";
 import { withPagination } from "utils/helpers";
 
 const authController = createReusableController(

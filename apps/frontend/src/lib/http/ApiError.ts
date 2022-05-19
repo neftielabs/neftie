@@ -1,4 +1,4 @@
-import { ApiErrorResponse } from "@neftie/common";
+import type { ApiErrorResponse } from "@neftie/common";
 
 export class ApiError extends Error implements ApiErrorResponse {
   status?: "error" | "fail" | undefined;

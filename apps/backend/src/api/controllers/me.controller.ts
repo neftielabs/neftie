@@ -1,10 +1,11 @@
+import { Response, applyMiddleware } from "typera-express";
+
 import { meSchema } from "@neftie/common";
 import { authMiddleware, fileMiddleware } from "api/middleware";
 import { withQuery } from "api/middleware/validation.middleware";
 import { userService } from "api/services";
 import AppError from "errors/AppError";
 import { createReusableController } from "modules/controller";
-import { Response, applyMiddleware } from "typera-express";
 import { isValidSingleFile } from "utils/file";
 import { httpResponse } from "utils/http";
 

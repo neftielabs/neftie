@@ -1,5 +1,6 @@
 import React, { useRef } from "react";
 
+import type { UserSafe } from "@neftie/common";
 import { CopyButton } from "components/buttons/CopyButton";
 import { Avatar } from "components/media/Avatar";
 import { Banner } from "components/media/Banner";
@@ -10,8 +11,6 @@ import { queryClient } from "lib/http/queryClient";
 import { handleProfileAssetUpload } from "lib/user";
 import { onlyTrue } from "utils/fp";
 import { shortenAddress } from "utils/wallet";
-
-import { UserSafe } from "@neftie/common";
 
 interface ProfileHeaderProps {
   user: UserSafe;

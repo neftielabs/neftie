@@ -1,4 +1,5 @@
-import { AxiosInstance } from "axios";
+import type { AxiosInstance } from "axios";
+
 import { createApiClient } from "./call";
 import { authMethods } from "./methods/auth";
 import { listingMethods } from "./methods/listing";

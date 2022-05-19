@@ -1,9 +1,10 @@
 import React from "react";
 
+import type { IconBaseProps } from "react-icons";
+import { FiExternalLink } from "react-icons/fi";
+
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
-import { IconBaseProps } from "react-icons";
-import { FiExternalLink } from "react-icons/fi";
 
 type ExternalLinkProps = React.ComponentProps<typeof Link> & {
   iconProps?: IconBaseProps;

@@ -1,7 +1,10 @@
-import { UserSafe, isValidAddress } from "@neftie/common";
-import { routes } from "lib/manifests/routes";
-import { useRouter } from "next/router";
 import { useCallback, useEffect } from "react";
+
+import { useRouter } from "next/router";
+
+import type { UserSafe } from "@neftie/common";
+import { isValidAddress } from "@neftie/common";
+import { routes } from "lib/manifests/routes";
 import { ProfileTab } from "types/ui";
 import { everyTrue } from "utils/fp";
 

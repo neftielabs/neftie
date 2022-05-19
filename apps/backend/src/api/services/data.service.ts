@@ -1,6 +1,9 @@
-import { ListingFull, ListingPreview } from "@neftie/common";
-import { Listing, User } from "@neftie/prisma";
-import { ListingFullFragment, ListingMinimalFragment } from "@neftie/subgraph";
+import type { ListingFull, ListingPreview } from "@neftie/common";
+import type { Listing, User } from "@neftie/prisma";
+import type {
+  ListingFullFragment,
+  ListingMinimalFragment,
+} from "@neftie/subgraph";
 import { listingProvider, userProvider } from "api/providers";
 import Log from "modules/Log";
 import { pick } from "utils/pick";

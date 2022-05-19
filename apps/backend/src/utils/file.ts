@@ -1,5 +1,6 @@
-import { UploadedFile } from "express-fileupload";
 import path from "path";
+
+import type { UploadedFile } from "express-fileupload";
 
 export const isImage = (filename: string) => {
   const extension = path.extname(filename);

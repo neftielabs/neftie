@@ -1,9 +1,10 @@
 import React from "react";
 
-import { Box } from "components/ui/Box";
 import { FiX } from "react-icons/fi";
-import { styled } from "stitches.config";
 import tw from "twin.macro";
+
+import { Box } from "components/ui/Box";
+import { styled } from "stitches.config";
 
 const NoticeContainer = styled(Box, {
   ...tw`relative`,

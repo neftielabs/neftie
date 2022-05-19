@@ -1,8 +1,10 @@
-import { UserSafe, isValidAddress } from "@neftie/common";
+import { Response } from "typera-express";
+
+import type { UserSafe } from "@neftie/common";
+import { isValidAddress } from "@neftie/common";
 import { userService } from "api/services";
 import AppError from "errors/AppError";
 import { createController } from "modules/controller";
-import { Response } from "typera-express";
 import { httpResponse } from "utils/http";
 
 /**

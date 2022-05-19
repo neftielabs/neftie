@@ -1,10 +1,11 @@
 import React from "react";
 
+import tw, { styled } from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
-import tw, { styled } from "twin.macro";
 
 const BannerContainer = styled(Box, {
   ...tw`rounded-17 overflow-hidden relative container`,

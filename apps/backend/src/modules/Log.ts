@@ -1,7 +1,8 @@
 import { captureException } from "@sentry/node";
+
 // import { CaptureContext } from
 import logger from "modules/Logger/Logger";
-import { OmitFirstArg } from "types/helpers";
+import type { OmitFirstArg } from "types/helpers";
 
 /**
  * Utility class to log to multiple transports

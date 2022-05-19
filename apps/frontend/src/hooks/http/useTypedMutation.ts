@@ -1,6 +1,7 @@
-import { useClient } from "hooks/http/useClient";
 import { useMutation } from "react-query";
-import { UseTypedMutation } from "types/api";
+
+import { useClient } from "hooks/http/useClient";
+import type { UseTypedMutation } from "types/api";
 
 /**
  * Wrapper for useMutation, to only use api-client defined

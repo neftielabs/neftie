@@ -1,5 +1,4 @@
 import { ifElse } from "fp-ts-std/Function";
-
 import * as A from "fp-ts/Array";
 import * as P from "fp-ts/Predicate";
 import * as R from "fp-ts/Record";

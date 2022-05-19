@@ -1,4 +1,5 @@
-import { TokenObject, useTokenStore } from "stores/useTokenStore";
+import type { TokenObject } from "stores/useTokenStore";
+import { useTokenStore } from "stores/useTokenStore";
 
 export const useToken = (): [
   TokenObject | null,

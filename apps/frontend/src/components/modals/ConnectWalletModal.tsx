@@ -1,12 +1,13 @@
 import React from "react";
 
+import { FiExternalLink } from "react-icons/fi";
+import { useConnect } from "wagmi";
+
 import { WalletProvider } from "components/buttons/WalletProvider";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
-import { FiExternalLink } from "react-icons/fi";
-import { useConnect } from "wagmi";
 
 interface ConnectWalletModalProps {}
 

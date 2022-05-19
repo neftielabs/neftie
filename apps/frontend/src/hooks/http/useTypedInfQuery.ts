@@ -1,6 +1,7 @@
-import { useClient } from "hooks/http/useClient";
 import { useInfiniteQuery } from "react-query";
-import { UseTypedInfQuery } from "types/api";
+
+import { useClient } from "hooks/http/useClient";
+import type { UseTypedInfQuery } from "types/api";
 
 export const useTypedInfQuery: UseTypedInfQuery = (key, opts?, params?) => {
   const client = useClient();

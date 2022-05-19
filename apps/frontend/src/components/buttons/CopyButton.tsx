@@ -1,9 +1,11 @@
 import React, { useState } from "react";
 
-import { Button, ButtonProps } from "components/ui/Button";
+import { FiCopy } from "react-icons/fi";
+
+import type { ButtonProps } from "components/ui/Button";
+import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import { FiCopy } from "react-icons/fi";
 import { ifTrue } from "utils/fp";
 
 interface CopyButtonProps extends ButtonProps {

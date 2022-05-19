@@ -1,5 +1,6 @@
-import { RouteManifest } from "@neftie/common";
-import { AxiosInstance, AxiosRequestConfig } from "axios";
+import type { AxiosInstance, AxiosRequestConfig } from "axios";
+
+import type { RouteManifest } from "@neftie/common";
 
 type ApiResponse<
   Path extends keyof RouteManifest,

@@ -1,7 +1,10 @@
-import { Signer } from "ethers";
-import { APP_ENV } from "lib/constants/app";
+import type { Signer } from "ethers";
 
-import { ListingFactory__factory, addresses } from "@neftie/contracts";
+import {
+  ListingFactory__factory as ListingFactoryFactory,
+  addresses,
+} from "@neftie/contracts";
+import { APP_ENV } from "lib/constants/app";
 
 const contractAddresses = addresses;
 const currentEnv = APP_ENV;
@@ -11,10 +14,7 @@ const currentEnv = APP_ENV;
  */
 export const getListingFactoryContract = (signer: Signer) => {
   const contractAddress = contractAddresses[currentEnv].listingFactory;
-  const listingFactory = ListingFactory__factory.connect(
-    contractAddress,
-    signer
-  );
+  const listingFactory = ListingFactoryFactory.connect(contractAddress, signer);
 
   return listingFactory;
 };

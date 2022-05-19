@@ -1,7 +1,8 @@
-import { UserSafe } from "@neftie/common";
-import { useTypedQuery } from "hooks/http/useTypedQuery";
-import { UseQueryOptions } from "react-query";
+import type { UseQueryOptions } from "react-query";
 import { useAccount } from "wagmi";
+
+import type { UserSafe } from "@neftie/common";
+import { useTypedQuery } from "hooks/http/useTypedQuery";
 
 type UseGetUserReturn = { user: UserSafe | undefined; isLoading: boolean };
 type QueryOptions = UseQueryOptions & { currentUser: true };

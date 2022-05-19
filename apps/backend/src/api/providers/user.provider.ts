@@ -1,4 +1,4 @@
-import { Prisma } from "@neftie/prisma";
+import type { Prisma } from "@neftie/prisma";
 import { prisma } from "config/database";
 
 export const getByAddress = async (address: string) => {

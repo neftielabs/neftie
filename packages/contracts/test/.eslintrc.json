@@ -1,5 +1,5 @@
 {
-  "extends": ["../../../.eslintrc.json"],
+  "extends": ["../../../.eslintrc.yml"],
   "rules": {
     "no-unused-expressions": "off",
     "init-declarations": "off"

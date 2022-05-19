@@ -1,4 +1,4 @@
-import { UserSafe } from "./user";
+import type { UserSafe } from "./user";
 
 export type ListingPreview = {
   id: string;

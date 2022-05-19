@@ -1,16 +1,14 @@
+import fs from "fs";
+import path from "path";
+
+import type { PutObjectCommandInput, S3Client } from "@aws-sdk/client-s3";
+import { DeleteObjectCommand, PutObjectCommand } from "@aws-sdk/client-s3";
+
 import { cryptoService } from "api/services";
 import { config } from "config/main";
 import Log from "modules/Log";
-import path from "path";
-import { S3FilenameParams, S3ObjectType, S3UploadParams } from "types/s3";
-import fs from "fs";
-import {
-  DeleteObjectCommand,
-  PutObjectCommand,
-  PutObjectCommandInput,
-  S3Client,
-} from "@aws-sdk/client-s3";
 import logger from "modules/Logger/Logger";
+import type { S3FilenameParams, S3ObjectType, S3UploadParams } from "types/s3";
 
 /**
  * Wrapper over the AWS S3 SDK for easy uploads

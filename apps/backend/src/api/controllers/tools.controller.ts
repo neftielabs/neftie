@@ -1,5 +1,6 @@
-import { createController } from "modules/controller";
 import { Response } from "typera-express";
+
+import { createController } from "modules/controller";
 import { getEthPrice } from "utils/eth";
 
 /**

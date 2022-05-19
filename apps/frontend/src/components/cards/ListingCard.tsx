@@ -1,5 +1,7 @@
 import React from "react";
 
+import { FiStar } from "react-icons/fi";
+
 import { EthIcon } from "components/assets/EthIcon";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
@@ -9,7 +11,6 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import { FiStar } from "react-icons/fi";
 
 interface ListingCardProps {
   id: string;

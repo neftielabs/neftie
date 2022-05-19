@@ -1,5 +1,7 @@
 import React from "react";
 
+import type { GetStaticPaths } from "next";
+
 import { ProfileHeader } from "components/headers/ProfileHeader";
 import { Page } from "components/Page";
 import { ProfileTabs } from "components/tabs/ProfileTabs";
@@ -7,8 +9,7 @@ import { useGetUser } from "hooks/queries/useGetUser";
 import { useAuth } from "hooks/useAuth";
 import { serverClient } from "lib/http/serverClient";
 import { handleStaticProps } from "lib/server/handleStaticProps";
-import { GetStaticPaths } from "next";
-import { PageComponent } from "types/tsx";
+import type { PageComponent } from "types/tsx";
 
 export const getStaticProps = handleStaticProps(async (ctx) => {
   const username = ctx.params?.username;

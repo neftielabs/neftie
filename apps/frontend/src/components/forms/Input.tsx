@@ -1,12 +1,13 @@
 import React from "react";
 
+import { useField } from "formik";
+import tw from "twin.macro";
+
 import { Label } from "components/forms/Label";
 import { Textarea } from "components/forms/Textarea";
 import { Box } from "components/ui/Box";
 import { Text } from "components/ui/Text";
-import { useField } from "formik";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const InputContainer = styled(Box, {
   ...tw`border transition relative rounded-12`,

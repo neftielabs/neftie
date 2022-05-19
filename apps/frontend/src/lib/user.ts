@@ -1,8 +1,7 @@
-import React from "react";
-
-import axiosInstance from "lib/http/axiosInstance";
+import type React from "react";
 
 import { apiClient } from "@neftie/api-client";
+import axiosInstance from "lib/http/axiosInstance";
 
 export const handleProfileAssetUpload = async (
   ev: React.ChangeEvent<HTMLInputElement>,

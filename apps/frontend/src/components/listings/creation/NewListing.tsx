@@ -1,5 +1,10 @@
 import React from "react";
 
+import type { FormikProps } from "formik";
+import tw from "twin.macro";
+import type { Asserts } from "yup";
+
+import type { UserSafe, listingSchema } from "@neftie/common";
 import { NoticeBox } from "components/alerts/NoticeBox";
 import { Input } from "components/forms/Input";
 import { ListingPreviewCard } from "components/listings/creation/ListingPreviewCard";
@@ -8,11 +13,6 @@ import { Button } from "components/ui/Button";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import { FormikProps } from "formik";
-import tw from "twin.macro";
-import { Asserts } from "yup";
-
-import { UserSafe, listingSchema } from "@neftie/common";
 
 interface NewListingProps {
   user?: UserSafe;

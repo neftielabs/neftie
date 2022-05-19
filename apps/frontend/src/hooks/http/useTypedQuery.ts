@@ -1,6 +1,7 @@
-import { useClient } from "hooks/http/useClient";
 import { useQuery } from "react-query";
-import { UseTypedQuery } from "types/api";
+
+import { useClient } from "hooks/http/useClient";
+import type { UseTypedQuery } from "types/api";
 
 /**
  * Wrapper for useQuery, to only use api-client defined

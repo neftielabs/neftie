@@ -1,13 +1,14 @@
 import React, { useMemo } from "react";
 
+import tw from "twin.macro";
+import type { Connector } from "wagmi";
+
 import { MetaMaskLogo } from "components/assets/MetaMaskLogo";
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Text } from "components/ui/Text";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
-import { ComponentVariants } from "types/stitches";
-import { Connector } from "wagmi";
+import type { ComponentVariants } from "types/stitches";
 
 const ProviderContainer = styled(Button, {
   ...tw`flex items-center hover:shadow-lg transform hover:-translate-y-0.5 transition-all

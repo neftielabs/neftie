@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useRouter } from "next/router";
+import tw from "twin.macro";
 
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Page } from "components/Page";
@@ -12,9 +14,7 @@ import { Text } from "components/ui/Text";
 import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useEthPrice } from "hooks/useEthPrice";
 import { routes } from "lib/manifests/routes";
-import { useRouter } from "next/router";
-import tw from "twin.macro";
-import { PageComponent } from "types/tsx";
+import type { PageComponent } from "types/tsx";
 
 interface ListingPageProps {}
 

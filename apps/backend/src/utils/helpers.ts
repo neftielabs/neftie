@@ -1,4 +1,4 @@
-import { Paginated } from "@neftie/common";
+import type { Paginated } from "@neftie/common";
 
 export const withPagination = <T>(
   items: T[],

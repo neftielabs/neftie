@@ -1,8 +1,9 @@
-import { AccessTokenPayload } from "types/auth";
-import { config } from "config/main";
-import { CookieOptions } from "express";
-import { isProd } from "utils/constants";
+import type { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
+
+import { config } from "config/main";
+import type { AccessTokenPayload } from "types/auth";
+import { isProd } from "utils/constants";
 
 /**
  * Generates an access token

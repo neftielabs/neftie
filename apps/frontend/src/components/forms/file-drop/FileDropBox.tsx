@@ -1,10 +1,11 @@
 import React from "react";
 
+import type { DropzoneState } from "react-dropzone";
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { Text } from "components/ui/Text";
-import { DropzoneState } from "react-dropzone";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const DropContainer = styled(Box, {
   ...tw`flex flex-1 flex-col items-center rounded-12

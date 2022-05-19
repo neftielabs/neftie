@@ -1,9 +1,11 @@
 import React from "react";
 
-import { Box } from "components/ui/Box";
-import NextImage, { ImageProps as NextImageProps } from "next/image";
-import { styled } from "stitches.config";
+import type { ImageProps as NextImageProps } from "next/image";
+import NextImage from "next/image";
 import tw from "twin.macro";
+
+import { Box } from "components/ui/Box";
+import { styled } from "stitches.config";
 
 const ImageWrapper = styled(Box, {
   variants: {

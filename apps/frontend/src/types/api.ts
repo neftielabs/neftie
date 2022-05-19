@@ -1,5 +1,4 @@
-import { apiClient } from "@neftie/api-client";
-import {
+import type {
   UseInfiniteQueryOptions,
   UseInfiniteQueryResult,
   UseMutationOptions,
@@ -7,6 +6,8 @@ import {
   UseQueryOptions,
   UseQueryResult,
 } from "react-query";
+
+import type { apiClient } from "@neftie/api-client";
 
 type ApiClient = typeof apiClient;
 

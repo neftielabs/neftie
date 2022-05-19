@@ -1,4 +1,4 @@
-import { Readable } from "stream";
+import type { Readable } from "stream";
 
 export type S3ObjectType = Readable | Blob | string | Uint8Array | Buffer;
 

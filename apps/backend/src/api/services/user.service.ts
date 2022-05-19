@@ -1,7 +1,9 @@
-import { UserSafe, range, typedObjectKeys } from "@neftie/common";
-import { User } from "@neftie/prisma";
+import type { UploadedFile } from "express-fileupload";
+
+import type { UserSafe } from "@neftie/common";
+import { range, typedObjectKeys } from "@neftie/common";
+import type { User } from "@neftie/prisma";
 import { userProvider } from "api/providers";
-import { UploadedFile } from "express-fileupload";
 import { mediaBucket } from "modules/aws/s3-instances";
 import Log from "modules/Log";
 import usernames from "resources/misc/usernames.json";

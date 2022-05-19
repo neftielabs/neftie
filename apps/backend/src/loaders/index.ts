@@ -1,5 +1,6 @@
 /* eslint-disable no-console */
-import express from "express";
+import type express from "express";
+
 import { envLoader } from "loaders/env";
 import { expressLoader } from "loaders/express";
 import { prismaLoader } from "loaders/prisma";

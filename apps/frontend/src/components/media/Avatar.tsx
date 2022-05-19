@@ -1,9 +1,10 @@
 import React from "react";
 
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { Image } from "components/ui/Image";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const AvatarComponent = styled(Box, {
   ...tw`rounded-full bg-gray-300 overflow-hidden relative`,

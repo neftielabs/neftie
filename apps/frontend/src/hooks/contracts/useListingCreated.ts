@@ -1,6 +1,7 @@
-import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useState } from "react";
-import { TransactionStatus } from "types/tx";
+
+import { useTypedQuery } from "hooks/http/useTypedQuery";
+import type { TransactionStatus } from "types/tx";
 
 export const useListingCreated = (): [
   { status: TransactionStatus; address: string },

@@ -1,6 +1,8 @@
-import { authSchema } from "@neftie/common";
-import { Asserts } from "yup";
-import { Call } from "../types";
+import type { Asserts } from "yup";
+
+import type { authSchema } from "@neftie/common";
+
+import type { Call } from "../types";
 
 export const authMethods = (call: Call) => ({
   mutation: {

@@ -1,5 +1,6 @@
 import { Middleware } from "typera-express";
-import { Pagination } from "types/helpers";
+
+import type { Pagination } from "types/helpers";
 
 type Filters = {
   pagination: Pagination;

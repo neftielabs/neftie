@@ -1,10 +1,11 @@
+import type express from "express";
 import { Middleware } from "typera-express";
-import express from "express";
-import { config } from "config/main";
-import logger from "modules/Logger/Logger";
-import AppError from "errors/AppError";
-import { httpResponse } from "utils/http";
+
 import { tokenService } from "api/services";
+import { config } from "config/main";
+import AppError from "errors/AppError";
+import logger from "modules/Logger/Logger";
+import { httpResponse } from "utils/http";
 
 /**
  * Extracts the access token from the cookies

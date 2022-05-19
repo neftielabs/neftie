@@ -1,5 +1,6 @@
 import * as yup from "yup";
-import * as env from "config/constants";
+
+import type * as env from "config/constants";
 
 type EnvSchema = { [K in keyof typeof env | "NODE_ENV"]: any };
 

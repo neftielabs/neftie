@@ -1,12 +1,12 @@
 import React from "react";
 
+import { useAccount } from "wagmi";
+
+import type { UserSafe } from "@neftie/common";
 import { Avatar } from "components/media/Avatar";
 import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
 import { styleUtils } from "utils/style";
-import { useAccount } from "wagmi";
-
-import { UserSafe } from "@neftie/common";
 
 interface UserAvatarProps {
   user?: UserSafe | null;

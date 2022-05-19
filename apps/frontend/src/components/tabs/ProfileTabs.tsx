@@ -1,5 +1,8 @@
 import React, { useEffect, useMemo, useState } from "react";
 
+import { useRouter } from "next/router";
+
+import type { UserSafe } from "@neftie/common";
 import { ProfileListings } from "components/profile/ProfileListings";
 import { TabItem } from "components/tabs/TabItem";
 import { Box } from "components/ui/Box";
@@ -7,10 +10,7 @@ import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { useRedirectProfile } from "hooks/useRedirectProfile";
 import { routes } from "lib/manifests/routes";
-import { useRouter } from "next/router";
 import { ProfileTab } from "types/ui";
-
-import { UserSafe } from "@neftie/common";
 
 interface ProfileTabsProps {
   user: UserSafe;

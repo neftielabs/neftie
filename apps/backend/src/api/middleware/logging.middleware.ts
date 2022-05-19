@@ -1,5 +1,7 @@
+import type { StreamOptions } from "morgan";
+import morgan from "morgan";
+
 import logger from "modules/Logger/Logger";
-import morgan, { StreamOptions } from "morgan";
 import { isProd } from "utils/constants";
 
 /**

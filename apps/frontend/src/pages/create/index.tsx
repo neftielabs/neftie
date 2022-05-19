@@ -1,5 +1,9 @@
 import React, { useCallback, useEffect, useState } from "react";
 
+import { constTrue } from "fp-ts/lib/function";
+import type { Asserts } from "yup";
+
+import { listingSchema } from "@neftie/common";
 import { TransactionLayout } from "components/layout/transactions/TransactionLayout";
 import { ListingPreviewCard } from "components/listings/creation/ListingPreviewCard";
 import { NewListing } from "components/listings/creation/NewListing";
@@ -7,14 +11,10 @@ import { Page } from "components/Page";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
-import { constTrue } from "fp-ts/lib/function";
 import { useCreateListing } from "hooks/contracts/useCreateListing";
 import { useListingCreated } from "hooks/contracts/useListingCreated";
 import { useGetUser } from "hooks/queries/useGetUser";
-import { PageComponent } from "types/tsx";
-import { Asserts } from "yup";
-
-import { listingSchema } from "@neftie/common";
+import type { PageComponent } from "types/tsx";
 
 interface CreatePageProps {}
 

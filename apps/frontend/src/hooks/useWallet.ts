@@ -1,8 +1,10 @@
-import { useTypedMutation } from "hooks/http/useTypedMutation";
-import { useToken } from "hooks/useToken";
 import { useCallback } from "react";
+
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
+
+import { useTypedMutation } from "hooks/http/useTypedMutation";
+import { useToken } from "hooks/useToken";
 
 export const useWallet = (): [
   boolean,

@@ -1,9 +1,10 @@
+import type express from "express";
+import { SiweMessage } from "siwe";
+
 import { tokenService } from "api/services";
 import { config } from "config/main";
-import express from "express";
 import logger from "modules/Logger/Logger";
-import { SiweMessage } from "siwe";
-import { Result } from "types/helpers";
+import type { Result } from "types/helpers";
 
 /**
  * Verify that the provided message and signature match and are
