@@ -1,14 +1,17 @@
-import { UserSafe } from "@neftie/common";
+import React, { useRef } from "react";
+
 import { CopyButton } from "components/buttons/CopyButton";
 import { Avatar } from "components/media/Avatar";
 import { Banner } from "components/media/Banner";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
+import { queryClient } from "lib/http/queryClient";
 import { handleProfileAssetUpload } from "lib/user";
-import { shortenAddress } from "utils/wallet";
-import React, { useRef } from "react";
 import { onlyTrue } from "utils/fp";
+import { shortenAddress } from "utils/wallet";
+
+import { UserSafe } from "@neftie/common";
 
 interface ProfileHeaderProps {
   user: UserSafe;
@@ -28,11 +31,15 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
         accept="image/jpg,image/jpeg,image/png,image/gif"
         ref={uploadBannerRef}
         tw="hidden"
-        onChange={(ev) => handleProfileAssetUpload(ev, "banner")}
+        onChange={(ev) =>
+          handleProfileAssetUpload(ev, "banner").then(() =>
+            queryClient.refetchQueries("getUser")
+          )
+        }
       />
 
       <Banner
-        imageUri={user.banner.url}
+        imageUrl={user.bannerUrl}
         tw="mt-2 p-3 h-30"
         edit={onlyTrue({
           onClick: () => uploadBannerRef.current?.click(),
@@ -46,7 +53,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             tw="transform -translate-y-1/3"
             size="xl"
             border="md"
-            avatarUrl={user.avatar.url}
+            avatarUrl={user.avatarUrl}
           />
           <Flex column tw="mt-1.5">
             <Text weight="bolder" size="lg">

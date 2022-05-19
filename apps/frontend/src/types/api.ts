@@ -1,5 +1,7 @@
 import { apiClient } from "@neftie/api-client";
 import {
+  UseInfiniteQueryOptions,
+  UseInfiniteQueryResult,
   UseMutationOptions,
   UseMutationResult,
   UseQueryOptions,
@@ -21,6 +23,18 @@ export type UseTypedQuery = <K extends QueryMethods>(
   opts?: UseQueryOptions,
   params?: Parameters<ReturnType<ApiClient>["query"][K]>
 ) => UseQueryResult<Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>>;
+
+// Infinite queries
+
+export type UseTypedInfQuery = <K extends QueryMethods>(
+  key: K,
+  opts?: UseInfiniteQueryOptions<
+    Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>
+  >,
+  params?: Parameters<ReturnType<ApiClient>["query"][K]>[0]
+) => UseInfiniteQueryResult<
+  Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>
+>;
 
 // Mutations
 

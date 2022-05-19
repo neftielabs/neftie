@@ -1,7 +1,8 @@
+import React, { useState } from "react";
+
 import { Button, ButtonProps } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import React, { useState } from "react";
 import { FiCopy } from "react-icons/fi";
 import { ifTrue } from "utils/fp";
 

@@ -1,6 +1,8 @@
 export const routes = {
   home: "/",
 
+  notFound: "/404",
+
   about: "/about", // tbd
   careers: "/careers", // tbd (3rd party)
   privacyPolicy: "/privacy-policy", // tbd

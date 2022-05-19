@@ -1,6 +1,7 @@
+import React from "react";
+
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import React from "react";
 import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { styled } from "stitches.config";
 import tw from "twin.macro";

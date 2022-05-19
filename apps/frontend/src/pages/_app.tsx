@@ -3,14 +3,14 @@ import { ModalProvider } from "context/ModalProvider";
 import { queryClient } from "lib/http/queryClient";
 import { connectors, getDefaultProvider } from "lib/web3/providers";
 import { Router, useRouter } from "next/router";
+import nProgress from "nprogress";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import styles from "styles/globalStyles";
+import { AppPropsWithLayout } from "types/tsx";
 import { WagmiProvider } from "wagmi";
-import nProgress from "nprogress";
 
 import "styles/nprogress.css";
-import { AppPropsWithLayout } from "types/tsx";
 
 // nprogress
 

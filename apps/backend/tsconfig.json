@@ -32,6 +32,9 @@
     },
     {
       "path": "../../packages/contracts"
+    },
+    {
+      "path": "../../packages/subgraph"
     }
   ],
   "include": ["src/**/*", ".env"],

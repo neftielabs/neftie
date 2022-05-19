@@ -1,6 +1,7 @@
-import { ListingFactory__factory, addresses } from "@neftie/contracts";
 import { Signer } from "ethers";
 import { APP_ENV } from "lib/constants/app";
+
+import { ListingFactory__factory, addresses } from "@neftie/contracts";
 
 const contractAddresses = addresses;
 const currentEnv = APP_ENV;

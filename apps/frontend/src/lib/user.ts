@@ -1,7 +1,8 @@
-import { apiClient } from "@neftie/api-client";
-import axiosInstance from "lib/http/axiosInstance";
 import React from "react";
-import { useUserStore } from "stores/useUserStore";
+
+import axiosInstance from "lib/http/axiosInstance";
+
+import { apiClient } from "@neftie/api-client";
 
 export const handleProfileAssetUpload = async (
   ev: React.ChangeEvent<HTMLInputElement>,
@@ -28,6 +29,4 @@ export const handleProfileAssetUpload = async (
     entity,
     file: data,
   });
-
-  await useUserStore.getState().fetchUser();
 };

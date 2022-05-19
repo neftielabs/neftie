@@ -1,26 +1,7 @@
-import { listingSchema, typedObjectKeys } from "@neftie/common";
-import { Asserts } from "yup";
 import { Call } from "../types";
 
 export const listingMethods = (call: Call) => ({
-  mutation: {
-    createListing: (
-      data: Asserts<typeof listingSchema["serverCreateListing"]>
-    ) => {
-      const formData = new FormData();
-
-      typedObjectKeys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
-
-      return call("/listings", "post", {
-        data: formData,
-        headers: {
-          "content-type": "multipart/form-data",
-        },
-      });
-    },
-  },
+  mutation: {},
   query: {
     verifyListingExists: (address: string) =>
       call(
@@ -29,5 +10,20 @@ export const listingMethods = (call: Call) => ({
         {},
         `/listings/${address}/verify`
       ),
+
+    getSellerListings: (data: { sellerAddress: string; pageParam?: string }) =>
+      call(
+        "/listings/user/:address",
+        "get",
+        {
+          params: {
+            cursor: data.pageParam,
+          },
+        },
+        `/listings/user/${data.sellerAddress}`
+      ),
+
+    getListing: (address: string) =>
+      call("/listings/:address", "get", {}, `/listings/${address}`),
   },
 });

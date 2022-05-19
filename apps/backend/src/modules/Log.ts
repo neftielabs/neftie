@@ -1,6 +1,7 @@
 import { captureException } from "@sentry/node";
 // import { CaptureContext } from
 import logger from "modules/Logger/Logger";
+import { OmitFirstArg } from "types/helpers";
 
 /**
  * Utility class to log to multiple transports
@@ -10,6 +11,11 @@ import logger from "modules/Logger/Logger";
 export default class Log {
   private section = "";
   private element?: string;
+
+  constructor(section?: string, func?: string) {
+    this.section = section || "";
+    this.element = func;
+  }
 
   /**
    * Set the current section and element in code.
@@ -117,9 +123,6 @@ export default class Log {
 }
 
 type CallbackFunc = (log: Log, ...args: any[]) => any;
-type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R
-  ? (...args: P) => R
-  : never;
 
 /**
  * Utility wrapper for functions that initializes

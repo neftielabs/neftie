@@ -1,15 +1,16 @@
-import { Backdrop } from "components/ui/Backdrop";
-import { Flex } from "components/ui/Flex";
 import React, { useEffect, useState } from "react";
+
+import { useIsMounted } from "@react-hookz/web";
+import { ModalBox } from "components/modals/ModalBox";
+import { ModalContainer } from "components/modals/ModalContainer";
+import { Backdrop } from "components/ui/Backdrop";
+import { Button } from "components/ui/Button";
+import { Flex } from "components/ui/Flex";
+import { RoundedIcon } from "components/ui/RoundedIcon";
+import { createPortal } from "react-dom";
+import { FiX } from "react-icons/fi";
 import { useModalStore } from "stores/useModalStore";
 import { Modal } from "types/modals";
-import { FiX } from "react-icons/fi";
-import { Button } from "components/ui/Button";
-import { RoundedIcon } from "components/ui/RoundedIcon";
-import { ModalContainer } from "components/modals/ModalContainer";
-import { ModalBox } from "components/modals/ModalBox";
-import { createPortal } from "react-dom";
-import { useIsMounted } from "@react-hookz/web";
 import { isServer } from "utils/app";
 
 interface ModalControllerProps extends React.ComponentProps<typeof Flex> {

@@ -1,13 +1,14 @@
+import React from "react";
+
 import { NeftieLogo } from "components/assets/NeftieLogo";
+import { FooterColumn } from "components/footers/FooterColumn";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
-import React from "react";
-import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io5";
-import { FaDiscord, FaGithub } from "react-icons/fa";
 import { routes } from "lib/manifests/routes";
-import { FooterColumn } from "components/footers/FooterColumn";
+import { FaDiscord, FaGithub } from "react-icons/fa";
+import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io5";
 
 interface FooterProps {}
 

@@ -23,11 +23,3 @@ export const createListing = commonCreateListing.concat(
     revisions: yup.number().required().min(0).max(5),
   })
 );
-
-export const serverCreateListing = commonCreateListing.concat(
-  yup.object({
-    predictedAddress: yup.string().required(),
-    txHash: yup.string().required(),
-    nonce: yup.string().required(),
-  })
-);

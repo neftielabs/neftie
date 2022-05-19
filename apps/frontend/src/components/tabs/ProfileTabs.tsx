@@ -1,4 +1,5 @@
-import { UserSafe } from "@neftie/common";
+import React, { useEffect, useMemo, useState } from "react";
+
 import { ProfileListings } from "components/profile/ProfileListings";
 import { TabItem } from "components/tabs/TabItem";
 import { Box } from "components/ui/Box";
@@ -7,8 +8,9 @@ import { Flex } from "components/ui/Flex";
 import { useRedirectProfile } from "hooks/useRedirectProfile";
 import { routes } from "lib/manifests/routes";
 import { useRouter } from "next/router";
-import React, { useEffect, useMemo, useState } from "react";
 import { ProfileTab } from "types/ui";
+
+import { UserSafe } from "@neftie/common";
 
 interface ProfileTabsProps {
   user: UserSafe;
@@ -33,7 +35,7 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
       {
         title: ProfileTab.listings,
         route: route.listings,
-        component: <ProfileListings />,
+        component: <ProfileListings sellerAddress={user.address} />,
       },
       {
         title: ProfileTab.about,

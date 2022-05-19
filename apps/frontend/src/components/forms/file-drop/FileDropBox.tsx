@@ -1,6 +1,7 @@
+import React from "react";
+
 import { Box } from "components/ui/Box";
 import { Text } from "components/ui/Text";
-import React from "react";
 import { DropzoneState } from "react-dropzone";
 import { styled } from "stitches.config";
 import tw from "twin.macro";

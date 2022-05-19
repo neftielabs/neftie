@@ -12,6 +12,7 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
   CLIENT_ROOT: yup.string().required(),
   SERVER_ROOT: yup.string().required(),
   BASE_DOMAIN: yup.string().required(),
+  MEDIA_SERVER_URL: yup.string().required(),
   NODE_ENV: yup
     .string()
     .oneOf(["development", "production", "test"])
@@ -31,4 +32,5 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
   AWS_ACCESS_KEY: yup.string().required(),
   AWS_SECRET_KEY: yup.string().required(),
   THEGRAPH_ENDPOINT: yup.string().required(),
+  COINMARKETCAP_API_KEY: yup.string().required(),
 });

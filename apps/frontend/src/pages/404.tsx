@@ -1,10 +1,11 @@
+import React from "react";
+
 import { Page } from "components/Page";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import React from "react";
 
 const NotFoundPage: React.FC = () => {
   return (

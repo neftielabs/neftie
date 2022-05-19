@@ -1,8 +1,9 @@
+import React, { useMemo } from "react";
+
 import { MetaMaskLogo } from "components/assets/MetaMaskLogo";
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Text } from "components/ui/Text";
-import React, { useMemo } from "react";
 import { styled } from "stitches.config";
 import tw from "twin.macro";
 import { ComponentVariants } from "types/stitches";

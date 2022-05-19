@@ -1,7 +1,8 @@
-import { Listing } from "@neftie/prisma";
 import { Response } from "typera-express";
-import { ListingMinimal } from "../models";
+import { ListingFull, ListingPreview } from "../models";
 import { UserSafe } from "../models/user";
+import { Paginated } from "../utils";
+
 /**
  * Collection of all the routes, their available
  * methods and the expected response type.
@@ -66,22 +67,40 @@ export type RouteManifest = {
   /**
    * Listings
    */
-  "/listings": {
-    post: {
+  "/listings/:address": {
+    get: {
       response: [
-        Response.Created<{ listing: Listing }>,
-        Response.Ok<{ listing: Listing | null }>
+        Response.Ok<ListingFull>,
+        Response.NotFound,
+        Response.UnprocessableEntity
       ];
     };
   };
   "/listings/:address/verify": {
     get: {
-      response: [Response.Ok<ListingMinimal>, Response.NotFound];
+      response: [
+        Response.Ok<ListingPreview>,
+        Response.NotFound,
+        Response.UnprocessableEntity
+      ];
     };
   };
   "/listings/user/:address": {
     get: {
-      response: [Response.Ok];
+      response: [Response.Ok<Paginated<ListingPreview[]>>];
+    };
+  };
+
+  /**
+   * Tools
+   */
+  "/tools/eth": {
+    get: {
+      response: [
+        Response.Ok<{
+          ethUsdPrice: number;
+        }>
+      ];
     };
   };
 };

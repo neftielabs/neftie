@@ -1,6 +1,7 @@
+import React from "react";
+
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
-import React from "react";
 
 interface TransactionBodyProps {}
 

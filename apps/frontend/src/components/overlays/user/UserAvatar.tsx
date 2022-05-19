@@ -1,11 +1,12 @@
-import { UserSafe } from "@neftie/common";
-import { Avatar } from "components/media/Avatar";
+import React from "react";
 
+import { Avatar } from "components/media/Avatar";
 import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
-import React from "react";
 import { styleUtils } from "utils/style";
 import { useAccount } from "wagmi";
+
+import { UserSafe } from "@neftie/common";
 
 interface UserAvatarProps {
   user?: UserSafe | null;
@@ -22,7 +23,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
     <Box tw="rounded-full text-white relative" onClick={() => disconnect()}>
       <Avatar
         css={{ opacity: isLoading ? "0" : "1" }}
-        avatarUrl={user?.avatar.url}
+        avatarUrl={user?.avatarUrl}
       />
 
       {/* <Avatar

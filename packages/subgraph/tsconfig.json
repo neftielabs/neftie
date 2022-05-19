@@ -1,3 +1,24 @@
 {
-  "extends": "@graphprotocol/graph-ts/tsconfig.json"
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "target": "es5",
+    "module": "commonjs",
+    "declaration": true,
+    "sourceMap": true,
+    "rootDir": "src",
+    "outDir": "dist",
+    "noEmit": false,
+    "lib": ["dom", "ES6"],
+    "composite": true
+  },
+  "include": ["src"],
+  "exclude": [
+    "node_modules",
+    "dist",
+    "src/**/*.test.ts",
+    "build",
+    "src/mappings",
+    "src/utils",
+    "./generated"
+  ]
 }

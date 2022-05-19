@@ -4,3 +4,10 @@ export interface ApiErrorResponse {
   message?: string;
   stack?: string;
 }
+
+export type Paginated<T> = {
+  items: T;
+  meta?: {
+    cursor?: string;
+  };
+};

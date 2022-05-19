@@ -1,18 +1,20 @@
-import { Page } from "components/Page";
-import { listingSchema } from "@neftie/common";
-import React, { useCallback, useState } from "react";
-import { useCreateListing } from "hooks/contracts/useCreateListing";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { TransactionLayout } from "components/layout/transactions/TransactionLayout";
-import { Asserts } from "yup";
-import { constTrue } from "fp-ts/lib/function";
+import { ListingPreviewCard } from "components/listings/creation/ListingPreviewCard";
 import { NewListing } from "components/listings/creation/NewListing";
-import { useListingCreated } from "hooks/contracts/useListingCreated";
-import { ListingPreview } from "components/listings/creation/ListingPreview";
-import { PageComponent } from "types/tsx";
-import { useGetUser } from "hooks/queries/useGetUser";
+import { Page } from "components/Page";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
+import { constTrue } from "fp-ts/lib/function";
+import { useCreateListing } from "hooks/contracts/useCreateListing";
+import { useListingCreated } from "hooks/contracts/useListingCreated";
+import { useGetUser } from "hooks/queries/useGetUser";
+import { PageComponent } from "types/tsx";
+import { Asserts } from "yup";
+
+import { listingSchema } from "@neftie/common";
 
 interface CreatePageProps {}
 
@@ -30,14 +32,16 @@ const CreatePage: PageComponent<CreatePageProps> = () => {
 
       setTxHash(tx.hash);
       handleListingCreated(address);
-
-      window.scrollTo({
-        top: 0,
-        behavior: "smooth",
-      });
     },
     [createListing, handleListingCreated]
   );
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [status]);
 
   return (
     <Page title="Create a listing">
@@ -65,7 +69,7 @@ const CreatePage: PageComponent<CreatePageProps> = () => {
             subtitle: "You can now add more details and start receiving orders",
             component: (
               <Flex column itemsCenter tw="w-3/4 gap-4">
-                <ListingPreview address={listingAddress} />
+                <ListingPreviewCard address={listingAddress} />
                 <Link href="">
                   <Button type="button" spring size="lg">
                     Edit listing

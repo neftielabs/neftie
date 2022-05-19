@@ -1,8 +1,9 @@
+import React, { useEffect } from "react";
+
 import { ConnectWalletModal } from "components/modals/ConnectWalletModal";
 import { ModalController } from "components/modals/ModalController";
 import { SignMessageModal } from "components/modals/SignMessageModal";
 import { useAuth } from "hooks/useAuth";
-import React, { useEffect } from "react";
 import { useModalStore } from "stores/useModalStore";
 import { Modal } from "types/modals";
 import { useConnect } from "wagmi";

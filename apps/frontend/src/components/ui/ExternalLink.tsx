@@ -1,6 +1,7 @@
+import React from "react";
+
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
-import React from "react";
 import { IconBaseProps } from "react-icons";
 import { FiExternalLink } from "react-icons/fi";
 

@@ -1,11 +1,13 @@
+import React from "react";
+
 import { ProfileHeader } from "components/headers/ProfileHeader";
 import { Page } from "components/Page";
 import { ProfileTabs } from "components/tabs/ProfileTabs";
+import { useGetUser } from "hooks/queries/useGetUser";
 import { useAuth } from "hooks/useAuth";
 import { serverClient } from "lib/http/serverClient";
 import { handleStaticProps } from "lib/server/handleStaticProps";
 import { GetStaticPaths } from "next";
-import React from "react";
 import { PageComponent } from "types/tsx";
 
 export const getStaticProps = handleStaticProps(async (ctx) => {
@@ -40,8 +42,12 @@ export const getStaticPaths: GetStaticPaths = () => {
 
 const AccountPage: PageComponent<typeof getStaticProps> = ({ serverProps }) => {
   const [, , { connectedAddress }] = useAuth();
+  const data = useGetUser(serverProps.user.address, {
+    initialData: serverProps.user,
+  });
 
-  const user = serverProps.user;
+  const user = data.user || serverProps.user;
+
   const isCurrentUser = user.address === connectedAddress;
 
   return (

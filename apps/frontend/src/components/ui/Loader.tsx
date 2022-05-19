@@ -1,5 +1,6 @@
-import { Box } from "components/ui/Box";
 import React from "react";
+
+import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
 import tw from "twin.macro";
 import { styleUtils } from "utils/style";

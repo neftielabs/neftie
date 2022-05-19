@@ -1,9 +1,10 @@
+import React from "react";
+
 import { TransactionConfirmed } from "components/layout/transactions/TransactionConfirmed";
 import { TransactionPending } from "components/layout/transactions/TransactionPending";
 import { Form, Formik, FormikConfig, FormikProps } from "formik";
 import { guard } from "fp-ts-std/Function";
 import { Predicate } from "fp-ts/lib/Predicate";
-import React from "react";
 import { TransactionStatus } from "types/tx";
 
 interface TransactionLayoutProps<T> {

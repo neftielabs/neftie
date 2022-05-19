@@ -1,7 +1,8 @@
+import React from "react";
+
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
-import React from "react";
 
 interface FooterColumnProps {
   heading: string;

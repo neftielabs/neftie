@@ -1,8 +1,9 @@
-import { styled } from "stitches.config";
-import tw, { theme } from "twin.macro";
 import React from "react";
+
 import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
+import { styled } from "stitches.config";
+import tw, { theme } from "twin.macro";
 
 const ButtonComponent = styled("button", {
   ...tw`flex items-center justify-center disabled:cursor-not-allowed transition relative duration-200`,

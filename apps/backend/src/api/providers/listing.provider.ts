@@ -12,3 +12,7 @@ export const get = async (where: Prisma.ListingWhereInput) => {
     where,
   });
 };
+
+export const getMany = async (where: Prisma.ListingWhereInput) => {
+  return await prisma.listing.findMany({ where });
+};

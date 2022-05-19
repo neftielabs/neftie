@@ -7,7 +7,7 @@ import { routes } from "lib/manifests/routes";
 import { useWallet } from "hooks/useWallet";
 import { logger } from "lib/logger/instance";
 import { WaitForAuth } from "components/layout/WaitForAuth";
-import { everyTrue, isTruthy, someTrue } from "utils/fp";
+import { isTruthy, someTrue } from "utils/fp";
 
 export const AuthContext = React.createContext<{
   isAuthLoading: boolean;
@@ -149,10 +149,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     <AuthContext.Provider
       value={useMemo(
         () => ({
-          isAuthLoading: everyTrue([
-            isWalletLoading,
-            someTrue([isAuthenticating, !token]),
-          ]),
+          isAuthLoading: someTrue([isWalletLoading, isAuthenticating]),
           isAuthed: isTruthy(token),
           connectedAddress: accountData?.address,
           connect: async () => {},
@@ -162,7 +159,14 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       )}
     >
       {requiresAuth ? (
-        <WaitForAuth isAuthed={isTruthy(token)}>{children}</WaitForAuth>
+        <WaitForAuth
+          isAuthed={isTruthy(token)}
+          isAuthLoading={someTrue([isWalletLoading, isAuthenticating])}
+          redirectToConnect={redirectToConnect}
+          requiresAuth={requiresAuth}
+        >
+          {children}
+        </WaitForAuth>
       ) : (
         children
       )}

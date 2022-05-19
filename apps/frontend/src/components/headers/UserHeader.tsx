@@ -1,3 +1,5 @@
+import React from "react";
+
 import { ConnectWalletButton } from "components/buttons/ConnectWalletButton";
 import { UserOverlay } from "components/overlays/user/UserOverlay";
 import { Button } from "components/ui/Button";
@@ -5,7 +7,6 @@ import { Link } from "components/ui/Link";
 import { useGetUser } from "hooks/queries/useGetUser";
 import { useAuth } from "hooks/useAuth";
 import { routes } from "lib/manifests/routes";
-import React from "react";
 
 interface UserHeaderProps {}
 

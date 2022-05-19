@@ -1,7 +1,8 @@
 import { providers } from "ethers";
-import { ALCHEMY_KEY } from "lib/constants/app";
 import { Connector, chain } from "wagmi";
 import { InjectedConnector } from "wagmi/connectors/injected";
+
+import { ALCHEMY_KEY } from "lib/constants/app";
 
 const supportedChains = [chain.goerli, chain.mainnet];
 

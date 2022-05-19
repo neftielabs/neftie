@@ -1,13 +1,15 @@
-import { UserSafe } from "@neftie/common";
+import React, { useState } from "react";
+
 import { UserAvatar } from "components/overlays/user/UserAvatar";
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import React, { useState } from "react";
 import { styled } from "stitches.config";
 import tw from "twin.macro";
+
+import { UserSafe } from "@neftie/common";
 
 const OverlayWrapper = styled(Box, {
   ...tw`bg-white rounded-12 shadow-lg

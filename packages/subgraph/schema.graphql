@@ -1,6 +1,9 @@
 type Client @entity {
   "The client address"
   id: ID!
+
+  "Orders"
+  orders: [Order!]! @derivedFrom(field: "client")
 }
 
 enum OrderStatus {

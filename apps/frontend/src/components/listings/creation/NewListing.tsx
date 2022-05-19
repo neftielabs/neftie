@@ -1,16 +1,18 @@
-import { UserSafe, listingSchema } from "@neftie/common";
-import { ListingPreview } from "components/listings/creation/ListingPreview";
-import { Box } from "components/ui/Box";
-import { Flex } from "components/ui/Flex";
 import React from "react";
-import { Input } from "components/forms/Input";
-import { Button } from "components/ui/Button";
-import { Text } from "components/ui/Text";
-import tw from "twin.macro";
-import { FormikProps } from "formik";
-import { Asserts } from "yup";
+
 import { NoticeBox } from "components/alerts/NoticeBox";
+import { Input } from "components/forms/Input";
+import { ListingPreviewCard } from "components/listings/creation/ListingPreviewCard";
+import { Box } from "components/ui/Box";
+import { Button } from "components/ui/Button";
 import { Container } from "components/ui/Container";
+import { Flex } from "components/ui/Flex";
+import { Text } from "components/ui/Text";
+import { FormikProps } from "formik";
+import tw from "twin.macro";
+import { Asserts } from "yup";
+
+import { UserSafe, listingSchema } from "@neftie/common";
 
 interface NewListingProps {
   user?: UserSafe;
@@ -136,7 +138,7 @@ export const NewListing: React.FC<NewListingProps> = ({
             </Flex>
           </Box>
           <Box tw="w-2/5">
-            <ListingPreview listing={formikState.values} />
+            <ListingPreviewCard listing={formikState.values} />
           </Box>
         </Flex>
       ) : null}

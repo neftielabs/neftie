@@ -1,5 +1,6 @@
-import { Image } from "components/ui/Image";
 import React from "react";
+
+import { Image } from "components/ui/Image";
 
 interface ImagePlaceholderProps
   extends Partial<React.ComponentProps<typeof Image>> {}

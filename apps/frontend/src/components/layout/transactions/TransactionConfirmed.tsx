@@ -1,9 +1,10 @@
+import React from "react";
+
 import { TransactionBody } from "components/layout/transactions/TransactionBody";
 import { Box } from "components/ui/Box";
 import { ExternalLink } from "components/ui/ExternalLink";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import React from "react";
 import { getEtherscanLink } from "utils/transaction";
 
 interface TransactionConfirmedProps {

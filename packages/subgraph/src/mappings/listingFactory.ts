@@ -16,6 +16,5 @@ export function handleListingCreated(event: ListingCreated): void {
   listing.bondFee = weiToEth(event.params.bondFee);
   listing.deliveryDays = event.params.deliveryDays;
   listing.revisions = event.params.revisions;
-  listing.orders = [];
   listing.save();
 }

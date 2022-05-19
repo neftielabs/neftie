@@ -116,7 +116,7 @@ export const finalErrorHandler = (
     return handleErrorDev(err, req, res, next);
   }
 
-  const codesToSkip = [400, 401, 404];
+  const codesToSkip = [400, 401, 404, 422];
 
   if (!err.statusCode || !codesToSkip.includes(err.statusCode)) {
     captureException(err);

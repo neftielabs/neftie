@@ -1,3 +1,5 @@
+import React, { useEffect, useState } from "react";
+
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
 import { LikePill } from "components/pills/LikePill";
@@ -8,29 +10,34 @@ import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
 import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useGetUser } from "hooks/queries/useGetUser";
-import React, { useEffect, useState } from "react";
 import { FiStar } from "react-icons/fi";
 import tw from "twin.macro";
 import { noop } from "utils/fp";
 
-type ListingPreviewArgs = {
-  coverUrl?: string;
-  title: string;
-  description?: string;
+import { ListingPreview } from "@neftie/common";
+
+type ListingPreviewMinimal = Omit<
+  ListingPreview,
+  "seller" | "description" | "id" | "coverUrl" | "price"
+> & {
+  coverUrl?: string | null;
+  description?: string | null;
   price: string | number;
 };
 
-type ListingPreviewProps =
+type ListingPreviewCardProps =
   | {
-      listing: ListingPreviewArgs;
+      listing: ListingPreviewMinimal;
     }
   | {
       address: string;
     };
 
-export const ListingPreview: React.FC<ListingPreviewProps> = (props) => {
+export const ListingPreviewCard: React.FC<ListingPreviewCardProps> = (
+  props
+) => {
   const { user } = useGetUser({ currentUser: true });
-  const [listing, setListing] = useState<ListingPreviewArgs>();
+  const [listing, setListing] = useState<ListingPreviewMinimal>();
   const { data } = useTypedQuery(
     "verifyListingExists",
     {
@@ -74,7 +81,7 @@ export const ListingPreview: React.FC<ListingPreviewProps> = (props) => {
           tw="border-b border-gray-100 px-3 pb-2"
         >
           <Flex tw="gap-1" itemsCenter>
-            <Avatar avatarUrl={user?.avatar.url} size="xs" />
+            <Avatar avatarUrl={user?.avatarUrl} size="xs" />
             <Text weight="medium" size="14">
               {user?.username}
             </Text>
@@ -101,7 +108,7 @@ export const ListingPreview: React.FC<ListingPreviewProps> = (props) => {
           ) : null}
 
           <Flex tw="mt-2 justify-between" itemsCenter>
-            <EthPrice price={listing.price} />
+            <EthPrice size="lg" price={listing.price} />
             <Flex>
               <LikePill amount="0" onLike={noop} />
             </Flex>
