@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FiStar } from "react-icons/fi";
 import tw from "twin.macro";
 
-import type { ListingPreview } from "@neftie/common";
+import type { ListingFull, ListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
 import { LikePill } from "components/pills/LikePill";
@@ -27,7 +27,7 @@ type ListingPreviewMinimal = Omit<
 
 type ListingPreviewCardProps =
   | {
-      listing: ListingPreviewMinimal;
+      listing: ListingPreviewMinimal | ListingFull;
     }
   | {
       address: string;
@@ -101,14 +101,21 @@ export const ListingPreviewCard: React.FC<ListingPreviewCardProps> = (
           <Text size="md" tw="mt-2">
             {listing.title || "I will..."}
           </Text>
-          {!listing.description ? (
+          {listing.description ? (
             <Text size="14" color="gray600" tw="mt-1">
-              {listing.description}
+              {listing.description.slice(0, 60)}
+              {listing.description.length > 60 ? "..." : ""}
             </Text>
           ) : null}
 
           <Flex tw="mt-2 justify-between" itemsCenter>
-            <EthPrice size="lg" price={listing.price} />
+            <EthPrice
+              size="lg"
+              price={listing.price}
+              svgProps={{ width: 10 }}
+              weight="bold"
+              containerProps={{ css: tw`gap-1` }}
+            />
             <Flex>
               <LikePill amount="0" onLike={noop} />
             </Flex>

@@ -82,7 +82,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
           <Flex tw="text-white items-end justify-end h-full w-full mt-1.5">
             <Flex tw="gap-1">
               <Button theme="gray">Message</Button>
-              <Button theme="gradient" tw="w-10">
+              <Button theme="gradientOrange" tw="w-10">
                 <Text weight="bolder">Hire</Text>
               </Button>
             </Flex>

@@ -43,6 +43,7 @@ export const CopyButton: React.FC<CopyButtonProps> = ({
   return (
     <Button
       theme="none"
+      size="none"
       tw="self-start"
       animated={false}
       onClick={handleCopy}

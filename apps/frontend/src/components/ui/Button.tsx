@@ -6,6 +6,19 @@ import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
 import { styled } from "stitches.config";
 
+const gradientCommonProps = {
+  ...tw`text-white font-bolder`,
+  transitionProperty:
+    "background-position, background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter",
+  transitionDuration:
+    "0.5s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s",
+  transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+  backgroundSize: "200%",
+  "&:hover": {
+    backgroundPosition: "-100%",
+  },
+};
+
 const ButtonComponent = styled("button", {
   ...tw`flex items-center justify-center disabled:cursor-not-allowed transition relative duration-200`,
   variants: {
@@ -15,30 +28,26 @@ const ButtonComponent = styled("button", {
       black: tw`bg-brand-black text-brand-white hover:bg-gray-800 disabled:bg-gray-300`,
       white: tw`bg-white text-gray-800 hover:bg-gray-50`,
       outlineWhite: tw`border border-white hover:border-gray-300`,
-      gradient: {
-        ...tw`text-white font-bolder`,
-        transitionProperty:
-          "background-position, background-color, border-color, color, fill, stroke, opacity, box-shadow, transform, filter, backdrop-filter",
-        transitionDuration:
-          "0.5s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s, 0.2s",
-        transitionTimingFunction: "cubic-bezier(0.4, 0, 0.2, 1)",
+      gradientOrange: {
+        ...gradientCommonProps,
         backgroundImage: `linear-gradient(100deg, ${theme(
           "colors.gradient.pink"
         )}, ${theme("colors.gradient.orange")}, ${theme(
           "colors.gradient.pink"
         )})`,
-        backgroundSize: "200%",
-        "&:hover": {
-          backgroundPosition: "-100%",
-        },
+      },
+      gradientBlue: {
+        ...gradientCommonProps,
+        backgroundImage: `linear-gradient(100deg, #ff1b6b, #45caff, #ff1b6b)`,
       },
     },
     shape: {
       circle: tw`rounded-full flex items-center justify-center`,
     },
     size: {
+      none: {},
       sm: tw`px-1.5 py-1`,
-      base: tw`px-2 py-1.3`,
+      base: tw`px-2 py-1.5`,
       lg: tw`px-2 py-1.5`,
       xl: tw`px-2.5 py-2`,
     },
@@ -70,12 +79,6 @@ const ButtonComponent = styled("button", {
     bold: true,
     spring: true,
   },
-  compoundVariants: [
-    {
-      theme: "none",
-      css: tw`p-0`,
-    },
-  ],
 });
 
 export interface ButtonProps

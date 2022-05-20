@@ -18,7 +18,7 @@ const NotFoundPage: React.FC = () => {
           Boring, isn&apos;t it
         </Text>
         <Link href={routes.home}>
-          <Button tw="mt-2" theme="gradient" size="lg">
+          <Button tw="mt-2" theme="gradientOrange" size="lg">
             Take me home
           </Button>
         </Link>

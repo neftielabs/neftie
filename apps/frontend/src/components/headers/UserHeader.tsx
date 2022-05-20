@@ -21,7 +21,13 @@ export const UserHeader: React.FC<UserHeaderProps> = () => {
       {isAuthed || isAuthLoading ? (
         <>
           <Link href={routes.create}>
-            <Button size="sm" theme="gradient" text="13" spring tw="h-3.5">
+            <Button
+              size="sm"
+              theme="gradientOrange"
+              text="13"
+              spring
+              tw="h-3.5"
+            >
               Create
             </Button>
           </Link>

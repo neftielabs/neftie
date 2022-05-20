@@ -16,9 +16,14 @@ const InputContainer = styled(Box, {
       true: tw`border-error`,
       false: tw`border-gray-150 focus-within:border-gray-900`,
     },
+    disabled: {
+      true: tw`bg-gray-100`,
+      false: tw``,
+    },
   },
   defaultVariants: {
     error: false,
+    disabled: false,
   },
 });
 
@@ -34,8 +39,9 @@ interface CommonProps {
   help?: string;
 }
 
-type InputProps = CommonProps & React.ComponentProps<typeof InputElement>;
-type TextareaProps = CommonProps &
+export type InputProps = CommonProps &
+  React.ComponentProps<typeof InputElement>;
+export type TextareaProps = CommonProps &
   React.TextareaHTMLAttributes<HTMLTextAreaElement> & {
     textarea: true;
   };
@@ -44,7 +50,6 @@ type TextareaProps = CommonProps &
 export const Input = ({
   label,
   name,
-  required = false,
   containerProps,
   help,
   ...props
@@ -57,7 +62,7 @@ export const Input = ({
         <Box tw="mb-1 ml-0.5">
           <Label htmlFor={name}>
             {label}{" "}
-            {required ? (
+            {props.required ? (
               <Text as="span" color="error">
                 *
               </Text>
@@ -71,7 +76,10 @@ export const Input = ({
         </Box>
       ) : null}
 
-      <InputContainer error={!!meta.error && !!meta.touched}>
+      <InputContainer
+        error={!!meta.error && !!meta.touched}
+        disabled={props.disabled}
+      >
         {"textarea" in props ? (
           <Textarea id={name} {...field} {...props}></Textarea>
         ) : (

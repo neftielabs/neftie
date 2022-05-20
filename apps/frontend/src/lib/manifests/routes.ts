@@ -19,7 +19,8 @@ export const routes = {
   create: "/create",
 
   connect: "/connect",
-  connectNext: (next: string) => `/connect?next=${encodeURIComponent(next)}`,
+  connectNext: (next = window.location.pathname) =>
+    `/connect?next=${encodeURIComponent(next)}`,
 
   listing: (address: string) => ({
     index: `/l/${address}`,

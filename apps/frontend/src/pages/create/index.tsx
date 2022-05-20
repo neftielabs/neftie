@@ -5,8 +5,8 @@ import type { Asserts } from "yup";
 
 import { listingSchema } from "@neftie/common";
 import { TransactionLayout } from "components/layout/transactions/TransactionLayout";
-import { ListingPreviewCard } from "components/listings/creation/ListingPreviewCard";
-import { NewListing } from "components/listings/creation/NewListing";
+import { ListingPreviewCard } from "components/listings/form/ListingPreviewCard";
+import { NewListing } from "components/listings/form/NewListing";
 import { Page } from "components/Page";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";

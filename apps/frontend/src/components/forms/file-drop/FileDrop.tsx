@@ -9,7 +9,7 @@ import { Label } from "components/forms/Label";
 import { Box } from "components/ui/Box";
 import { Text } from "components/ui/Text";
 
-interface FileDropProps {
+export interface FileDropProps {
   label?: string;
   help?: string;
   name: string;

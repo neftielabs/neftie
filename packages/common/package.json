@@ -2,8 +2,8 @@
   "name": "@neftie/common",
   "version": "0.0.0",
   "private": true,
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "src/index.ts",
+  "types": "src/index.ts",
   "yarn.build": {
     "input": "src",
     "output": "dist"
@@ -23,7 +23,8 @@
     "typescript": "4.6.3"
   },
   "dependencies": {
-    "@neftie/prisma": "0.0.0",
+    "@neftie/prisma": "*",
+    "ethers": "5.6.6",
     "rimraf": "3.0.2",
     "typera-express": "2.4.4",
     "yup": "0.32.11"

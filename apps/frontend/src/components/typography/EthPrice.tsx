@@ -22,20 +22,22 @@ export const EthPrice: React.FC<EthPriceLabelProps | EthPriceIconProps> = ({
   price,
   ...props
 }) => {
+  if (props.label) {
+    return (
+      <Text size="14" weight="bold" {...props}>
+        {price} ETH
+      </Text>
+    );
+  }
+
+  const { containerProps, svgProps, ...textProps } = props;
+
   return (
-    <>
-      {props.label ? (
-        <Text size="14" weight="bold" {...props}>
-          {price} ETH
-        </Text>
-      ) : (
-        <Flex itemsCenter tw="gap-0.7" {...props.containerProps}>
-          <EthIcon width="8" {...props.svgProps} />
-          <Text size="14" weight="bold" {...props}>
-            {price}
-          </Text>
-        </Flex>
-      )}
-    </>
+    <Flex itemsCenter tw="gap-0.7" {...containerProps}>
+      <EthIcon width="8" {...svgProps} />
+      <Text size="14" weight="bold" {...textProps}>
+        {price}
+      </Text>
+    </Flex>
   );
 };

@@ -22,9 +22,6 @@
   },
   "references": [
     {
-      "path": "../../packages/common"
-    },
-    {
       "path": "../../packages/api-client"
     },
     {
