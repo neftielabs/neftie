@@ -30,7 +30,7 @@ jobs:
           node-version: 16
 
       - name: Cache yarn dependencies
-        uses: actions/cache@v3
+        uses: actions/cache@v2
         id: cache-dependencies
         with:
           path: node_modules
@@ -41,7 +41,7 @@ jobs:
       - name: Install dependencies
         if: steps.cache-dependencies.outputs.cache-hit != 'true'
         run: |
-          yarn install
+          yarn install --frozen-lockfile
 
   #
   # Run contracts tests
