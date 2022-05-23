@@ -70,4 +70,5 @@ jobs:
 
       - name: Run tests
         run: |
+          yarn cs compile
           yarn cs test
