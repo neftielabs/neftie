@@ -14,6 +14,7 @@ const {
   ADMIN_PRIVATE_KEY,
   SELLER_PRIVATE_KEY,
   COINMARKETCAP_KEY,
+  CI,
 } = process.env;
 
 const config: HardhatUserConfig = {
@@ -26,24 +27,30 @@ const config: HardhatUserConfig = {
       },
     },
   },
-  gasReporter: {
-    enabled: true,
-    currency: "USD",
-    gasPrice: 30,
-    coinmarketcap: COINMARKETCAP_KEY,
-  },
-  networks: {
-    goerli: {
-      url: ALCHEMY_URL,
-      accounts: [
-        `0x${String(ADMIN_PRIVATE_KEY)}`,
-        `0x${String(SELLER_PRIVATE_KEY)}`,
-      ],
-    },
-  },
-  etherscan: {
-    apiKey: ETHERSCAN_API_KEY,
-  },
+  gasReporter: CI
+    ? {}
+    : {
+        enabled: true,
+        currency: "USD",
+        gasPrice: 30,
+        coinmarketcap: COINMARKETCAP_KEY,
+      },
+  networks: CI
+    ? {}
+    : {
+        goerli: {
+          url: ALCHEMY_URL,
+          accounts: [
+            `0x${String(ADMIN_PRIVATE_KEY)}`,
+            `0x${String(SELLER_PRIVATE_KEY)}`,
+          ],
+        },
+      },
+  etherscan: CI
+    ? {}
+    : {
+        apiKey: ETHERSCAN_API_KEY,
+      },
   typechain: {
     outDir: "typechain",
     target: "ethers-v5",
