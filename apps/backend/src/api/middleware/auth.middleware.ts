@@ -1,10 +1,11 @@
+import type express from "express";
 import { Middleware } from "typera-express";
-import express from "express";
-import { config } from "config/main";
-import Logger from "modules/Logger/Logger";
-import AppError from "errors/AppError";
-import { httpResponse } from "utils/http";
+
 import { tokenService } from "api/services";
+import { config } from "config/main";
+import AppError from "errors/AppError";
+import logger from "modules/Logger/Logger";
+import { httpResponse } from "utils/http";
 
 /**
  * Extracts the access token from the cookies
@@ -24,8 +25,12 @@ const extractTokenFromCookies = (req: express.Request) => {
 };
 
 type AuthMode = "required" | "optional" | "present";
-type AuthRequired = { auth: { userId: string; nonce?: string } };
-type AuthOptional = { auth: { userId?: string; nonce?: string } };
+type AuthRequired = {
+  auth: { token: string; userAddress: string; nonce?: string };
+};
+type AuthOptional = {
+  auth: { token?: string; userAddress?: string; nonce?: string };
+};
 
 type WithAuth<T extends AuthMode> = T extends "optional" | "present"
   ? Middleware.Middleware<AuthOptional, never>
@@ -45,44 +50,83 @@ export function withAuth<T extends AuthMode>(
 ): Middleware.Middleware<AuthRequired | AuthOptional, never> {
   return async (ctx) => {
     const accessToken = extractTokenFromCookies(ctx.req);
-    let result: AuthRequired | AuthOptional = {
-      auth: {},
-    };
+
+    /**
+     * If auth mode is "required" and token isn't there,
+     * deny access to resources
+     */
 
     if (!accessToken && mode === "required") {
-      Logger.debug("[Auth] Token not found and was required");
-      throw new AppError(...httpResponse("UNAUTHORIZED"));
-    } else if (accessToken) {
-      try {
-        const tokenPayload = await tokenService.verifyAccessToken(accessToken);
+      logger.debug("[AuthMiddleware] Token not found");
+      throw new AppError(httpResponse("BAD_REQUEST"));
+    } else if (!accessToken) {
+      /**
+       * If auth mode is not "required" and token isn't there,
+       * early return
+       */
 
-        if (tokenPayload.userId && mode === "required") {
-          result = {
-            auth: {
-              userId: tokenPayload.userId,
-              nonce: tokenPayload.nonce,
-            },
-          };
-        } else if (!tokenPayload.userId && mode === "required") {
-          throw new AppError(...httpResponse("UNAUTHORIZED"));
-        }
-
-        result = {
-          auth: tokenPayload,
-        };
-      } catch (error) {
-        Logger.debug(`[Auth] Error verifying access token`);
-        Logger.debug(error);
-
-        if (mode === "required" || mode === "present") {
-          Logger.debug(`[Auth] Token verify error and mode ${mode}`);
-          throw new AppError(...httpResponse("UNAUTHORIZED"));
-        }
-
-        result = { auth: {} };
-      }
+      return Middleware.next({ auth: {} });
     }
 
-    return Middleware.next(result);
+    /**
+     * Token exists from this point onwards, perform
+     * validation and enforce rules based on auth mode
+     */
+
+    try {
+      const { userAddress, nonce, version } =
+        await tokenService.verifyAccessToken(accessToken);
+
+      /**
+       * Ensure token versions match
+       */
+
+      if (Number(version) !== config.tokens.access.currentVersion) {
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * If user address is not in the decoded payload and
+       * auth mode is "required", deny access
+       */
+
+      if (!userAddress && mode === "required") {
+        logger.debug("[AuthMiddleware] No user address in token payload");
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * All checks have passed and we can safely return
+       * the decoded payload
+       */
+
+      return Middleware.next({
+        auth: {
+          userAddress,
+          nonce,
+          token: accessToken,
+        },
+      });
+    } catch (error) {
+      logger.debug("[AuthMiddleware] Error verifying access token");
+      logger.debug(error);
+
+      /**
+       * If an error occurred while decoding the token
+       * and mode is either "required" or "present",
+       * deny access
+       */
+
+      if (["required", "present"].includes(mode)) {
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * Mode is "optional", which doesn't require a valid
+       * access token
+       */
+
+      return Middleware.next({ auth: {} });
+    }
   };
 }

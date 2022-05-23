@@ -11,6 +11,7 @@
   "scripts": {
     "build": "tsc",
     "build:prod": "yarn clean && yarn build",
+    "dev": "tsc -w",
     "clean": "rimraf -rf ./dist tsconfig.tsbuildinfo",
     "lint": "eslint --ext=ts ./src",
     "format": "prettier --check \"./src/**/*.{js,ts}\"",
@@ -18,13 +19,14 @@
   },
   "devDependencies": {
     "@types/node": "17.0.21",
-    "eslint": "8.11.0",
-    "typescript": "4.6.2"
+    "eslint": "8.13.0",
+    "typescript": "4.6.3"
   },
   "dependencies": {
-    "@neftie/prisma": "0.0.0",
+    "@neftie/prisma": "*",
+    "ethers": "5.6.6",
     "rimraf": "3.0.2",
-    "typera-express": "2.4.3",
+    "typera-express": "2.4.4",
     "yup": "0.32.11"
   }
 }

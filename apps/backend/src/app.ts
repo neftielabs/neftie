@@ -1,9 +1,10 @@
 /* eslint-disable no-console */
 import { createTerminus } from "@godaddy/terminus";
-import { config } from "config/main";
 import dotenv from "dotenv";
 import express from "express";
-import Logger from "modules/Logger/Logger";
+
+import { config } from "config/main";
+import logger from "modules/Logger/Logger";
 
 dotenv.config();
 
@@ -28,8 +29,8 @@ const startServer = async () => {
       console.log(error);
     }
 
-    Logger.error("🔴 " + (error.message || error));
-    Logger.error(
+    logger.error("🔴 " + (error.message || error));
+    logger.error(
       "🔴 An error occurred while initializing all loaders. Shutting down.",
       error
     );
@@ -42,9 +43,9 @@ const startServer = async () => {
    */
   const server = app.listen(config.port, () => {
     console.log("\n");
-    Logger.info(`🚀 Express server started successfully`);
-    Logger.info(`🌎 Live on ${config.roots.server}`);
-    Logger.info(`🔨 Environment: ${config.env}`);
+    logger.info(`🚀 Express server started successfully`);
+    logger.info(`🌎 Live on ${config.roots.server}`);
+    logger.info(`🔨 Environment: ${config.env}`);
     console.log("\n");
 
     // Inform that the server is ready to process requests
@@ -64,19 +65,19 @@ const startServer = async () => {
   createTerminus(server, {
     timeout: 5000,
     onSignal: () => {
-      Logger.info("SIGTERM received");
+      logger.info("SIGTERM received");
 
       return Promise.all([
         // @todo Stop all services
       ]);
     },
     onShutdown: () => {
-      Logger.info("Cleanup done, shutting down gracefully");
+      logger.info("Cleanup done, shutting down gracefully");
       return Promise.all([
         // @todo Anything that needs to be done
       ]);
     },
-    logger: (msg, err) => Logger.warn(msg, err),
+    logger: (msg, err) => logger.warn(msg, err),
   });
 };
 

@@ -1,8 +1,11 @@
-import { Call } from "../types";
+import type { Call } from "../types";
 
 export const userMethods = (call: Call) => ({
   mutation: {},
   query: {
-    getMe: () => call("/me", "get"),
+    getUser: (addressOrUsername: string) =>
+      call("/users/:addressOrUsername", "get", {
+        realUrl: `/users/${addressOrUsername}`,
+      }),
   },
 });

@@ -1,6 +1,8 @@
-import { UserSafe, authSchema } from "@neftie/common";
-import { rateLimitMiddleware } from "api/middleware";
-import { withAuth } from "api/middleware/auth.middleware";
+import { generateNonce } from "siwe";
+import { Response, applyMiddleware } from "typera-express";
+
+import { authSchema } from "@neftie/common";
+import { authMiddleware, rateLimitMiddleware } from "api/middleware";
 import { withBody } from "api/middleware/validation.middleware";
 import { userProvider } from "api/providers";
 import {
@@ -12,8 +14,7 @@ import {
 import AppError from "errors/AppError";
 import RateLimitError from "errors/RateLimitError";
 import { createController } from "modules/controller";
-import { generateNonce } from "siwe";
-import { Response, applyMiddleware } from "typera-express";
+import logger from "modules/Logger/Logger";
 import { httpResponse } from "utils/http";
 
 const strictLimited = applyMiddleware(
@@ -32,7 +33,7 @@ const strictLimited = applyMiddleware(
  */
 export const getNonce = createController(
   "/auth/nonce",
-  "get",
+  "post",
   strictLimited,
   (route) =>
     route.handler((ctx) => {
@@ -49,21 +50,25 @@ export const getNonce = createController(
 );
 
 /**
- * Verify the signed message and proceed to
- * sign in or sign up the user.
+ * Sign-in With Ethereum (SIWE)
+ *
+ * The backend receives a message and a signature, verifies
+ * everything is correct and proceeds to sign in the user
+ * or sign it up if not found in the database.
  */
 export const verifySignature = createController(
-  "/auth/verify",
+  "/auth/connect",
   "post",
   strictLimited,
   (route) =>
     route
       .use(withBody(authSchema.verifyPayload))
-      .use(withAuth("present"))
+      .use(authMiddleware.withAuth("present"))
       .use(rateLimitMiddleware.register)
       .handler(async (ctx) => {
         if (!ctx.auth.nonce) {
-          throw new AppError(...httpResponse("BAD_REQUEST"));
+          logger.debug("No nonce");
+          throw new AppError(httpResponse("BAD_REQUEST"));
         }
 
         const verifyRes = await authService.verifyWalletSignature({
@@ -73,19 +78,15 @@ export const verifySignature = createController(
         });
 
         if (!verifyRes.success) {
-          throw new AppError(...httpResponse("BAD_REQUEST"));
+          logger.debug("Verification fail");
+          throw new AppError(httpResponse("BAD_REQUEST"));
         }
 
         // Lookup user
+        let user = await userProvider.getByAddress(verifyRes.data.address);
 
-        let user: UserSafe | null = null;
-        const existingUser = await userProvider.getByPublicKey(
-          verifyRes.data.address
-        );
-
-        if (!existingUser) {
-          // Register new user
-
+        if (!user) {
+          // Check if it has to be ratelimited
           const rateLimitResult =
             await rateLimitService.registerLimiter.onSuccessfulRegister(
               ctx.req.ip
@@ -95,17 +96,77 @@ export const verifySignature = createController(
             throw new RateLimitError(ctx.res, rateLimitResult.msBeforeNext);
           }
 
+          // Register new user
+
           user = await userService.registerUser(verifyRes.data.address);
-        } else {
-          user = userService.toSafeUser(existingUser);
         }
 
         // Generate token
         const accessToken = tokenService.generateAccessToken({
-          userId: user.id,
+          userAddress: user.address,
         });
+
         authService.setClientToken(ctx.res, accessToken);
 
-        return Response.ok({ user });
+        return Response.ok({
+          token: accessToken,
+          user: userService.toSafeUser(user),
+        });
       })
+);
+
+/**
+ * Sign-in With Ethereum (SIWE)
+ *
+ * The backend receives a valid access token from the client
+ * in an httpOnly cookie, verifies its validity and sends the token
+ * back to the client in order for it to store it in memory.
+ *
+ * In short, the client asks the backend
+ * "hey, can I also have that token that is probably in cookies?"
+ *
+ * The client requires it because it is the only way for it to make sure
+ * that both the wallet and the backend are authed and in sync.
+ */
+export const getUserToken = createController(
+  "/auth/token",
+  "post",
+  strictLimited,
+  (route) =>
+    route.use(authMiddleware.withAuth("present")).handler(async (ctx) => {
+      const { token, userAddress } = ctx.auth;
+
+      if (!token || !userAddress) {
+        if (token) {
+          authService.clearTokens(ctx.res);
+        }
+
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      const user = await userService.getUser({ address: userAddress });
+
+      if (!user) {
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      return Response.ok({ token, user });
+    })
+);
+
+/**
+ * Sign-in With Ethereum (SIWE)
+ *
+ * Since the client has no practical way of accessing or modifying
+ * the user cookies, this endpoint will just clear the access token,
+ * essentially logging the user out
+ */
+export const disconnect = createController(
+  "/auth/disconnect",
+  "post",
+  (route) =>
+    route.use(authMiddleware.withAuth("required")).handler((ctx) => {
+      authService.clearTokens(ctx.res);
+      return Response.noContent();
+    })
 );

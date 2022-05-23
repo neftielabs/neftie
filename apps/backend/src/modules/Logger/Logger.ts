@@ -1,7 +1,9 @@
-import { isProd, isStaging } from "utils/constants";
 import winston, { createLogger } from "winston";
-import * as definedTransports from "./transports";
+
 import { typedObjectKeys } from "@neftie/common";
+import { isProd, isStaging } from "utils/constants";
+
+import * as definedTransports from "./transports";
 
 const { exceptionHandler, ...transportsToUse } = definedTransports;
 
@@ -44,7 +46,7 @@ typedObjectKeys(transportsToUse).forEach((transport) => {
  * The main Logger instance, used to log events
  * to the transports specified.
  */
-const Logger = createLogger({
+const logger = createLogger({
   level: isProd && !isStaging ? "http" : "debug",
   levels,
   exceptionHandlers: exceptionHandler,
@@ -53,7 +55,7 @@ const Logger = createLogger({
   format: winston.format.combine(winston.format.errors({ stack: true })),
 });
 
-export default Logger;
+export default logger;
 
 /**
  * When calling process.exit(), the process will finish

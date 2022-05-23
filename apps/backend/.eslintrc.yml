@@ -1,0 +1,8 @@
+extends:
+  - ../../.eslintrc.yml
+overrides:
+  - files:
+      - src/api/routes/**/*.ts
+    rules:
+      tsdoc/syntax:
+        - "off"

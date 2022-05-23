@@ -1,10 +1,11 @@
+import type express from "express";
+import { Middleware } from "typera-express";
+
 import { rateLimitService } from "api/services";
 import { registerLimiter } from "api/services/rate-limit.service";
 import RateLimitError from "errors/RateLimitError";
-import express from "express";
 import Log from "modules/Log";
-import RateLimiter from "modules/rate-limiters/RateLimiter";
-import { Middleware } from "typera-express";
+import type RateLimiter from "modules/rate-limiters/RateLimiter";
 
 const { globalLimiter } = rateLimitService;
 

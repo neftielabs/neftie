@@ -4,3 +4,7 @@ logs/**
 coverage
 .env*
 !.env.project
+
+public/uploads
+
+generated

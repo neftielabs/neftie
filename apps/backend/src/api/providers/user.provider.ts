@@ -1,9 +1,9 @@
-import { Prisma } from "@neftie/prisma";
+import type { Prisma } from "@neftie/prisma";
 import { prisma } from "config/database";
 
-export const getByPublicKey = async (publicKey: string) => {
+export const getByAddress = async (address: string) => {
   return await prisma.user.findUnique({
-    where: { publicKey },
+    where: { address },
   });
 };
 
@@ -16,5 +16,25 @@ export const getById = async (id: string) => {
     where: {
       id,
     },
+  });
+};
+
+export const getByUsername = async (username: string) => {
+  return await prisma.user.findUnique({
+    where: {
+      username,
+    },
+  });
+};
+
+export const update = async (
+  id: string,
+  data: Prisma.UserUncheckedUpdateInput
+) => {
+  return await prisma.user.update({
+    where: {
+      id,
+    },
+    data,
   });
 };

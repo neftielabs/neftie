@@ -1,5 +1,6 @@
+import type express from "express";
 import httpStatus from "http-status";
-import express from "express";
+
 import AppError from "errors/AppError";
 
 /**

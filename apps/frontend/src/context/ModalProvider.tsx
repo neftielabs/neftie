@@ -1,5 +1,6 @@
-import { AuthModal } from "components/modals/AuthModal";
 import React from "react";
+
+import { AuthModal } from "components/modals/AuthModal";
 
 interface ModalProviderProps {}
 

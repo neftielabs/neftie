@@ -1,0 +1,63 @@
+specVersion: 0.0.2
+schema:
+  file: ./schema.graphql
+dataSources:
+  - kind: ethereum
+    name: ListingFactory
+    network: goerli
+    source:
+      address: "0xdd95e54924c9748dceD5C46d81c5cb52ea38Bfc8"
+      abi: ListingFactory
+      startBlock: 6783481
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Listing
+        - Seller
+      abis:
+        - name: ListingFactory
+          file: ../contracts/artifacts/src/ListingFactory.sol/ListingFactory.json
+      eventHandlers:
+        - event: ListingCreated(indexed address,indexed address,string,uint256,uint256,uint256,uint256,uint256)
+          handler: handleListingCreated
+      file: ./src/mappings/listingFactory.ts
+
+templates:
+  - kind: ethereum/contract
+    name: Listing
+    network: goerli
+    source:
+      abi: Listing
+    mapping:
+      kind: ethereum/events
+      apiVersion: 0.0.5
+      language: wasm/assemblyscript
+      entities:
+        - Client
+        - Order
+        - Tip
+      abis:
+        - name: Listing
+          file: ../contracts/artifacts/src/Listing.sol/Listing.json
+      eventHandlers:
+        - event: OrderPlaced(indexed uint256,indexed address,uint8,uint256,uint256)
+          handler: handleOrderPlaced
+        - event: OrderApproved(indexed uint256)
+          handler: handleOrderApproved
+        - event: OrderDismissed(indexed uint256,address)
+          handler: handleOrderDismissed
+        - event: OrderCancelled(indexed uint256,address,uint256)
+          handler: handleOrderCancelled
+        - event: OrderDelivered(indexed uint256,uint256)
+          handler: handleOrderDelivered
+        - event: RevisionRequested(indexed uint256)
+          handler: handleRevisionRequested
+        - event: Tip(indexed uint256,uint256)
+          handler: handleTip
+        - event: OrderWithdrawn(indexed uint256)
+          handler: handleOrderWithdrawn
+        - event: BondFeeWithdrawn(indexed uint256)
+          handler: handleBondFeeWithdrawn
+      file: ./src/mappings/listing.ts

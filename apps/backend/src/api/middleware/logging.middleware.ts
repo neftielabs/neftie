@@ -1,5 +1,7 @@
-import Logger from "modules/Logger/Logger";
-import morgan, { StreamOptions } from "morgan";
+import type { StreamOptions } from "morgan";
+import morgan from "morgan";
+
+import logger from "modules/Logger/Logger";
 import { isProd } from "utils/constants";
 
 /**
@@ -7,7 +9,7 @@ import { isProd } from "utils/constants";
  * using winston console transport
  */
 const stream: StreamOptions = {
-  write: (message) => Logger.http(message),
+  write: (message) => logger.http(message),
 };
 
 /**

@@ -105,7 +105,7 @@ module.exports = {
       "3xl": "35px",
       11: "11px",
       13: "13px",
-      15: "15px",
+      14: "14px",
       16: "16px",
     },
     colors: {
@@ -131,6 +131,17 @@ module.exports = {
         white: "var(--color-brand-white)",
         black: "var(--color-brand-black)",
       },
+      gradient: {
+        pink: "var(--color-gradient-pink)",
+        orange: "var(--color-gradient-orange)",
+      },
+      error: {
+        DEFAULT: "var(--color-error)",
+        lighter: "var(--color-error-lighter)",
+      },
+      success: {
+        DEFAULT: "var(--color-success)",
+      },
     },
     spacing: {
       0: "0px",
@@ -145,6 +156,7 @@ module.exports = {
       2: "20px",
       2.5: "25px",
       3: "30px",
+      3.5: "35px",
       4: "40px",
       5: "50px",
       5.5: "55px",

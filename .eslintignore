@@ -5,3 +5,5 @@
 **/jest.config.js
 **/next-env.d.ts
 **/prisma/generated
+**/generated
+packages/subgraph/src

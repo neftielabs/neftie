@@ -1,8 +1,11 @@
 import React from "react";
-import NextLink, { LinkProps as NextLinkProps } from "next/link";
+
+import type { LinkProps as NextLinkProps } from "next/link";
+import NextLink from "next/link";
 import tw from "twin.macro";
-import { styled } from "stitches.config";
+
 import { Box } from "components/ui/Box";
+import { styled } from "stitches.config";
 
 const sharedStyles = {
   ...tw`transition-colors duration-150`,

@@ -1,6 +1,8 @@
 import { captureException } from "@sentry/node";
-import { CaptureContext } from "@sentry/node/node_modules/@sentry/types";
-import Logger from "modules/Logger/Logger";
+
+// import { CaptureContext } from
+import logger from "modules/Logger/Logger";
+import type { OmitFirstArg } from "types/helpers";
 
 /**
  * Utility class to log to multiple transports
@@ -9,17 +11,22 @@ import Logger from "modules/Logger/Logger";
  */
 export default class Log {
   private section = "";
-  private function?: string;
+  private element?: string;
+
+  constructor(section?: string, func?: string) {
+    this.section = section || "";
+    this.element = func;
+  }
 
   /**
-   * Set the current section and function in code.
+   * Set the current section and element in code.
    * Useful to better target errors where stacks might not
    * correctly locate the origin of the issue.
-   * Also used as tags for Sentry.
+   * Mainly used as tags for Sentry.
    */
   public setTargets(section: string, func?: string) {
     this.section = section;
-    this.function = func;
+    this.element = func;
   }
 
   /**
@@ -30,10 +37,10 @@ export default class Log {
   }
 
   /**
-   * Setter for the function only
+   * Setter for the element only
    */
-  public setTargetFunction(v: string) {
-    this.function = v;
+  public setTargetElement(v: string) {
+    this.element = v;
   }
 
   /**
@@ -44,19 +51,17 @@ export default class Log {
   public winston(error: any, meta?: Record<string, unknown>) {
     const data = {
       section: this.section,
-      function: this.function
-        ? `${this.section} > ${this.function}`
-        : undefined,
+      element: this.element ? `${this.section} > ${this.element}` : undefined,
       ...meta,
     };
 
     if (error instanceof Error) {
-      Logger.warn(error.message, {
+      logger.warn(error.message, {
         error,
         ...data,
       });
     } else {
-      Logger.warn(error, { data });
+      logger.warn(error, { data });
     }
   }
 
@@ -67,11 +72,11 @@ export default class Log {
     section: string,
     func?: string,
     extra?: Record<string, unknown>
-  ): CaptureContext {
+  ) {
     return {
       tags: {
         section,
-        function: func,
+        element: func,
       },
       extra,
     };
@@ -97,7 +102,7 @@ export default class Log {
       formattedError,
       this.getSentryMeta(
         this.section,
-        this.function ? `${this.section} > ${this.function}` : undefined,
+        this.element ? `${this.section} > ${this.element}` : undefined,
         stringify ? { data: JSON.stringify(meta, null, 2) } : meta
       )
     );
@@ -119,9 +124,6 @@ export default class Log {
 }
 
 type CallbackFunc = (log: Log, ...args: any[]) => any;
-type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R
-  ? (...args: P) => R
-  : never;
 
 /**
  * Utility wrapper for functions that initializes

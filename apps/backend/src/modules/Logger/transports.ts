@@ -1,7 +1,9 @@
 import path from "path";
-import { isProd } from "utils/constants";
+
 import winston from "winston";
 import DailyRotateFile from "winston-daily-rotate-file";
+
+import { isProd } from "utils/constants";
 
 const commonFileOptions = {
   datePattern: "YYYY-MM-DD",
@@ -92,6 +94,7 @@ export const all = new DailyRotateFile({
  * Console transport
  */
 export const consoleCommon = new winston.transports.Console({
+  level: "debug",
   format: winston.format.combine(
     ...(isProd
       ? [

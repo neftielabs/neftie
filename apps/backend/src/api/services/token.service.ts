@@ -1,16 +1,23 @@
-import { AccessTokenPayload } from "types/auth";
-import { config } from "config/main";
-import { CookieOptions } from "express";
-import { isProd } from "utils/constants";
+import type { CookieOptions } from "express";
 import jwt from "jsonwebtoken";
+
+import { config } from "config/main";
+import type { AccessTokenPayload } from "types/auth";
+import { isProd } from "utils/constants";
 
 /**
  * Generates an access token
  */
-export const generateAccessToken = (payload: AccessTokenPayload) =>
-  jwt.sign(payload, config.tokens.access.secret, {
-    expiresIn: config.tokens.access.expires,
-  });
+export const generateAccessToken = (
+  payload: Omit<AccessTokenPayload, "version">
+) =>
+  jwt.sign(
+    { ...payload, version: config.tokens.access.currentVersion },
+    config.tokens.access.secret,
+    {
+      expiresIn: config.tokens.access.expires,
+    }
+  );
 
 /**
  * Verifies the validity of an access token

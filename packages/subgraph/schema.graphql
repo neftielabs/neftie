@@ -1,0 +1,105 @@
+type Client @entity {
+  "The client address"
+  id: ID!
+
+  "Orders"
+  orders: [Order!]! @derivedFrom(field: "client")
+}
+
+enum OrderStatus {
+  PLACED
+  DISMISSED
+  ONGOING
+  CANCELLED
+  DELIVERED
+  COMPLETED
+}
+
+type Tip @entity {
+  "tx hash + '-' + event logIndex"
+  id: String!
+
+  "The order it belongs to"
+  order: Order!
+
+  "The unix timestamp when the tip was sent"
+  timestamp: BigInt!
+
+  "The total amount in Eth (minus the cut)"
+  amount: BigDecimal!
+}
+
+type Order @entity {
+  "Listing id + _ + order id"
+  id: String!
+
+  "The transaction hash of the order placement"
+  tx: String!
+
+  "The listing it belongs to"
+  listing: Listing!
+
+  "The creator of the order, aka the client"
+  client: Client!
+
+  "The current order status"
+  status: OrderStatus!
+
+  "The unix timestamp when the order started"
+  startedAt: BigInt!
+
+  "The unix timestamp when the order was delivered"
+  deliveredAt: BigInt!
+
+  "The unix timestamp when the order was completed"
+  completedAt: BigInt!
+
+  "The unix timestamp when the order was cancelled"
+  cancelledAt: BigInt!
+
+  "The number of revisions left"
+  revisionsLeft: Int!
+
+  "All tips sent by the client"
+  tips: [Tip!]! @derivedFrom(field: "order")
+
+  "If the order is currently under revision"
+  underRevision: Boolean!
+
+  "If the bond fee has been withdrawn by the seller"
+  bondFeeWithdrawn: Boolean!
+}
+
+type Seller @entity {
+  "The address"
+  id: ID!
+
+  "Listings"
+  listings: [Listing!]! @derivedFrom(field: "seller")
+}
+
+type Listing @entity {
+  "The contract address"
+  id: ID!
+
+  "The seller that created the listing"
+  seller: Seller!
+
+  "The title of the listing"
+  title: String!
+
+  "The price of the listing"
+  price: BigDecimal!
+
+  "The bond fee"
+  bondFee: BigDecimal!
+
+  "The number of delivery days"
+  deliveryDays: BigInt!
+
+  "The number of revisions"
+  revisions: BigInt!
+
+  "Orders"
+  orders: [Order!]! @derivedFrom(field: "listing")
+}

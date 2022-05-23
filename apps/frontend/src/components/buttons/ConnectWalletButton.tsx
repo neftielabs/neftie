@@ -1,5 +1,6 @@
-import { Button } from "components/ui/Button";
 import React from "react";
+
+import { Button } from "components/ui/Button";
 import { useModalStore } from "stores/useModalStore";
 import { Modal } from "types/modals";
 
@@ -9,6 +10,8 @@ export const ConnectWalletButton: React.FC<ConnectWalletButtonProps> = () => {
   const { setActiveModal } = useModalStore();
 
   return (
-    <Button onClick={() => setActiveModal(Modal.auth)}>Connect wallet</Button>
+    <Button size="sm" text="13" onClick={() => setActiveModal(Modal.auth)}>
+      Connect wallet
+    </Button>
   );
 };

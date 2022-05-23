@@ -1,6 +1,6 @@
-/* eslint-disable init-declarations */
+/* eslint-disable */
 import "twin.macro";
-import { styled as StyledImport, css as cssImport } from "@stitches/react";
+import type { styled as StyledImport, css as cssImport } from "@stitches/react";
 
 // Support a css prop when used with twins styled.div({}) syntax
 type CSSProp<T = AnyIfEmpty<DefaultTheme>> = string | CSSObject;

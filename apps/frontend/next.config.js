@@ -1,5 +1,4 @@
 // eslint-disable-next-line tsdoc/syntax
-/** @type {import('next').NextConfig} */
 
 const { withSentryConfig } = require("@sentry/nextjs");
 
@@ -11,8 +10,20 @@ const withBundleAnalyzer = isProd
       enabled: process.env.ANALYZE === "true",
     });
 
+/** @type {import('next').NextConfig} */
 const baseConfig = {
   reactStrictMode: true,
+  experimental: {
+    externalDir: true,
+  },
+  images: {
+    domains: [
+      "images.unsplash.com",
+      "localhost",
+      "i.imgur.com",
+      "media.neftie.io",
+    ],
+  },
 };
 
 const sentryWebpackPluginOptions = {

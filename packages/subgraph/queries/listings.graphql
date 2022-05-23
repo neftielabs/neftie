@@ -1,0 +1,70 @@
+# ---------------------------------------------------------------------------- #
+#                                   Fragments                                  #
+# ---------------------------------------------------------------------------- #
+
+fragment listingFull on Listing {
+  id
+  title
+  price
+  bondFee
+  deliveryDays
+  revisions
+  seller {
+    id
+  }
+  orders {
+    id
+    startedAt
+    status
+  }
+}
+
+fragment listingMinimal on Listing {
+  id
+  title
+  price
+  seller {
+    id
+  }
+}
+
+# ---------------------------------------------------------------------------- #
+#                                    Queries                                   #
+# ---------------------------------------------------------------------------- #
+
+#
+# Get a listing by its address
+#
+
+query getMinimalListing($address: ID!) {
+  listing(id: $address) {
+    ...listingMinimal
+  }
+}
+
+query getFullListing($address: ID!) {
+  listing(id: $address) {
+    ...listingFull
+  }
+}
+
+#
+# Get all listings from a specific seller
+#
+
+query getSellerMinimalListings(
+  $sellerAddress: ID!
+  $cursor: ID = ""
+  $limit: Int
+) {
+  seller(id: $sellerAddress) {
+    listings(
+      first: $limit
+      where: { id_gt: $cursor }
+      orderBy: id
+      orderDirection: asc
+    ) {
+      ...listingMinimal
+    }
+  }
+}

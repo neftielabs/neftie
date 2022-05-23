@@ -1,6 +1,7 @@
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 export const Text = styled(Box, {
   // ...tw`text-gray-900`,
@@ -16,12 +17,14 @@ export const Text = styled(Box, {
       gray500: tw`text-gray-500`,
       gray600: tw`text-gray-600`,
       gray700: tw`text-gray-700`,
+      gray800: tw`text-gray-800`,
       gray900: tw`text-gray-900`,
+      error: tw`text-error`,
     },
     size: {
       11: tw`text-11`,
       13: tw`text-13`,
-      15: tw`text-15`,
+      14: tw`text-14`,
       sm: tw`text-sm`,
       md: tw`text-md`,
       lg: tw`text-lg`,

@@ -1,8 +1,10 @@
+import fs from "fs";
 import path from "path";
+
+import chalk from "chalk";
+
 import { exitProcess, firstUpper } from "../utils/helpers";
 import Log from "../utils/log";
-import fs from "fs";
-import chalk from "chalk";
 
 type EntityType = "provider" | "controller" | "service" | "middleware";
 
