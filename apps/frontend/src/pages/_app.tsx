@@ -1,16 +1,19 @@
+import { Router, useRouter } from "next/router";
+import nProgress from "nprogress";
+import { QueryClientProvider } from "react-query";
+import { ReactQueryDevtools } from "react-query/devtools";
+import { WagmiConfig } from "wagmi";
+
 import { AuthProvider } from "context/AuthProvider";
 import { ModalProvider } from "context/ModalProvider";
 import { queryClient } from "lib/http/queryClient";
-import { connectors, getDefaultProvider } from "lib/web3/providers";
-import type { AppProps } from "next/app";
-import { Router, useRouter } from "next/router";
-import { QueryClientProvider } from "react-query";
-import { ReactQueryDevtools } from "react-query/devtools";
+import { wagmiClient } from "lib/web3/wagmi";
 import styles from "styles/globalStyles";
-import { WagmiProvider } from "wagmi";
-import nProgress from "nprogress";
+import type { AppPropsWithLayout } from "types/tsx";
 
 import "styles/nprogress.css";
+
+// nprogress
 
 nProgress.configure({
   showSpinner: false,
@@ -20,24 +23,22 @@ Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
 Router.events.on("routeChangeError", () => nProgress.done());
 
-const App = ({ Component, pageProps }: AppProps) => {
+const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   styles();
   const { asPath } = useRouter();
 
+  const getLayout = Component.getLayout ?? ((page) => page);
+
   return (
     <QueryClientProvider client={queryClient}>
-      <WagmiProvider
-        autoConnect
-        connectors={connectors}
-        provider={getDefaultProvider}
-      >
-        <AuthProvider requiresAuth={false}>
+      <WagmiConfig client={wagmiClient}>
+        <AuthProvider requiresAuth={!!Component.requiresAuth}>
           <ModalProvider>
             <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-            <Component {...pageProps} key={asPath} />
+            {getLayout(<Component {...pageProps} key={asPath} />)}
           </ModalProvider>
         </AuthProvider>
-      </WagmiProvider>
+      </WagmiConfig>
     </QueryClientProvider>
   );
 };

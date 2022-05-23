@@ -1,0 +1,15 @@
+extends:
+  - ../../.eslintrc.yml
+  - plugin:react/recommended
+  - plugin:react-hooks/recommended
+plugins:
+  - react
+  - react-hooks
+settings:
+  react:
+    pragma: React
+    version: detect
+rules:
+  jsx-a11y/alt-text: off
+  react/react-in-jsx-scope: off
+  react/prop-types: off

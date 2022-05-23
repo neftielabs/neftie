@@ -1,7 +1,9 @@
-import { Box } from "components/ui/Box";
 import React from "react";
-import { styled } from "stitches.config";
+
 import tw from "twin.macro";
+
+import { Box } from "components/ui/Box";
+import { styled } from "stitches.config";
 import { styleUtils } from "utils/style";
 
 const Container = styled(Box, {
@@ -17,12 +19,14 @@ const Container = styled(Box, {
 
 interface LoaderProps extends React.ComponentProps<typeof Container> {
   active?: boolean;
+  svgProps?: React.SVGAttributes<SVGSVGElement>;
 }
 
 export const Loader: React.FC<LoaderProps> = ({
   centered = false,
   absoluteCentered = false,
   active = true,
+  svgProps,
   ...props
 }) => {
   return (
@@ -33,10 +37,12 @@ export const Loader: React.FC<LoaderProps> = ({
     >
       <svg
         xmlns="http://www.w3.org/2000/svg"
-        tw="w-2 h-2 animation-duration[1.05s] animation-timing-function[cubic-bezier(.39,.6,.81,.58)]"
+        tw="animation-duration[1.05s] animation-timing-function[cubic-bezier(.39,.6,.81,.58)]"
         css={active ? tw`animate-spin` : {}}
+        width="20"
         viewBox="0 0 34 33.1"
         fill="currentColor"
+        {...svgProps}
       >
         <path
           fill="currentColor"

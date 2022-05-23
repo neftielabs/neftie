@@ -1,7 +1,9 @@
-import { ApiRoute, RouteManifest } from "@neftie/common";
-import { RouteFn } from "typera-common";
-import { Response, route as typeraRoute } from "typera-express";
-import { ControllerFn } from "types/controller";
+import type { RouteFn } from "typera-common";
+import type { Response } from "typera-express";
+import { route as typeraRoute } from "typera-express";
+
+import type { ApiRoute, RouteManifest } from "@neftie/common";
+import type { ControllerFn } from "types/controller";
 
 /**
  * Creates a controller that will result in

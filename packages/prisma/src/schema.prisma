@@ -12,14 +12,17 @@ datasource db {
 // -------------------------------------------------------------------------- //
 
 model User {
-  id        String    @id @default(uuid())
-  address   String    @unique
-  name      String?
-  email     String?   @unique
-  username  String    @unique
-  avatarUrl String
-  bannerUrl String?
-  listings  Listing[]
+  id           String         @id @default(uuid())
+  address      String         @unique
+  name         String?
+  email        String?        @unique
+  username     String         @unique
+  avatarUri    String
+  bannerUri    String?
+  listings     Listing[]
+  OrderMessage OrderMessage[]
+
+  @@index([address])
 }
 
 // -------------------------------------------------------------------------- //
@@ -29,14 +32,38 @@ model User {
 model Listing {
   id          Int      @id @default(autoincrement())
   address     String   @unique
-  nonce       String
-  tx          String   @unique
   seller      User     @relation(fields: [sellerId], references: [id])
   sellerId    String
   coverUri    String?
   description String?
-  isConfirmed Boolean  @default(false)
-  isExternal  Boolean  @default(false) // Created calling the contract directly
+  isExternal  Boolean  @default(false) // Created calling the contract directly or not completed
+  orders      Order[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
+}
+
+// --------------------------------------------------------------------------- //
+//                                    Orders                                   //
+// --------------------------------------------------------------------------- //
+
+model Order {
+  id         Int            @id @default(autoincrement())
+  hexId      String         @unique
+  tx         String         @unique
+  listing    Listing        @relation(fields: [listingId], references: [id])
+  listingId  Int
+  isExternal Boolean        @default(false)
+  createdAt  DateTime       @default(now())
+  updatedAt  DateTime       @updatedAt
+  messages   OrderMessage[]
+}
+
+model OrderMessage {
+  id        Int      @id @default(autoincrement())
+  message   String
+  sender    User     @relation(fields: [userId], references: [id])
+  userId    String
+  order     Order    @relation(fields: [orderId], references: [id])
+  orderId   Int
+  timestamp DateTime @default(now())
 }

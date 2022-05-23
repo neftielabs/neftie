@@ -1,95 +1,119 @@
-import { useClient } from "hooks/http/useClient";
 import { useCallback } from "react";
+
 import { SiweMessage } from "siwe";
-import { useUserStore } from "stores/useUserStore";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
 
-export const useWallet = () => {
-  const [{ loading: isConnectLoading }] = useConnect();
-  const [{ data: accountData, loading: isAccountLoading }, disconnect] =
-    useAccount();
-  const [{ data: networkData, loading: isNetworkLoading }] = useNetwork();
-  const [{ loading: isSignLoading }, signMessage] = useSignMessage();
+import { useTypedMutation } from "hooks/http/useTypedMutation";
+import { useToken } from "hooks/useToken";
+import { someTrue } from "utils/fp";
 
-  const client = useClient();
-  const setUser = useUserStore((s) => s.setUser);
+export const useWallet = () => {
+  const { isConnecting, isReconnecting } = useConnect();
+  const { activeChain, isLoading: isNetworkLoading } = useNetwork();
+  const { isLoading: isSignLoading, signMessageAsync } = useSignMessage();
+  const {
+    data: accountData,
+    isLoading: isAccountLoading,
+    isFetching: isAccountFetching,
+    isRefetching: isAccountRefetching,
+  } = useAccount();
+
+  const { mutateAsync: getNonce } = useTypedMutation("getNonce");
+  const { mutateAsync: connect } = useTypedMutation("authConnect");
+  const { mutateAsync: disconnect } = useTypedMutation("disconnect");
+
+  const [, { setToken }] = useToken();
 
   /**
-   * SIWE requires the user to sign a message
-   * with their wallet in order to ensure they
-   * have full rights on it.
+   * In order for us to verify that the signer is actually
+   * the one willing to perform the action, we request
+   * a signature of a message using a random nonce. Once
+   * verified, we can proceed to authenticate the user.
    */
   const requestSignature = useCallback(async () => {
     const address = accountData?.address;
-    const chainId = networkData.chain?.id;
+    const chainId = activeChain?.id;
 
-    if (!address || !chainId) return;
+    if (!address || !chainId) {
+      return { error: "An error occurred getting your address or chain" };
+    }
 
     let nonce = "";
 
+    /**
+     * Request a nonce from the backend, that will get
+     * stored in a token in order to ensure that it hasn't changed
+     * throughout the process
+     */
     try {
-      nonce = await client.query.getNonce();
+      nonce = await getNonce([]);
     } catch {
-      disconnect();
-      return {
-        error: "An error occurred requesting the signature",
-      };
+      return { error: "An error occurred while requesting the signature" };
     }
 
+    /**
+     * Build the message for the user to sign with
+     * their wallet
+     */
     const message = new SiweMessage({
-      domain: window.location.host,
+      statement:
+        "Welcome! Neftie requires you to sign this message with your wallet in order to verify that it is really you who is trying to use this account.",
+      nonce,
       address,
-      statement: "Neftie would like you to sign this message with your wallet",
+      domain: window.location.host,
       uri: window.location.origin,
       version: "1",
       chainId,
-      nonce,
     }).prepareMessage();
 
-    const signResult = await signMessage({ message });
+    const signature = await signMessageAsync({ message });
 
-    if (signResult.error) {
-      disconnect();
-      return {
-        error: "An error occurred while signing the message",
-      };
-    }
-
+    /**
+     * Verify everything with our backend, by sending the
+     * message, the signature and the token already present in cookies
+     * containing the nonce.
+     */
     try {
-      const verifyResult = await client.mutation.verifyMessage({
-        message,
-        signature: signResult.data,
-      });
+      const { token, user } = await connect([{ message, signature }]);
 
-      setUser(verifyResult.user);
+      /**
+       * Addresses must still match. Clear tokens if not.
+       */
+      if (accountData.address !== user.address) {
+        await disconnect([]);
+        return {
+          error: "An error occurred, please try again",
+        };
+      }
+
+      setToken({
+        address: user.address,
+        value: token,
+      });
     } catch {
-      disconnect();
       return {
         error: "An error occurred verifying the signature",
       };
     }
   }, [
     accountData?.address,
-    client.mutation,
-    client.query,
+    activeChain?.id,
+    connect,
     disconnect,
-    networkData.chain?.id,
-    setUser,
-    signMessage,
+    getNonce,
+    setToken,
+    signMessageAsync,
   ]);
 
-  return {
-    requestSignature,
-    isLoading:
-      isConnectLoading || isAccountLoading || isNetworkLoading || isSignLoading,
-  };
-};
+  const isLoading = someTrue([
+    isAccountFetching,
+    isAccountRefetching,
+    isReconnecting,
+    isConnecting,
+    isAccountLoading,
+    isNetworkLoading,
+    isSignLoading,
+  ]);
 
-/**
- * Steps are simple:
- *
- * 1 - Connect wallet
- * 2 - Sign message
- * 3 - Verify signed message
- * 4 - Store user in zustand
- */
+  return [isLoading, requestSignature] as const;
+};

@@ -1,10 +1,8 @@
 /* eslint-disable no-console */
 import { ethers, upgrades } from "hardhat";
-import {
-  Listing__factory,
-  NeftieCore,
-  NeftieCore__factory,
-} from "../typechain";
+
+import type { NeftieCore } from "../typechain";
+import { Listing__factory, NeftieCore__factory } from "../typechain";
 
 async function main() {
   const admin = await ethers.getSigner(

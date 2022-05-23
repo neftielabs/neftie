@@ -1,5 +1,6 @@
-import { Signer } from "ethers";
-import { UseMutationOptions, useMutation } from "react-query";
+import type { Signer } from "ethers";
+import type { UseMutationOptions } from "react-query";
+import { useMutation } from "react-query";
 import { useSigner } from "wagmi";
 
 type InjectSigner<D> = D & { signer: Signer };
@@ -16,7 +17,7 @@ export const useContractMutation = <R, E, D>(
   handler: (data: InjectSigner<D>) => Promise<R>,
   options?: UseMutationOptions<R, E, D, unknown>
 ) => {
-  const [{ data: signer }] = useSigner();
+  const { data: signer } = useSigner();
 
   return useMutation<R, E, D, unknown>(async (data) => {
     if (!signer) {

@@ -16,6 +16,8 @@
     "@typescript-eslint/eslint-plugin": "5.17.0",
     "@typescript-eslint/parser": "5.17.0",
     "eslint": "8.13.0",
+    "eslint-import-resolver-typescript": "2.7.1",
+    "eslint-plugin-import": "2.26.0",
     "eslint-plugin-tsdoc": "0.2.14",
     "eslint-plugin-unused-imports": "2.0.0",
     "husky": "7.0.4",
@@ -45,6 +47,8 @@
     "cs": "yarn workspace @neftie/contracts",
     "sg": "yarn workspace @neftie/subgraph",
     "_cli": "yarn workspace @neftie/cli",
-    "cli": "yarn _cli cli"
+    "cli": "yarn _cli cli",
+    "lint:fix:all": "eslint --fix --ext=ts,tsx apps packages",
+    "lint:all": "eslint --fix --ext=ts,tsx apps packages"
   }
 }

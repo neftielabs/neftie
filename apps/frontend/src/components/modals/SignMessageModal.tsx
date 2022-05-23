@@ -1,14 +1,15 @@
+import React, { useState } from "react";
+
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
 import { useWallet } from "hooks/useWallet";
-import React, { useState } from "react";
 import { useModalStore } from "stores/useModalStore";
 
 interface SignMessageModalProps {}
 
 export const SignMessageModal: React.FC<SignMessageModalProps> = () => {
-  const { requestSignature, isLoading } = useWallet();
+  const [isLoading, requestSignature] = useWallet();
   const [error, setError] = useState("");
   const { closeModal } = useModalStore();
 

@@ -1,5 +1,5 @@
 import { captureException, withSentry } from "@sentry/nextjs";
-import { NextApiRequest, NextApiResponse } from "next";
+import type { NextApiRequest, NextApiResponse } from "next";
 
 /**
  * Route config

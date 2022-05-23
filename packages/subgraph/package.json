@@ -2,18 +2,27 @@
   "name": "@neftie/subgraph",
   "private": true,
   "version": "0.0.0",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
   "scripts": {
     "clean": "rimraf -rf build generated",
-    "codegen": "yarn clean && graph codegen",
+    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen:graph": "graph codegen",
+    "codegen:all": "yarn clean && yarn codegen:graph && yarn codegen",
     "build": "graph build",
     "predeploy": "yarn codegen",
     "deploy:goerli": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-rinkeby ./subgraph.yaml"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.29.0",
-    "@graphprotocol/graph-ts": "0.26.0"
+    "@graphprotocol/graph-ts": "0.26.0",
+    "graphql": "16.5.0"
   },
   "devDependencies": {
+    "@graphql-codegen/cli": "2.6.2",
+    "@graphql-codegen/typescript": "2.4.11",
+    "@graphql-codegen/typescript-graphql-request": "4.4.8",
+    "@graphql-codegen/typescript-operations": "2.4.0",
     "rimraf": "3.0.2"
   }
 }

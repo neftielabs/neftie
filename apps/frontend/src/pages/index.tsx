@@ -1,10 +1,11 @@
+import React from "react";
+
 import { Page } from "components/Page";
 import { Box } from "components/ui/Box";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
-import React from "react";
 
 interface HomePageProps {}
 

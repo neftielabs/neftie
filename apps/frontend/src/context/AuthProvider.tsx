@@ -1,57 +1,179 @@
-import React, { useEffect } from "react";
-import { useConnect } from "wagmi";
-import { useUserStore } from "stores/useUserStore";
+import React, { useCallback, useEffect, useMemo, useState } from "react";
+
+import { useRouter } from "next/router";
+import { useAccount } from "wagmi";
+
+import { WaitForAuth } from "components/layout/WaitForAuth";
+import { useTypedMutation } from "hooks/http/useTypedMutation";
+import { useToken } from "hooks/useToken";
+import { useWallet } from "hooks/useWallet";
+import { logger } from "lib/logger/instance";
+import { routes } from "lib/manifests/routes";
+import { isTruthy, someTrue } from "utils/fp";
+
+export const AuthContext = React.createContext<{
+  isAuthLoading: boolean;
+  isAuthed: boolean;
+  connectedAddress: string | undefined;
+  disconnect: () => Promise<void>;
+  connect: () => Promise<void>;
+}>({
+  isAuthLoading: true,
+  isAuthed: false,
+  connectedAddress: undefined,
+  disconnect: async () => {},
+  connect: async () => {},
+});
 
 interface AuthProviderProps {
   requiresAuth: boolean;
 }
 
-/**
- * Fetches the current user on page load/change
- * in case the wallet is connected and no user is
- * present in the store.
- *
- * If the wallet was to be disconnected and a user is
- * in store, we empty the user forcing to log in again.
- */
-export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser, hasFetched, isFetching, fetchUser, set] = useUserStore(
-    (s) => [
-      s.user,
-      s.setUser,
-      s.hasFetchedUser,
-      s.isFetchingUser,
-      s.fetchUser,
-      s.set,
-    ]
-  );
-  const [{ data: connectData }] = useConnect();
+export const AuthProvider: React.FC<AuthProviderProps> = ({
+  requiresAuth,
+  children,
+}) => {
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
+
+  const [token, { setToken }] = useToken();
+  const [isWalletLoading] = useWallet();
+
+  const { mutateAsync: getToken } = useTypedMutation("getAuthToken");
+  const { mutateAsync: disconnect } = useTypedMutation("disconnect");
+
+  const { data: accountData } = useAccount();
+
+  const router = useRouter();
+
+  /**
+   * Redirect a user to the connect wallet page,
+   * together with the intended path stored in the query params
+   */
+  const redirectToConnect = useCallback(() => {
+    const redirect = routes.connectNext(window.location.pathname);
+    router.replace(redirect);
+  }, [router]);
 
   useEffect(() => {
-    if (!user && !isFetching && !hasFetched && connectData.connected) {
-      fetchUser()
-        .then((success) => {
-          if (!success) {
-            // @todo
-            // If requiresAuth == true, redirect to some login page
+    if (!token && accountData?.address) {
+      setIsAuthenticating(true);
+
+      logger.debug("[Auth] Requesting /token");
+
+      /**
+       * If the call is successful and a token is returned,
+       * this means that the user had a valid access token in their cookies.
+       */
+      getToken([])
+        .then((result) => {
+          /**
+           * Check if the user received matches the current
+           * connected wallet address
+           */
+          if (result.user.address !== accountData?.address) {
+            logger.debug(`[Auth] Received address and connected mismatch`);
+
+            /**
+             * No match, call disconnect to clear current token in cookies
+             * and stay logged out
+             */
+            disconnect([])
+              .then(() => {
+                if (requiresAuth) {
+                  redirectToConnect();
+                }
+              })
+              .catch();
+          } else {
+            logger.debug("[Auth] Auth ok, storing token");
+
+            /**
+             * All good to store the token in memory.
+             * We store it together with the address in order
+             * to be able to react to a wallet account change.
+             */
+            setToken({ value: result.token, address: result.user.address });
           }
         })
         .catch(() => {
-          // @todo
-          // If requiresAuth == true, redirect to some login page
+          /**
+           * If the current page requires auth, redirect to the
+           * connect page and store the intended path in the query params
+           */
+          if (requiresAuth) {
+            logger.debug("[Auth] Auth error, and auth required");
+            redirectToConnect();
+          }
+        })
+        .finally(() => {
+          setIsAuthenticating(false);
         });
-    } else if (user && !connectData.connected) {
-      setUser(null);
+    } else {
+      setIsAuthenticating(false);
+    }
+
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [accountData?.address]);
+
+  useEffect(() => {
+    if (
+      token &&
+      token.address !== accountData?.address &&
+      !isAuthenticating &&
+      !isWalletLoading
+    ) {
+      logger.debug("[Auth] Accounts mismatch");
+
+      /**
+       * Token address and current connected address don't match
+       * clear all tokens (server & client)
+       */
+      disconnect([])
+        .then(() => {
+          setToken(null);
+
+          if (requiresAuth) {
+            redirectToConnect();
+          }
+        })
+        .catch();
     }
   }, [
-    connectData.connected,
-    fetchUser,
-    hasFetched,
-    isFetching,
-    set,
-    setUser,
-    user,
+    accountData?.address,
+    disconnect,
+    isAuthenticating,
+    isWalletLoading,
+    redirectToConnect,
+    requiresAuth,
+    setToken,
+    token,
   ]);
 
-  return <>{children}</>;
+  return (
+    <AuthContext.Provider
+      value={useMemo(
+        () => ({
+          isAuthLoading: someTrue([isWalletLoading, isAuthenticating]),
+          isAuthed: isTruthy(token),
+          connectedAddress: accountData?.address,
+          connect: async () => {},
+          disconnect: async () => {},
+        }),
+        [accountData?.address, isAuthenticating, isWalletLoading, token]
+      )}
+    >
+      {requiresAuth ? (
+        <WaitForAuth
+          isAuthed={isTruthy(token)}
+          isAuthLoading={someTrue([isWalletLoading, isAuthenticating])}
+          redirectToConnect={redirectToConnect}
+          requiresAuth={requiresAuth}
+        >
+          {children}
+        </WaitForAuth>
+      ) : (
+        children
+      )}
+    </AuthContext.Provider>
+  );
 };

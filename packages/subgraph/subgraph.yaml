@@ -15,6 +15,7 @@ dataSources:
       language: wasm/assemblyscript
       entities:
         - Listing
+        - Seller
       abis:
         - name: ListingFactory
           file: ../contracts/artifacts/src/ListingFactory.sol/ListingFactory.json
@@ -34,7 +35,9 @@ templates:
       apiVersion: 0.0.5
       language: wasm/assemblyscript
       entities:
-        - todo
+        - Client
+        - Order
+        - Tip
       abis:
         - name: Listing
           file: ../contracts/artifacts/src/Listing.sol/Listing.json
@@ -53,8 +56,8 @@ templates:
           handler: handleRevisionRequested
         - event: Tip(indexed bytes32,uint256)
           handler: handleTip
-        - event: FundsWithdrawn(indexed bytes32)
-          handler: handleFundsWithdrawn
+        - event: OrderWithdrawn(indexed bytes32)
+          handler: handleOrderWithdrawn
         - event: BondFeeWithdrawn(indexed bytes32)
           handler: handleBondFeeWithdrawn
       file: ./src/mappings/listing.ts

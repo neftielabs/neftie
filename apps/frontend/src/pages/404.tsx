@@ -1,10 +1,11 @@
+import React from "react";
+
 import { Page } from "components/Page";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import React from "react";
 
 const NotFoundPage: React.FC = () => {
   return (
@@ -17,7 +18,7 @@ const NotFoundPage: React.FC = () => {
           Boring, isn&apos;t it
         </Text>
         <Link href={routes.home}>
-          <Button tw="mt-2" theme="gradient" size="lg">
+          <Button tw="mt-2" theme="gradientOrange" size="lg">
             Take me home
           </Button>
         </Link>

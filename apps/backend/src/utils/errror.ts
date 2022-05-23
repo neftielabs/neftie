@@ -1,5 +1,6 @@
-import AppError from "errors/AppError";
 import httpStatus from "http-status";
+
+import AppError from "errors/AppError";
 import { waitForWinston } from "modules/Logger/Logger";
 
 /**

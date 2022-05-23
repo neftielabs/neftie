@@ -1,13 +1,15 @@
 import React, { useRef } from "react";
-import { styled } from "stitches.config";
+
 import tw from "twin.macro";
 
+import { styled } from "stitches.config";
+
 const Item = styled("button", {
-  ...tw`px-1 py-1 font-bold`,
+  ...tw`px-1 py-1 font-bold border-b-0.2`,
   variants: {
     active: {
-      true: tw`text-gray-900 border-b-0.2 border-gray-900`,
-      false: tw`text-gray-500`,
+      true: tw`text-gray-900 border-gray-900`,
+      false: tw`text-gray-500 border-transparent`,
     },
   },
 });

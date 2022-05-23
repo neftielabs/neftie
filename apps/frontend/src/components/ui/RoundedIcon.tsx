@@ -1,6 +1,7 @@
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 export const RoundedIcon = styled(Box, {
   ...tw`rounded-full p-1 bg-transparent transition-colors`,

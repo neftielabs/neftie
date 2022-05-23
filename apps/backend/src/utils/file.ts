@@ -1,19 +1,33 @@
-import { UploadedFile } from "express-fileupload";
 import path from "path";
 
-export const isImage = (filename: string) => {
-  const extension = path.extname(filename);
+import type { UploadedFile } from "express-fileupload";
+
+import type { Result } from "types/helpers";
+
+export const isImage = (file?: UploadedFile): Result<{ extension: string }> => {
+  if (!file) {
+    return {
+      success: false,
+    };
+  }
+
+  const extension = path.extname(file.name);
 
   if (!extension || ["jpg", "jpeg", "gif", "png"].includes(extension)) {
     return {
       success: false,
-      extension,
+    };
+  }
+
+  if (!file.mimetype.includes("image")) {
+    return {
+      success: false,
     };
   }
 
   return {
     success: true,
-    extension,
+    data: { extension },
   };
 };
 

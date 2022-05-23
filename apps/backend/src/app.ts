@@ -1,8 +1,9 @@
 /* eslint-disable no-console */
 import { createTerminus } from "@godaddy/terminus";
-import { config } from "config/main";
 import dotenv from "dotenv";
 import express from "express";
+
+import { config } from "config/main";
 import logger from "modules/Logger/Logger";
 
 dotenv.config();

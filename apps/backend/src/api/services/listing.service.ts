@@ -1,120 +1,207 @@
-import { listingSchema } from "@neftie/common";
-import { Listing } from "@neftie/prisma";
+import type { UploadedFile } from "express-fileupload";
+
+import type { ListingFull, ListingPreview } from "@neftie/common";
+import { areAddressesEqual, isValidAddress } from "@neftie/common";
 import { listingProvider, userProvider } from "api/providers";
-import { UploadedFile } from "express-fileupload";
+import { dataService } from "api/services";
 import { mediaBucket } from "modules/aws/s3-instances";
-import { withLog } from "modules/Log";
-import { graph } from "modules/thegraph";
-import { Result } from "types/helpers";
+import Log from "modules/Log";
+import logger from "modules/Logger/Logger";
+import { subgraphProvider } from "modules/subgraph-client";
+import type { Pagination, Result } from "types/helpers";
 import { isImage } from "utils/file";
-import { Asserts } from "yup";
+
+/**
+ * Get a listing by its address and merge it
+ * with onchain data
+ */
+export const getListing = async (
+  address: string
+): Promise<ListingFull | null> => {
+  const { listing } = await subgraphProvider.getFullListing({
+    address,
+  });
+
+  if (!listing) {
+    return null;
+  }
+
+  const seller = await userProvider.getByAddress(listing.seller.id);
+
+  const offChainListing = await listingProvider.get({ address });
+
+  return await dataService.mergeFullListing({
+    onChain: listing,
+    offChain: offChainListing,
+    user: seller,
+  });
+};
 
 /**
  * Verify that a given listing exists on the blockchain
  * by querying the subgraph by the predicted listing address..
  */
-export const ensureListingExists = async (address: string) => {
-  const { listing } = await graph.listings.getById(address);
-  return listing;
+export const ensureListingExists = async (
+  address: string
+): Promise<ListingPreview | null> => {
+  const { listing } = await subgraphProvider.getMinimalListing({
+    address: address.toLowerCase(),
+  });
+
+  if (!listing) {
+    return null;
+  }
+
+  // Listing exists, check if we have it ourselves too
+  // and if not, create it
+
+  const seller = await userProvider.getByAddress(listing.seller.id);
+
+  const offChainListing = await listingProvider.get({ address });
+
+  return await dataService.mergeMinimalListing({
+    onChain: listing,
+    offChain: offChainListing,
+    user: seller,
+  });
 };
 
 /**
- * Register a new listing storing all off-chain data
- * like cover and description. Storing them on-chain
- * would result on higher transaction fees and the listing
- * can work without it.
+ * Gets all listings from a seller.
+ * First gets on-chain data from the subgraph and then
+ * combines it with off-chain data
  */
-export const createListing = withLog(
-  async (
-    log,
-    data: {
-      body: Asserts<typeof listingSchema["serverCreateListing"]>;
-      file?: UploadedFile;
-      userId: string;
-    }
-  ): Promise<
-    Result<{ exists?: boolean; listing: Listing }, "noUser" | "noListing">
-  > => {
-    log.setTargets("listingService", "createListing");
+export const getSellerListings = async (data: {
+  sellerAddress: string;
+  pagination: Pagination;
+}): Promise<ListingPreview[]> => {
+  const { sellerAddress, pagination } = data;
 
-    const { body, file, userId } = data;
+  const user = await userProvider.getByAddress(sellerAddress);
 
-    const user = await userProvider.getById(userId);
-    if (!user) {
-      return {
-        success: false,
-        error: "noUser",
-      };
-    }
+  if (!user) {
+    return [];
+  }
 
-    // Verify listing doesn't exist
+  // Get on-chain listings
 
-    const existingListing = await listingProvider.get({
-      nonce: body.nonce,
-      tx: body.txHash,
-      sellerId: user.id,
-      address: body.predictedAddress,
-    });
+  const cursor = isValidAddress(pagination.cursor || "")
+    ? pagination.cursor
+    : "";
 
-    if (existingListing !== null) {
-      return {
-        success: true,
-        data: {
-          exists: true,
-          listing: existingListing,
-        },
-      };
-    }
+  const onChainListingsData = await subgraphProvider.getSellerMinimalListings({
+    sellerAddress: sellerAddress.toLowerCase(),
+    limit: pagination.limit,
+    cursor,
+  });
 
-    // Verify listing exists on-chain
+  const onChainListings = onChainListingsData.seller?.listings;
 
-    const chainListing = await ensureListingExists(body.predictedAddress);
-    if (!chainListing || chainListing.seller.id !== user.address) {
-      return {
-        success: false,
-        error: "noListing",
-      };
-    }
+  if (!onChainListings || !onChainListings.length) {
+    return [];
+  }
 
-    // Store cover
+  // Get off-chain complementary data
 
-    let coverUri: string | null = null;
+  const addresses = onChainListings.map((l) => l.id);
+  const offChainListings = await listingProvider.getMany({
+    sellerId: user.id,
+    address: {
+      in: addresses,
+    },
+  });
 
-    if (file) {
-      const isImageResult = isImage(file.name);
+  if (offChainListings.length !== onChainListings.length) {
+    logger.warn(`On and off-chain listing count mismatch for user ${user.id}`);
+  }
 
-      if (isImageResult.success) {
-        try {
-          const result = await mediaBucket.upload({
-            file: file.data,
-            directory: "l/covers",
-            extension: isImageResult.extension,
-          });
+  const listings: ListingPreview[] = [];
 
-          if (result) coverUri = result.key;
-        } catch (error) {
-          log.all(error);
-        }
-      }
-    }
+  for (const listing of onChainListings) {
+    const offChainListing = offChainListings.find((o) =>
+      areAddressesEqual(o.address, listing.id)
+    );
 
-    // Create listing
+    listings.push(
+      await dataService.mergeMinimalListing({
+        onChain: listing,
+        offChain: offChainListing,
+        user,
+      })
+    );
+  }
 
-    const listing = await listingProvider.create({
-      sellerId: user.id,
-      nonce: body.nonce,
-      address: body.predictedAddress,
-      isConfirmed: true,
-      tx: body.txHash,
-      description: body.description,
-      coverUri,
-    });
+  return listings;
+};
 
+/**
+ * Updates off-chain data of a listing
+ */
+export const updateOffChainData = async (data: {
+  address: string;
+  sellerAddress: string;
+  description?: string;
+  file?: UploadedFile;
+}): Promise<Result<undefined, "noData" | "unprocessable">> => {
+  const { sellerAddress, description, file, address } = data;
+
+  if (!description && !file) {
     return {
-      success: true,
-      data: {
-        listing,
-      },
+      success: false,
+      error: "noData",
     };
   }
-);
+
+  const seller = await userProvider.getByAddress(sellerAddress);
+
+  if (!seller) {
+    return {
+      success: false,
+      error: "unprocessable",
+    };
+  }
+
+  const listing = await listingProvider.get({
+    address,
+    sellerId: sellerAddress,
+  });
+
+  if (!listing) {
+    return {
+      success: false,
+      error: "unprocessable",
+    };
+  }
+
+  const isImageResult = isImage(file);
+  let coverUri: string | undefined = undefined;
+
+  try {
+    if (file && isImageResult.success) {
+      const result = await mediaBucket.upload({
+        file: file.data,
+        directory: "l",
+        extension: isImageResult.data.extension,
+        previousFile: listing.coverUri ?? undefined,
+      });
+
+      if (result) {
+        coverUri = result.key;
+      }
+    } else if (file && !isImageResult.success) {
+      return {
+        success: false,
+        error: "unprocessable",
+      };
+    }
+  } catch (error) {
+    new Log("listingService", "updateOffChainData").all(error);
+  }
+
+  await listingProvider.update(address, sellerAddress, {
+    description,
+    coverUri,
+  });
+
+  return { success: true };
+};

@@ -1,6 +1,7 @@
+import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 export const ModalBox = styled(Box, {
   ...tw`rounded-12 bg-white z-50 relative

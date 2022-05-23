@@ -1,6 +1,9 @@
 import React from "react";
-import NextImage, { ImageProps as NextImageProps } from "next/image";
+
+import type { ImageProps as NextImageProps } from "next/image";
+import NextImage from "next/image";
 import tw from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { styled } from "stitches.config";
 
@@ -25,20 +28,22 @@ export const Image: React.FC<ImageProps> = ({
   layout = "fill",
   ...props
 }) => {
-  const image = (
-    <NextImage
-      objectFit={layout === "fill" ? "cover" : undefined}
-      layout={layout}
-      {...props}
-    />
-  );
-
   return (
     <>
       {noContainer ? (
-        image
+        <NextImage
+          objectFit={layout === "fill" ? "cover" : undefined}
+          layout={layout}
+          {...props}
+        />
       ) : (
-        <ImageWrapper fill={layout === "fill"}>{image}</ImageWrapper>
+        <ImageWrapper fill={layout === "fill"}>
+          <NextImage
+            objectFit={layout === "fill" ? "cover" : undefined}
+            layout={layout}
+            {...props}
+          />
+        </ImageWrapper>
       )}
     </>
   );

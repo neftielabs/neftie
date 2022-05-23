@@ -1,5 +1,6 @@
 import yargs from "yargs";
 import { hideBin } from "yargs/helpers";
+
 import { addCommand } from "./commands/add";
 
 yargs(hideBin(process.argv))

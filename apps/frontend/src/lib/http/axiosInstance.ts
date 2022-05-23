@@ -1,6 +1,8 @@
-import axios, { AxiosError, AxiosInstance } from "axios";
-import { ApiError } from "lib/http/ApiError";
+import type { AxiosError, AxiosInstance } from "axios";
+import axios from "axios";
+
 import { API_BASEURL } from "lib/constants/app";
+import { ApiError } from "lib/http/ApiError";
 
 /**
  * Reusable Axios instance for easy interaction with

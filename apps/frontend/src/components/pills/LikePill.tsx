@@ -1,9 +1,11 @@
+import React from "react";
+
+import { IoHeart, IoHeartOutline } from "react-icons/io5";
+import tw from "twin.macro";
+
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
-import React from "react";
-import { IoHeart, IoHeartOutline } from "react-icons/io5";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const PillContainer = styled(Flex, {
   ...tw`border rounded-md px-1 py-0.5

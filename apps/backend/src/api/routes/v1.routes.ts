@@ -1,7 +1,9 @@
-import * as controllerGroups from "api/controllers";
-import { Route, router as typeraRouter } from "typera-express";
-import { Generic } from "typera-express/response";
+import type { Route } from "typera-express";
+import { router as typeraRouter } from "typera-express";
+import type { Generic } from "typera-express/response";
+
 import { typedObjectKeys } from "@neftie/common";
+import * as controllerGroups from "api/controllers";
 
 /**
  * Generate an express router from all

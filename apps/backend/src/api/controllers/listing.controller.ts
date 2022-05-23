@@ -1,13 +1,77 @@
-import { isValidAddress } from "@neftie/common";
-import { authMiddleware } from "api/middleware";
-import { listingService } from "api/services";
-import AppError from "errors/AppError";
-import { createReusableController } from "modules/controller";
 import { Response, applyMiddleware } from "typera-express";
-import { httpResponse } from "utils/http";
+
+import { isValidAddress, listingSchema } from "@neftie/common";
+import {
+  authMiddleware,
+  fileMiddleware,
+  filterMiddleware,
+} from "api/middleware";
+import { withBody } from "api/middleware/validation.middleware";
+import { listingService } from "api/services";
+import { createController, createReusableController } from "modules/controller";
+import { isValidSingleFile } from "utils/file";
+import { isErrorResult, withPagination } from "utils/helpers";
 
 const authController = createReusableController(
   applyMiddleware(authMiddleware.withAuth("required"))
+);
+
+/**
+ * Returns a listing by its id
+ */
+export const getListing = createController(
+  "/listings/:address",
+  "get",
+  (route) =>
+    route.handler(async (ctx) => {
+      const address = ctx.routeParams.address;
+
+      if (!isValidAddress(address)) {
+        return Response.unprocessableEntity();
+      }
+
+      const listing = await listingService.getListing(address);
+
+      if (!listing) {
+        return Response.notFound();
+      }
+
+      return Response.ok(listing);
+    })
+);
+
+/**
+ * Allows updating off-chain data of a given listing
+ */
+export const patchListing = authController(
+  "/listings/:address",
+  "patch",
+  (route) =>
+    route
+      .use(withBody(listingSchema.serverEditListing))
+      .use(fileMiddleware.generic())
+      .handler(async (ctx) => {
+        const { userAddress } = ctx.auth;
+        const { description } = ctx.body;
+        const file = ctx.req.files?.coverFile;
+
+        if (file && !isValidSingleFile(file, 10 * 1024 * 1024)) {
+          return Response.unprocessableEntity();
+        }
+
+        const patchResult = await listingService.updateOffChainData({
+          address: ctx.routeParams.address,
+          sellerAddress: userAddress,
+          description,
+          file,
+        });
+
+        if (isErrorResult(patchResult, "unprocessable")) {
+          return Response.unprocessableEntity();
+        }
+
+        return Response.ok();
+      })
 );
 
 /**
@@ -19,70 +83,41 @@ export const verifyListingCreated = authController(
   "get",
   (route) =>
     route.handler(async (ctx) => {
-      if (!isValidAddress(ctx.routeParams.address)) {
-        throw new AppError(httpResponse("BAD_REQUEST"));
+      const address = ctx.routeParams.address;
+
+      if (!isValidAddress(address)) {
+        return Response.unprocessableEntity();
       }
 
-      const listing = await listingService.ensureListingExists(
-        ctx.routeParams.address
-      );
+      const listing = await listingService.ensureListingExists(address);
 
       if (!listing) {
         return Response.notFound();
       }
 
-      return Response.ok(listing.id);
+      return Response.ok(listing);
     })
 );
 
 /**
- * Create a new listing.
- * Receives the transaction hash, nonce used and some data
- * that is stored off-chain (such as the cover image and description).
+ * Returns the listings published by a given
+ * seller
  */
-// export const createListing = authController("/listings", "post", (route) =>
-//   route
-//     .use(withBody(listingSchema.serverCreateListing))
-//     .use(
-//       fileMiddleware.generic({
-//         limits: { fileSize: 10 * 1024 * 1024 },
-//       })
-//     )
-//     .handler(async (ctx) => {
-//       const file = ctx.req.files?.file;
+export const getUserListings = createController(
+  "/listings/user/:address",
+  "get",
+  (route) =>
+    route.use(filterMiddleware.pagination).handler(async (ctx) => {
+      const listings = await listingService.getSellerListings({
+        sellerAddress: ctx.routeParams.address,
+        pagination: ctx.filters.pagination,
+      });
 
-//       if (!isValidSingleFile(file, 10 * 1024 * 1024)) {
-//         throw new AppError(httpResponse("BAD_REQUEST"));
-//       }
-
-//       const result = await listingService.createListing({
-//         body: ctx.body,
-//         file,
-//         userId: ctx.auth.userId,
-//       });
-
-//       if (!result.success) {
-//         if (result.error === "noUser") {
-//           throw new AppError(httpResponse("BAD_REQUEST"));
-//         }
-
-//         // Listing was not found on the blockchain
-//         // We just send a null listing and wait for another request
-//         // to be sent
-
-//         return Response.ok({
-//           listing: null,
-//         });
-//       }
-
-//       if (result.data.exists) {
-//         return Response.ok({
-//           listing: result.data.listing,
-//         });
-//       }
-
-//       return Response.created({
-//         listing: result.data.listing,
-//       });
-//     })
-// );
+      return Response.ok(
+        withPagination(listings, {
+          cursor: "id",
+          limit: ctx.filters.pagination.limit,
+        })
+      );
+    })
+);

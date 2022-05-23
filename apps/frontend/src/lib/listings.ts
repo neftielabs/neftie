@@ -1,4 +1,5 @@
-import { Signer } from "ethers";
+import type { Signer } from "ethers";
+
 import { getListingFactoryContract } from "lib/web3/contracts";
 
 /**

@@ -1,7 +1,8 @@
 import { captureException } from "@sentry/node";
-import AppError from "errors/AppError";
-import express from "express";
+import type express from "express";
 import httpStatus from "http-status";
+
+import AppError from "errors/AppError";
 import logger from "modules/Logger/Logger";
 import { isProd } from "utils/constants";
 import { convertToSafeError, exitProcess } from "utils/errror";
@@ -116,7 +117,7 @@ export const finalErrorHandler = (
     return handleErrorDev(err, req, res, next);
   }
 
-  const codesToSkip = [400, 401, 404];
+  const codesToSkip = [400, 401, 404, 422];
 
   if (!err.statusCode || !codesToSkip.includes(err.statusCode)) {
     captureException(err);

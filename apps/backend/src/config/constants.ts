@@ -13,3 +13,5 @@ export const AWS_REGION: string = process.env.AWS_REGION!;
 export const AWS_ACCESS_KEY: string = process.env.AWS_ACCESS_KEY!;
 export const AWS_SECRET_KEY: string = process.env.AWS_SECRET_KEY!;
 export const THEGRAPH_ENDPOINT: string = process.env.THEGRAPH_ENDPOINT!;
+export const MEDIA_SERVER_URL: string = process.env.MEDIA_SERVER_URL!;
+export const COINMARKETCAP_API_KEY: string = process.env.COINMARKETCAP_API_KEY!;

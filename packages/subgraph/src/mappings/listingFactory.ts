@@ -1,7 +1,7 @@
-import { Listing } from "../../generated/templates";
 import { ListingCreated } from "../../generated/ListingFactory/ListingFactory";
-import { getListingEntity, getSellerEntity } from "../utils/store";
+import { Listing } from "../../generated/templates";
 import { weiToEth } from "../utils/eth";
+import { getListingEntity, getSellerEntity } from "../utils/store";
 
 export function handleListingCreated(event: ListingCreated): void {
   Listing.create(event.params.listingAddress);
@@ -16,6 +16,5 @@ export function handleListingCreated(event: ListingCreated): void {
   listing.bondFee = weiToEth(event.params.bondFee);
   listing.deliveryDays = event.params.deliveryDays;
   listing.revisions = event.params.revisions;
-  listing.orders = [];
   listing.save();
 }

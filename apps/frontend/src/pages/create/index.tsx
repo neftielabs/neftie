@@ -1,30 +1,48 @@
-import { Page } from "components/Page";
-import { useUser } from "hooks/useUser";
-import { listingSchema } from "@neftie/common";
-import React, { useCallback, useState } from "react";
-import { useCreateListing } from "hooks/contracts/useCreateListing";
-import { TransactionLayout } from "components/layout/transactions/TransactionLayout";
-import { Asserts } from "yup";
+import React, { useCallback, useEffect, useState } from "react";
+
 import { constTrue } from "fp-ts/lib/function";
-import { NewListing } from "components/listings/creation/NewListing";
+import type { Asserts } from "yup";
+
+import { listingSchema } from "@neftie/common";
+import { TransactionLayout } from "components/layout/transactions/TransactionLayout";
+import { ListingPreviewCard } from "components/listings/form/ListingPreviewCard";
+import { NewListing } from "components/listings/form/NewListing";
+import { Page } from "components/Page";
+import { Button } from "components/ui/Button";
+import { Flex } from "components/ui/Flex";
+import { Link } from "components/ui/Link";
+import { useCreateListing } from "hooks/contracts/useCreateListing";
 import { useListingCreated } from "hooks/contracts/useListingCreated";
+import { useGetUser } from "hooks/queries/useGetUser";
+import { routes } from "lib/manifests/routes";
+import type { PageComponent } from "types/tsx";
 
 interface CreatePageProps {}
 
-const CreatePage: React.FC<CreatePageProps> = () => {
-  const [user] = useUser();
-  const { mutateAsync: createListing } = useCreateListing();
-  const [{ status }, handleListingCreated] = useListingCreated();
+const CreatePage: PageComponent<CreatePageProps> = () => {
   const [txHash, setTxHash] = useState<string>();
+
+  const { data: user } = useGetUser({ from: { currentUser: true } });
+  const { mutateAsync: createListing } = useCreateListing();
+  const [{ status, address: listingAddress }, handleListingCreated] =
+    useListingCreated();
 
   const handleSubmit = useCallback(
     async (data: Asserts<typeof listingSchema["createOnChainListing"]>) => {
       const { address, tx } = await createListing(data);
+
       setTxHash(tx.hash);
       handleListingCreated(address);
     },
     [createListing, handleListingCreated]
   );
+
+  useEffect(() => {
+    window.scrollTo({
+      top: 0,
+      behavior: "smooth",
+    });
+  }, [status]);
 
   return (
     <Page title="Create a listing">
@@ -41,15 +59,25 @@ const CreatePage: React.FC<CreatePageProps> = () => {
           },
         }}
         transaction={{
-          status: "pending",
+          status,
           hash: txHash,
           pending: {
             title: "Creating listing",
             subtitle: "Waiting for the transaction confirmation, hold tight!",
           },
           confirmed: {
-            title: "Listing created",
-            subtitle: "",
+            title: "Listing created!",
+            subtitle: "You can now add more details and start receiving orders",
+            component: (
+              <Flex column itemsCenter tw="w-3/4 gap-4">
+                <ListingPreviewCard address={listingAddress} />
+                <Link href={routes.listing(listingAddress).edit}>
+                  <Button type="button" spring size="lg">
+                    Edit listing
+                  </Button>
+                </Link>
+              </Flex>
+            ),
           },
         }}
         screens={[
@@ -59,5 +87,7 @@ const CreatePage: React.FC<CreatePageProps> = () => {
     </Page>
   );
 };
+
+CreatePage.requiresAuth = true;
 
 export default CreatePage;

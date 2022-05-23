@@ -1,11 +1,15 @@
-import { UserSafe } from "@neftie/common";
+import React, { useState } from "react";
+
+import tw from "twin.macro";
+
+import type { UserSafe } from "@neftie/common";
 import { UserAvatar } from "components/overlays/user/UserAvatar";
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
+import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
-import React, { useState } from "react";
+import { routes } from "lib/manifests/routes";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const OverlayWrapper = styled(Box, {
   ...tw`bg-white rounded-12 shadow-lg
@@ -30,7 +34,7 @@ const OverlayWrapper = styled(Box, {
 });
 
 interface UserOverlayProps {
-  user: UserSafe | null;
+  user?: UserSafe | null;
   isLoading: boolean;
 }
 
@@ -47,13 +51,17 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
       onMouseLeave={() => setVisible(false)}
     >
       <UserAvatar user={user} isLoading={isLoading} />
-      <OverlayWrapper visible={visible}>
-        <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
-          <Text weight="bold" color="gray600">
-            Profile
-          </Text>
-        </Button>
-      </OverlayWrapper>
+      {user ? (
+        <OverlayWrapper visible={visible}>
+          <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
+            <Link href={routes.user(user.address).index}>
+              <Text weight="bold" color="gray600">
+                Profile
+              </Text>
+            </Link>
+          </Button>
+        </OverlayWrapper>
+      ) : null}
     </Box>
   );
 };

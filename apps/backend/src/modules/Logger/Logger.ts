@@ -1,7 +1,9 @@
-import { isProd, isStaging } from "utils/constants";
 import winston, { createLogger } from "winston";
-import * as definedTransports from "./transports";
+
 import { typedObjectKeys } from "@neftie/common";
+import { isProd, isStaging } from "utils/constants";
+
+import * as definedTransports from "./transports";
 
 const { exceptionHandler, ...transportsToUse } = definedTransports;
 

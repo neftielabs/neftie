@@ -6,3 +6,5 @@ coverage
 !.env.project
 
 public/uploads
+
+generated

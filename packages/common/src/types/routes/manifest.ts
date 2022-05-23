@@ -1,6 +1,9 @@
-import { Listing } from "@neftie/prisma";
-import { Response } from "typera-express";
-import { UserSafe } from "../models/user";
+import type { Response } from "typera-express";
+
+import type { ListingFull, ListingPreview } from "../models";
+import type { UserSafe } from "../models/user";
+import type { Paginated } from "../utils";
+
 /**
  * Collection of all the routes, their available
  * methods and the expected response type.
@@ -9,6 +12,7 @@ export type RouteManifest = {
   /**
    * Healthchecks
    */
+
   "/health": {
     get: {
       response: [Response.Ok<string>];
@@ -18,25 +22,35 @@ export type RouteManifest = {
   /**
    * Auth
    */
+
   "/auth/nonce": {
-    get: {
+    post: {
       response: [Response.Ok<string>];
     };
   };
-  "/auth/verify": {
+
+  "/auth/connect": {
     post: {
-      response: [Response.Ok<{ user: UserSafe }>];
+      response: [Response.Ok<{ token: string; user: UserSafe }>];
+    };
+  };
+
+  "/auth/token": {
+    post: {
+      response: [Response.Ok<{ token: string; user: UserSafe }>];
+    };
+  };
+
+  "/auth/disconnect": {
+    post: {
+      response: [Response.NoContent];
     };
   };
 
   /**
    * Authorized user
    */
-  "/me": {
-    get: {
-      response: [Response.Ok<{ user: UserSafe | null }>];
-    };
-  };
+
   "/me/upload": {
     post: {
       response: [Response.Created];
@@ -46,26 +60,73 @@ export type RouteManifest = {
   /**
    * Users
    */
-  "/users/:username": {
+
+  "/users/:addressOrUsername": {
     get: {
-      response: [Response.Ok<{ user: UserSafe }>];
+      response: [Response.Ok<UserSafe>];
     };
   };
 
   /**
    * Listings
    */
-  "/listings": {
-    post: {
+
+  "/listings/:address": {
+    get: {
       response: [
-        Response.Created<{ listing: Listing }>,
-        Response.Ok<{ listing: Listing | null }>
+        Response.Ok<ListingFull>,
+        Response.NotFound,
+        Response.UnprocessableEntity
+      ];
+    };
+    patch: {
+      response: [Response.Ok, Response.UnprocessableEntity];
+    };
+  };
+
+  "/listings/:address/verify": {
+    get: {
+      response: [
+        Response.Ok<ListingPreview>,
+        Response.NotFound,
+        Response.UnprocessableEntity
       ];
     };
   };
-  "/listings/:address/verify": {
+
+  "/listings/user/:address": {
     get: {
-      response: [Response.Ok<string>, Response.NotFound];
+      response: [Response.Ok<Paginated<ListingPreview[]>>];
+    };
+  };
+
+  /**
+   * Orders
+   */
+
+  "/orders/listing/:address/verify": {
+    get: {
+      response: [Response.Ok, Response.NotFound];
+    };
+  };
+
+  "/orders/user/:address": {
+    get: {
+      response: [Response.Ok<Paginated<never[]>>];
+    };
+  };
+
+  /**
+   * Tools
+   */
+
+  "/tools/eth": {
+    get: {
+      response: [
+        Response.Ok<{
+          ethUsdPrice: number;
+        }>
+      ];
     };
   };
 };

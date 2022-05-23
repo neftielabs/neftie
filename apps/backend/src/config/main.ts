@@ -15,6 +15,7 @@ export const config = {
     base: env.BASE_DOMAIN,
     server: env.SERVER_ROOT,
     client: env.CLIENT_ROOT,
+    media: env.MEDIA_SERVER_URL,
   },
 
   /**
@@ -33,6 +34,7 @@ export const config = {
       key: "@neftie/at",
       secret: env.ACCESS_TOKEN_SECRET,
       expires: "6d",
+      currentVersion: 1,
     },
   },
 
@@ -47,8 +49,11 @@ export const config = {
         secretAccessKey: env.AWS_SECRET_KEY,
       },
     },
-    thegraph: {
+    subgraph: {
       endpoint: env.THEGRAPH_ENDPOINT,
+    },
+    coinmarketcap: {
+      apikey: env.COINMARKETCAP_API_KEY,
     },
   },
 };

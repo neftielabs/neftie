@@ -1,4 +1,6 @@
-import { BigNumber, BigNumberish } from "ethers";
+import type { BigNumberish } from "ethers";
+import { BigNumber } from "ethers";
+
 import { ONE_ETH_IN_WEI } from "lib/constants/web3";
 
 /**

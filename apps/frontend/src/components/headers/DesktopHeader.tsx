@@ -1,3 +1,8 @@
+import React from "react";
+
+import { IoFileTray } from "react-icons/io5";
+import tw from "twin.macro";
+
 import { NeftieIcon } from "components/assets/NeftieIcon";
 import { UserHeader } from "components/headers/UserHeader";
 import { Box } from "components/ui/Box";
@@ -5,10 +10,7 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import React from "react";
-import { IoFileTray } from "react-icons/io5";
 import { styled } from "stitches.config";
-import tw from "twin.macro";
 
 const HeaderContainer = styled(Box, {
   ...tw`hidden md:flex top-0 left-0 w-full h-7 bg-white border-b border-gray-100`,

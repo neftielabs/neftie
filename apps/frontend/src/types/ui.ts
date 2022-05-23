@@ -1,8 +1,9 @@
 export type HeaderTheme = "transparent" | "solid";
 
-export enum ProfileTab {
-  work = "Work",
-  about = "About",
-  reviews = "Reviews",
-  services = "Services",
-}
+export const allowedProfileTabs = [
+  "work",
+  "about",
+  "reviews",
+  "listings",
+] as const;
+export type ProfileTabs = typeof allowedProfileTabs[number];

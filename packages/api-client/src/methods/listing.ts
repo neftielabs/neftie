@@ -1,33 +1,57 @@
-import { listingSchema, typedObjectKeys } from "@neftie/common";
-import { Asserts } from "yup";
-import { Call } from "../types";
+import type { Asserts } from "yup";
+
+import type { listingSchema } from "@neftie/common";
+
+import type { Call } from "../types";
 
 export const listingMethods = (call: Call) => ({
   mutation: {
-    createListing: (
-      data: Asserts<typeof listingSchema["serverCreateListing"]>
+    updateListing: (
+      address: string,
+      data: Asserts<typeof listingSchema["editListing"]>
     ) => {
+      const file = data.coverFile as File;
+
+      if (!file && !data.description) {
+        return;
+      }
+
       const formData = new FormData();
 
-      typedObjectKeys(data).forEach((key) => {
-        formData.append(key, data[key]);
-      });
+      if (file) {
+        formData.append("coverFile", file);
+      }
 
-      return call("/listings", "post", {
+      if (data.description) {
+        formData.append("description", data.description);
+      }
+
+      return call("/listings/:address", "patch", {
+        realUrl: `/listings/${address}`,
         data: formData,
         headers: {
-          "content-type": "multipart/form-data",
+          "content-type": "multipart/from-data",
         },
       });
     },
   },
   query: {
     verifyListingExists: (address: string) =>
-      call(
-        "/listings/:address/verify",
-        "get",
-        {},
-        `/listings/${address}/verify`
-      ),
+      call("/listings/:address/verify", "get", {
+        realUrl: `/listings/${address}/verify`,
+      }),
+
+    getSellerListings: (data: { sellerAddress: string; pageParam?: string }) =>
+      call("/listings/user/:address", "get", {
+        realUrl: `/listings/user/${data.sellerAddress}`,
+        params: {
+          cursor: data.pageParam,
+        },
+      }),
+
+    getListing: (address: string) =>
+      call("/listings/:address", "get", {
+        realUrl: `/listings/${address}`,
+      }),
   },
 });

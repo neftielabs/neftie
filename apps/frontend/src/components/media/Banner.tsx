@@ -1,17 +1,18 @@
+import React from "react";
+
+import tw, { styled } from "twin.macro";
+
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
-import React from "react";
-import tw, { styled } from "twin.macro";
-import { getAssetUrl } from "utils/media";
 
 const BannerContainer = styled(Box, {
   ...tw`rounded-17 overflow-hidden relative container`,
 });
 
 interface BannerProps extends React.ComponentProps<typeof BannerContainer> {
-  imageUri?: string | null;
+  imageUrl?: string | null;
   alt?: string;
   isLoading?: boolean;
   edit?: {
@@ -21,7 +22,7 @@ interface BannerProps extends React.ComponentProps<typeof BannerContainer> {
 }
 
 export const Banner: React.FC<BannerProps> = ({
-  imageUri,
+  imageUrl,
   alt = "Banner image",
   isLoading = false,
   edit,
@@ -31,10 +32,10 @@ export const Banner: React.FC<BannerProps> = ({
   return (
     <BannerContainer {...props}>
       <Box tw="w-full h-full" className="group">
-        {isLoading || !imageUri ? (
+        {isLoading || !imageUrl ? (
           <Box tw="w-full h-full bg-gray-100 absolute top-0 left-0" />
         ) : (
-          <Image noContainer src={getAssetUrl(imageUri)} alt={alt} />
+          <Image noContainer src={imageUrl} alt={alt} />
         )}
         {edit ? (
           <>

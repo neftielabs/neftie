@@ -1,5 +1,5 @@
 import "dotenv/config";
-import { HardhatUserConfig } from "hardhat/types";
+import type { HardhatUserConfig } from "hardhat/types";
 import "@nomiclabs/hardhat-ethers";
 import "hardhat-gas-reporter";
 import "@typechain/hardhat";

@@ -1,10 +1,12 @@
+import React from "react";
+
+import Head from "next/head";
+
 import { Footer } from "components/footers/Footer";
 import { Header } from "components/headers/Header";
 import { DEFAULT_TITLE } from "lib/constants/seo";
-import Head from "next/head";
-import React from "react";
 
-interface PageProps {
+export interface PageProps {
   title?: string;
   description?: string;
 }

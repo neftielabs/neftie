@@ -1,7 +1,9 @@
-import * as Sentry from "@sentry/nextjs";
-import NextErrorComponent, { ErrorProps as NextErrorProps } from "next/error";
 import React from "react";
-import { NextPageContext } from "next";
+
+import * as Sentry from "@sentry/nextjs";
+import type { NextPageContext } from "next";
+import type { ErrorProps as NextErrorProps } from "next/error";
+import NextErrorComponent from "next/error";
 
 interface ErrorPageProps {
   statusCode: number;

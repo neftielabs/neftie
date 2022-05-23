@@ -1,15 +1,15 @@
 import {
   BondFeeWithdrawn,
-  FundsWithdrawn,
   OrderApproved,
   OrderCancelled,
   OrderDelivered,
   OrderDismissed,
   OrderPlaced,
+  OrderWithdrawn,
   Tip,
 } from "../../generated/templates/Listing/Listing";
-import { weiToEth } from "../utils/eth";
 import { mapOrderStatus } from "../utils/order";
+import { weiToEth } from "../utils/eth";
 import {
   getClientEntity,
   getListingEntity,
@@ -33,6 +33,7 @@ export function handleOrderPlaced(event: OrderPlaced): void {
   client.save();
 
   const order = getOrderEntity(event.params.orderId);
+  order.tx = event.transaction.hash.toHex();
   order.listing = listing.id;
   order.client = client.id;
   order.status = mapOrderStatus(event.params.status);
@@ -89,7 +90,7 @@ export const handleBondFeeWithdrawn = (event: BondFeeWithdrawn): void => {
   order.save();
 };
 
-export const handleFundsWithdrawn = (event: FundsWithdrawn): void => {
+export const handleOrderWithdrawn = (event: OrderWithdrawn): void => {
   const order = getOrderEntity(event.params.orderId);
   order.status = mapOrderStatus(OrderStatus.COMPLETED);
   order.completedAt = event.block.timestamp;

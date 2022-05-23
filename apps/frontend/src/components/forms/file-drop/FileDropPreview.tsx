@@ -1,9 +1,11 @@
+import React from "react";
+
+import { FiTrash } from "react-icons/fi";
+
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Image } from "components/ui/Image";
 import { RoundedIcon } from "components/ui/RoundedIcon";
-import React from "react";
-import { FiTrash } from "react-icons/fi";
 
 interface FileDropPreviewProps {
   preview: string;

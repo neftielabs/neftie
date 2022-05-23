@@ -1,9 +1,13 @@
-import { TransactionPending } from "components/layout/transactions/TransactionPending";
-import { Form, Formik, FormikConfig, FormikProps } from "formik";
-import { guard } from "fp-ts-std/Function";
-import { Predicate } from "fp-ts/lib/Predicate";
 import React from "react";
-import { TransactionStatus } from "types/tx";
+
+import type { FormikConfig, FormikProps } from "formik";
+import { Form, Formik } from "formik";
+import { guard } from "fp-ts-std/Function";
+import type { Predicate } from "fp-ts/lib/Predicate";
+
+import { TransactionConfirmed } from "components/layout/transactions/TransactionConfirmed";
+import { TransactionPending } from "components/layout/transactions/TransactionPending";
+import type { TransactionStatus } from "types/tx";
 
 interface TransactionLayoutProps<T> {
   formikProps: FormikConfig<T>;
@@ -21,6 +25,7 @@ interface TransactionLayoutProps<T> {
     confirmed: {
       title: string;
       subtitle: string;
+      component?: JSX.Element;
     };
   };
 }
@@ -51,7 +56,18 @@ export function TransactionLayout<T>({
                 />
               ),
             ],
-            [() => transaction.status === "confirmed", () => <></>],
+            [
+              () => transaction.status === "confirmed",
+              () => (
+                <TransactionConfirmed
+                  title={transaction.confirmed.title}
+                  subtitle={transaction.confirmed.subtitle}
+                  txHash={transaction.hash}
+                >
+                  {transaction.confirmed.component}
+                </TransactionConfirmed>
+              ),
+            ],
             ...screens,
           ])(() => null)(state)}
         </Form>

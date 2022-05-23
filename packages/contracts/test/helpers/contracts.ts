@@ -1,13 +1,12 @@
 /* eslint-disable init-declarations */
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { Contract } from "ethers";
+import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import type { Contract } from "ethers";
 import { ethers, upgrades } from "hardhat";
+
+import type { Listing, ListingFactory, NeftieCore } from "../../typechain";
 import {
-  Listing,
-  ListingFactory,
   ListingFactory__factory,
   Listing__factory,
-  NeftieCore,
   NeftieCore__factory,
 } from "../../typechain";
 
