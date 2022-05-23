@@ -1,33 +1,38 @@
+/* eslint-disable camelcase */
 /* eslint-disable no-console */
-import { ethers, upgrades } from "hardhat";
+import { ethers } from "hardhat";
 
-import type { NeftieCore } from "../typechain";
-import { Listing__factory, NeftieCore__factory } from "../typechain";
+import { ListingFactory__factory, Listing__factory } from "../typechain";
 
 async function main() {
   const admin = await ethers.getSigner(
     "0x2a09e1e008Aa84c481894737b3D7A22f1dB63c90"
   );
 
-  const listingFactory = await ethers.getContractAt(
-    "ListingFactory",
-    "0xb65a229393c34336e3b9D10BF27E0C339FD4a2f3"
+  // const listingFactory = await ethers.getContractAt(
+  //   "ListingFactory",
+  //   addresses.development.listingFactory
+  // );
+
+  const core = await ethers.getContractAt(
+    "NeftieCore",
+    "0x90d9378476527818790557f00a438190f9b87d30"
   );
 
-  console.log("Deploying core");
+  // console.log("Deploying core");
 
-  const _core = new NeftieCore__factory(admin);
-  const core = (await upgrades.deployProxy(_core, [
-    admin.address,
-  ])) as NeftieCore;
-  await core.deployed();
+  // const _core = new NeftieCore__factory(admin);
+  // const core = (await upgrades.deployProxy(_core, [
+  //   admin.address,
+  // ])) as NeftieCore;
+  // await core.deployed();
 
-  // console.log("Deploying listing factory");
+  console.log("Deploying listing factory");
 
-  // const listingFactory = await new ListingFactory__factory(admin).deploy(
-  //   core.address
-  // );
-  // await listingFactory.deployed();
+  const listingFactory = await new ListingFactory__factory(admin).deploy(
+    core.address
+  );
+  await listingFactory.deployed();
 
   console.log("Deploying listing implementation");
 
@@ -43,8 +48,8 @@ async function main() {
     .updateImplementationContract(listingImpl.address);
 
   console.log({
-    core: core.address,
-    listingFactory: listingFactory.address,
+    // core: core.address,
+    // listingFactory: listingFactory.address,
     listingImpl: listingImpl.address,
   });
 }

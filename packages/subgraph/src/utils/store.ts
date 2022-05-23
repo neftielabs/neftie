@@ -1,6 +1,7 @@
-import { Bytes } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
 
 import { Client, Listing, Order, Seller, Tip } from "../../generated/schema";
+import { buildOrderId } from "./order";
 
 /**
  * Loads a seller
@@ -31,7 +32,8 @@ export const getListingEntity = (id: string): Listing => {
 /**
  * Loads an order
  */
-export const getOrderEntity = (id: Bytes): Order => {
+export const getOrderEntity = (orderId: BigInt, listingId: string): Order => {
+  const id = buildOrderId(orderId, listingId);
   let order = Order.load(id);
 
   if (!order) {

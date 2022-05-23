@@ -1,4 +1,4 @@
-import { TypedMap } from "@graphprotocol/graph-ts";
+import { BigInt, TypedMap } from "@graphprotocol/graph-ts";
 
 export const orderStatusMap = new TypedMap<number, string>();
 orderStatusMap.set(0, "PLACED");
@@ -35,3 +35,6 @@ export const mapOrderStatus = (a: number): string => {
 
   return "PLACED";
 };
+
+export const buildOrderId = (orderId: BigInt, listingId: string): string =>
+  listingId.concat("_".concat(orderId.toString()));

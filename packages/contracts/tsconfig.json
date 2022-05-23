@@ -10,7 +10,7 @@
     "composite": true,
     "noEmit": false
   },
-  "include": ["index.ts", "typechain", "scripts", "addresses.ts"],
+  "include": ["index.ts", "typechain", "scripts", "addresses.ts", "./test"],
   "exclude": ["dist", "node_modules"],
   "files": ["./hardhat.config.ts"]
 }

@@ -8,7 +8,7 @@ import {
   OrderWithdrawn,
   Tip,
 } from "../../generated/templates/Listing/Listing";
-import { mapOrderStatus } from "../utils/order";
+import { buildOrderId, mapOrderStatus } from "../utils/order";
 import { weiToEth } from "../utils/eth";
 import {
   getClientEntity,
@@ -16,6 +16,7 @@ import {
   getOrderEntity,
   getTipEntity,
 } from "../utils/store";
+import { BigInt } from "@graphprotocol/graph-ts";
 
 enum OrderStatus {
   PLACED,
@@ -32,7 +33,7 @@ export function handleOrderPlaced(event: OrderPlaced): void {
   const client = getClientEntity(event.params.client.toHex());
   client.save();
 
-  const order = getOrderEntity(event.params.orderId);
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.tx = event.transaction.hash.toHex();
   order.listing = listing.id;
   order.client = client.id;
@@ -44,40 +45,50 @@ export function handleOrderPlaced(event: OrderPlaced): void {
 }
 
 export function handleOrderApproved(event: OrderApproved): void {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.ONGOING);
   order.save();
 }
 
 export function handleOrderDismissed(event: OrderDismissed): void {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DISMISSED);
   order.save();
 }
 
 export function handleOrderCancelled(event: OrderCancelled): void {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.CANCELLED);
   order.cancelledAt = event.params.cancelledAt;
   order.save();
 }
 
 export function handleOrderDelivered(event: OrderDelivered): void {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DELIVERED);
   order.deliveredAt = event.params.deliveredAt;
   order.save();
 }
 
 export function handleTip(event: Tip): void {
+  const listing = getListingEntity(event.address.toHex());
+
   const tipId = `${event.transaction.hash.toHex()}-${event.logIndex.toString()}`;
   const tip = getTipEntity(tipId);
   tip.amount = weiToEth(event.params.amount);
-  tip.order = event.params.orderId;
+  tip.order = buildOrderId(event.params.orderId, listing.id);
   tip.timestamp = event.block.timestamp;
   tip.save();
 
-  const order = getOrderEntity(event.params.orderId);
+  const order = getOrderEntity(event.params.orderId, listing.id);
   const tips = order.tips;
   tips.push(tipId);
   order.tips = tips;
@@ -85,13 +96,17 @@ export function handleTip(event: Tip): void {
 }
 
 export const handleBondFeeWithdrawn = (event: BondFeeWithdrawn): void => {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.bondFeeWithdrawn = true;
   order.save();
 };
 
 export const handleOrderWithdrawn = (event: OrderWithdrawn): void => {
-  const order = getOrderEntity(event.params.orderId);
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.COMPLETED);
   order.completedAt = event.block.timestamp;
   order.save();
