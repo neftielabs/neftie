@@ -23,6 +23,14 @@ export const withGasMargin = async <
     estimatedGas.add(estimatedGas.mul(GAS_MARGIN).div(100)).toNumber()
   );
 
+  if ("value" in data[0] && data.length === 1) {
+    const param = data[0];
+    return await contract[method]({
+      gasLimit,
+      ...param,
+    });
+  }
+
   return await contract[method](...data, {
     gasLimit,
     ...overrides,

@@ -1,4 +1,4 @@
-import type { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
+import { BigDecimal, BigInt } from "@graphprotocol/graph-ts";
 
 import { ONE_ETH_IN_WEI } from "./constants";
 

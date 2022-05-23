@@ -7,15 +7,17 @@ import type { ListingFull } from "@neftie/common";
 import { EthPrice } from "components/typography/EthPrice";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
+import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { useEthPrice } from "hooks/useEthPrice";
+import { routes } from "lib/manifests/routes";
 
 interface ListingActionsProps {
   listing: ListingFull;
 }
 
 export const ListingActions: React.FC<ListingActionsProps> = ({ listing }) => {
-  const ethPrice = useEthPrice();
+  const { formattedUsdPrice } = useEthPrice(listing.price);
 
   return (
     <Flex column tw="flex-basis[35%] sticky top-0">
@@ -45,12 +47,14 @@ export const ListingActions: React.FC<ListingActionsProps> = ({ listing }) => {
             containerProps={{ css: tw`gap-1` }}
           />
           <Text color="gray600" size="13" css={{ marginTop: 17 }}>
-            ({ethPrice})
+            ({formattedUsdPrice})
           </Text>
         </Flex>
-        <Button tw="mt-2" theme="gradientOrange">
-          Place order
-        </Button>
+        <Link href={routes.listing(listing.id).order}>
+          <Button tw="mt-2 w-full" theme="gradientOrange">
+            Place order
+          </Button>
+        </Link>
       </Flex>
     </Flex>
   );

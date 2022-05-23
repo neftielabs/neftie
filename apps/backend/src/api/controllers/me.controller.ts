@@ -14,18 +14,6 @@ const authController = createReusableController(
 );
 
 /**
- * Return the current authorized user.
- * Fails if the token is invalid and returns `user: null` if the
- * user isn't found
- */
-export const getMe = authController("/me", "get", (route) =>
-  route.handler(async (ctx) => {
-    const user = await userService.getUser({ userId: ctx.auth.userId });
-    return Response.ok({ user });
-  })
-);
-
-/**
  * Upload user-related files
  */
 export const uploadFile = authController("/me/upload", "post", (route) =>
@@ -44,7 +32,7 @@ export const uploadFile = authController("/me/upload", "post", (route) =>
       }
 
       const uploadResult = await userService.handleProfileUpload({
-        userId: ctx.auth.userId,
+        userAddress: ctx.auth.userAddress,
         file,
         entity,
       });

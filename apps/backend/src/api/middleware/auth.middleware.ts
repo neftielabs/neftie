@@ -25,9 +25,11 @@ const extractTokenFromCookies = (req: express.Request) => {
 };
 
 type AuthMode = "required" | "optional" | "present";
-type AuthRequired = { auth: { token: string; userId: string; nonce?: string } };
+type AuthRequired = {
+  auth: { token: string; userAddress: string; nonce?: string };
+};
 type AuthOptional = {
-  auth: { token?: string; userId?: string; nonce?: string };
+  auth: { token?: string; userAddress?: string; nonce?: string };
 };
 
 type WithAuth<T extends AuthMode> = T extends "optional" | "present"
@@ -72,17 +74,24 @@ export function withAuth<T extends AuthMode>(
      */
 
     try {
-      const { userId, nonce } = await tokenService.verifyAccessToken(
-        accessToken
-      );
+      const { userAddress, nonce, version } =
+        await tokenService.verifyAccessToken(accessToken);
 
       /**
-       * If user id is not in the decoded payload and
+       * Ensure token versions match
+       */
+
+      if (Number(version) !== config.tokens.access.currentVersion) {
+        throw new AppError(httpResponse("BAD_REQUEST"));
+      }
+
+      /**
+       * If user address is not in the decoded payload and
        * auth mode is "required", deny access
        */
 
-      if (!userId && mode === "required") {
-        logger.debug("[AuthMiddleware] No userId in token payload");
+      if (!userAddress && mode === "required") {
+        logger.debug("[AuthMiddleware] No user address in token payload");
         throw new AppError(httpResponse("BAD_REQUEST"));
       }
 
@@ -93,7 +102,7 @@ export function withAuth<T extends AuthMode>(
 
       return Middleware.next({
         auth: {
-          userId,
+          userAddress,
           nonce,
           token: accessToken,
         },

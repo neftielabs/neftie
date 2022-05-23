@@ -1,4 +1,4 @@
-import type { Bytes } from "@graphprotocol/graph-ts";
+import { Bytes } from "@graphprotocol/graph-ts";
 
 import { Client, Listing, Order, Seller, Tip } from "../../generated/schema";
 

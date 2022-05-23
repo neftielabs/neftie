@@ -14,6 +14,7 @@ import { Link } from "components/ui/Link";
 import { useCreateListing } from "hooks/contracts/useCreateListing";
 import { useListingCreated } from "hooks/contracts/useListingCreated";
 import { useGetUser } from "hooks/queries/useGetUser";
+import { routes } from "lib/manifests/routes";
 import type { PageComponent } from "types/tsx";
 
 interface CreatePageProps {}
@@ -21,7 +22,7 @@ interface CreatePageProps {}
 const CreatePage: PageComponent<CreatePageProps> = () => {
   const [txHash, setTxHash] = useState<string>();
 
-  const { user } = useGetUser({ currentUser: true });
+  const { data: user } = useGetUser({ from: { currentUser: true } });
   const { mutateAsync: createListing } = useCreateListing();
   const [{ status, address: listingAddress }, handleListingCreated] =
     useListingCreated();
@@ -70,7 +71,7 @@ const CreatePage: PageComponent<CreatePageProps> = () => {
             component: (
               <Flex column itemsCenter tw="w-3/4 gap-4">
                 <ListingPreviewCard address={listingAddress} />
-                <Link href="">
+                <Link href={routes.listing(listingAddress).edit}>
                   <Button type="button" spring size="lg">
                     Edit listing
                   </Button>

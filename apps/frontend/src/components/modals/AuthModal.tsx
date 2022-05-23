@@ -12,9 +12,9 @@ import { Modal } from "types/modals";
 interface AuthModalProps {}
 
 export const AuthModal: React.FC<AuthModalProps> = () => {
-  const [{ data: connectData }] = useConnect();
+  const { isConnected } = useConnect();
   const { closeModal } = useModalStore();
-  const [isAuthed] = useAuth();
+  const { isAuthed } = useAuth();
 
   useEffect(() => {
     if (isAuthed) {
@@ -24,7 +24,7 @@ export const AuthModal: React.FC<AuthModalProps> = () => {
 
   return (
     <ModalController type={Modal.auth} tw="max-width[550px]">
-      {!isAuthed && !connectData.connected ? (
+      {!isAuthed && !isConnected ? (
         <ConnectWalletModal />
       ) : (
         <SignMessageModal />

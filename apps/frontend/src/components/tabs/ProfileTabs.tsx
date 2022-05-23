@@ -8,16 +8,18 @@ import { TabItem } from "components/tabs/TabItem";
 import { Box } from "components/ui/Box";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
-import { useRedirectProfile } from "hooks/useRedirectProfile";
 import { routes } from "lib/manifests/routes";
-import { ProfileTab } from "types/ui";
+import type { ProfileTabs as ProfileTabsType } from "types/ui";
 
 interface ProfileTabsProps {
   user: UserSafe;
+  currentTab: ProfileTabsType;
 }
 
-export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
-  const { getCurrentTab } = useRedirectProfile(user);
+export const ProfileTabs: React.FC<ProfileTabsProps> = ({
+  user,
+  currentTab,
+}) => {
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
   const { push } = useRouter();
 
@@ -33,22 +35,22 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
 
     return [
       {
-        title: ProfileTab.listings,
+        title: "Listings",
         route: route.listings,
         component: <ProfileListings sellerAddress={user.address} />,
       },
       {
-        title: ProfileTab.about,
+        title: "About",
         route: route.about,
         component: <></>,
       },
       {
-        title: ProfileTab.work,
+        title: "Work",
         route: route.work,
         component: <></>,
       },
       {
-        title: ProfileTab.reviews,
+        title: "Reviews",
         route: route.reviews,
         component: <></>,
       },
@@ -56,14 +58,13 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
   }, [user.address, user.username]);
 
   useEffect(() => {
-    const currentTab = getCurrentTab();
     if (!currentTab) return;
 
     const tabIdx = tabs.findIndex((t) => t.title.toLowerCase() === currentTab);
     if (tabIdx !== -1) {
       setCurrentTabIdx(tabIdx);
     }
-  }, [getCurrentTab, tabs]);
+  }, [currentTab, tabs]);
 
   return (
     <Container tw="mb-10">

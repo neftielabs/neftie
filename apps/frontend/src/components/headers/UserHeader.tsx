@@ -11,9 +11,9 @@ import { routes } from "lib/manifests/routes";
 interface UserHeaderProps {}
 
 export const UserHeader: React.FC<UserHeaderProps> = () => {
-  const [isAuthed, isAuthLoading] = useAuth();
-  const { user } = useGetUser({
-    currentUser: true,
+  const { isAuthed, isAuthLoading } = useAuth();
+  const { data: user } = useGetUser({
+    from: { currentUser: true },
   });
 
   return (

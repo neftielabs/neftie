@@ -33,6 +33,9 @@ type Order @entity {
   "The order id"
   id: Bytes!
 
+  "The transaction hash of the order placement"
+  tx: String!
+
   "The listing it belongs to"
   listing: Listing!
 

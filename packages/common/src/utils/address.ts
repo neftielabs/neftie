@@ -20,5 +20,7 @@ export const toChecksum = (address: string) => {
 /**
  * Transform both addresses to checksum and compare them
  */
-export const areAddressesEqual = (address1: string, address2: string) =>
-  toChecksum(address1) === toChecksum(address2);
+export const areAddressesEqual = (address1?: string, address2?: string) =>
+  !address1 || !address2
+    ? false
+    : toChecksum(address1) === toChecksum(address2);

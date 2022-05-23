@@ -9,11 +9,10 @@ interface EthPriceProps extends React.ComponentProps<typeof Text> {
 }
 
 interface EthPriceLabelProps extends EthPriceProps {
-  label: true;
+  ethLabel: string | true;
 }
 
 interface EthPriceIconProps extends EthPriceProps {
-  label?: false | undefined;
   svgProps?: React.SVGAttributes<SVGSVGElement>;
   containerProps?: React.ComponentProps<typeof Flex>;
 }
@@ -22,10 +21,12 @@ export const EthPrice: React.FC<EthPriceLabelProps | EthPriceIconProps> = ({
   price,
   ...props
 }) => {
-  if (props.label) {
+  if ("ethLabel" in props) {
+    const { ethLabel, ...textProps } = props;
+
     return (
-      <Text size="14" weight="bold" {...props}>
-        {price} ETH
+      <Text size="14" weight="bold" {...textProps}>
+        {price} {typeof ethLabel === "string" ? ethLabel : "ETH"}
       </Text>
     );
   }

@@ -1,39 +1,53 @@
-import type { UseQueryOptions } from "react-query";
-import { useAccount } from "wagmi";
+import { useEffect, useState } from "react";
 
-import type { UserSafe } from "@neftie/common";
+import { useRouter } from "next/router";
+import type { QueryOptions } from "react-query";
+
 import { useTypedQuery } from "hooks/http/useTypedQuery";
+import { useAuth } from "hooks/useAuth";
+import { isStringQueryParam } from "utils/router";
 
-type UseGetUserReturn = { user: UserSafe | undefined; isLoading: boolean };
-type QueryOptions = UseQueryOptions & { currentUser: true };
+type UseGetUserOptions = {
+  from:
+    | {
+        address: string;
+      }
+    | {
+        currentUser: true;
+      }
+    | {
+        queryParam: string;
+      };
+};
 
-export function useGetUser(opts: QueryOptions): UseGetUserReturn;
-export function useGetUser(
-  address: string | undefined,
-  opts?: UseQueryOptions
-): UseGetUserReturn;
-export function useGetUser(
-  addressOrOpts: string | undefined | QueryOptions,
-  opts?: UseQueryOptions | undefined
-): UseGetUserReturn {
-  const [{ data: accountData }] = useAccount();
+export const useGetUser = (opts: QueryOptions & UseGetUserOptions) => {
+  const [queryFrom, setQueryFrom] = useState<string>("");
+  const { query } = useRouter();
 
-  let queryAddress: string | undefined = undefined;
+  const { connectedAddress } = useAuth();
 
-  if (typeof addressOrOpts === "string") {
-    queryAddress = addressOrOpts;
-  } else if (addressOrOpts?.currentUser) {
-    queryAddress = accountData?.address;
-  }
+  const { from, ...queryOpts } = opts;
 
-  const { data: userData, isLoading } = useTypedQuery(
-    "getUser",
+  useEffect(() => {
+    if ("address" in from) {
+      setQueryFrom(from.address);
+    } else if ("currentUser" in from && connectedAddress) {
+      setQueryFrom(connectedAddress);
+    } else if ("queryParam" in from) {
+      const q = query[from.queryParam];
+
+      if (isStringQueryParam(q)) {
+        setQueryFrom(q);
+      }
+    }
+  }, [connectedAddress, from, query]);
+
+  return useTypedQuery(
+    ["getUser", queryFrom],
     {
-      enabled: !!queryAddress,
-      ...opts,
+      enabled: !!queryFrom,
+      ...queryOpts,
     },
-    [queryAddress || ""]
+    [queryFrom]
   );
-
-  return { user: userData?.user, isLoading };
-}
+};

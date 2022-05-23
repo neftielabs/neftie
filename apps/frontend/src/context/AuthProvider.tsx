@@ -33,7 +33,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   requiresAuth,
   children,
 }) => {
-  const [isAuthenticating, setIsAuthenticating] = useState(false);
+  const [isAuthenticating, setIsAuthenticating] = useState(true);
 
   const [token, { setToken }] = useToken();
   const [isWalletLoading] = useWallet();
@@ -41,7 +41,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const { mutateAsync: getToken } = useTypedMutation("getAuthToken");
   const { mutateAsync: disconnect } = useTypedMutation("disconnect");
 
-  const [{ data: accountData }] = useAccount();
+  const { data: accountData } = useAccount();
 
   const router = useRouter();
 
@@ -108,6 +108,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         .finally(() => {
           setIsAuthenticating(false);
         });
+    } else {
+      setIsAuthenticating(false);
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps

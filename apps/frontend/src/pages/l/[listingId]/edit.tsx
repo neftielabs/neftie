@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 import { Form, Formik } from "formik";
 import { useRouter } from "next/router";
@@ -6,6 +6,7 @@ import tw from "twin.macro";
 import type { Asserts } from "yup";
 
 import { areAddressesEqual, listingSchema } from "@neftie/common";
+import { FileDropPreview } from "components/forms/file-drop/FileDropPreview";
 import { ListingFormContainer } from "components/listings/form/ListingFormContainer";
 import { ListingPreviewCard } from "components/listings/form/ListingPreviewCard";
 import { Page } from "components/Page";
@@ -15,6 +16,7 @@ import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
+import { useTypedMutation } from "hooks/http/useTypedMutation";
 import { useAuth } from "hooks/useAuth";
 import { useGetListingFromQuery } from "hooks/useGetListingFromQuery";
 import { routes } from "lib/manifests/routes";
@@ -23,9 +25,14 @@ import type { PageComponent } from "types/tsx";
 interface ListingEditPageProps {}
 
 const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
-  const { data: listing, isError } = useGetListingFromQuery();
   const { push } = useRouter();
-  const [, , { connectedAddress }] = useAuth();
+
+  const [isUpdatingCover, setIsUpdatingCover] = useState(false);
+
+  const { data: listing, isError, refetch } = useGetListingFromQuery();
+  const { connectedAddress } = useAuth();
+
+  const { mutateAsync: updateListing } = useTypedMutation("updateListing");
 
   if (
     isError ||
@@ -38,9 +45,14 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
     return <Loader centered tw="py-30" />;
   }
 
-  const handleSubmit = (
+  const handleSubmit = async (
     values: Asserts<typeof listingSchema["editListing"]>
-  ) => {};
+  ) => {
+    try {
+      await updateListing([listing.id, values]);
+      refetch();
+    } catch {}
+  };
 
   return (
     <Page title="Edit your listing">
@@ -62,7 +74,7 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
 
             coverUrl: listing.coverUrl || "",
             coverFile: null,
-            description: "",
+            description: listing.description || "",
           }}
         >
           {(formikState) => (
@@ -90,12 +102,21 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
                           placeholder:
                             "Provide a detailed description of the service you're offering",
                         },
-                        {
-                          name: "coverUrl",
-                          label: "Cover",
-                          help: "Accepted formats: JPG, JPEG, PNG. Max size: 10 MB",
-                          fileFieldName: "coverFile",
-                        },
+                        ...[
+                          listing.coverUrl && !isUpdatingCover ? (
+                            <FileDropPreview
+                              preview={listing.coverUrl}
+                              onRemove={() => setIsUpdatingCover(true)}
+                            />
+                          ) : (
+                            {
+                              name: "coverUrl",
+                              label: "Cover",
+                              help: "Accepted formats: JPG, JPEG, PNG. Max size: 10 MB",
+                              fileFieldName: "coverFile",
+                            }
+                          ),
+                        ],
                       ],
                     },
                     {
@@ -163,7 +184,7 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
                       theme="gradientOrange"
                       isLoading={formikState.isSubmitting}
                     >
-                      Create listing
+                      Submit
                     </Button>
                   </Box>
                 </ListingFormContainer>

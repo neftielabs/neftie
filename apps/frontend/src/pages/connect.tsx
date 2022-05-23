@@ -19,23 +19,26 @@ import type { PageComponent } from "types/tsx";
 const ConnectPage: PageComponent<never> = () => {
   const { push } = useRouter();
 
-  const [{ data: connectData }, connect] = useConnect();
+  const { connectAsync, connectors, isConnected } = useConnect();
 
   const intendedPath = useGetIntendedPath();
   const { setActiveModal } = useModalStore();
-  const [isAuthed] = useAuth();
+  const { isAuthed } = useAuth();
 
   const onConnect = async (c: Connector) => {
-    await connect(c);
+    await connectAsync(c);
     setActiveModal(Modal.auth);
   };
 
   useEffect(() => {
     if (isAuthed) {
       const redirectPath = intendedPath || routes.home;
+
       push(redirectPath);
+    } else if (isConnected) {
+      setActiveModal(Modal.auth);
     }
-  }, [intendedPath, isAuthed, push]);
+  }, [intendedPath, isAuthed, isConnected, push, setActiveModal]);
 
   return (
     <Box tw="w-full px-10">
@@ -47,7 +50,7 @@ const ConnectPage: PageComponent<never> = () => {
         sign in to your neftie account.
       </Text>
       <Box tw="mt-3">
-        {connectData.connectors.map((c) => (
+        {connectors.map((c) => (
           <WalletProvider
             type="horizontal"
             key={c.id}

@@ -5,15 +5,18 @@ import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
 
 import { useTypedMutation } from "hooks/http/useTypedMutation";
 import { useToken } from "hooks/useToken";
+import { someTrue } from "utils/fp";
 
-export const useWallet = (): [
-  boolean,
-  () => Promise<{ error: string } | undefined>
-] => {
-  const [{ loading: isConnectLoading }] = useConnect();
-  const [{ data: networkData, loading: isNetworkLoading }] = useNetwork();
-  const [{ loading: isSignLoading }, signMessage] = useSignMessage();
-  const [{ data: accountData, loading: isAccountLoading }] = useAccount();
+export const useWallet = () => {
+  const { isConnecting, isReconnecting } = useConnect();
+  const { activeChain, isLoading: isNetworkLoading } = useNetwork();
+  const { isLoading: isSignLoading, signMessageAsync } = useSignMessage();
+  const {
+    data: accountData,
+    isLoading: isAccountLoading,
+    isFetching: isAccountFetching,
+    isRefetching: isAccountRefetching,
+  } = useAccount();
 
   const { mutateAsync: getNonce } = useTypedMutation("getNonce");
   const { mutateAsync: connect } = useTypedMutation("authConnect");
@@ -29,7 +32,7 @@ export const useWallet = (): [
    */
   const requestSignature = useCallback(async () => {
     const address = accountData?.address;
-    const chainId = networkData.chain?.id;
+    const chainId = activeChain?.id;
 
     if (!address || !chainId) {
       return { error: "An error occurred getting your address or chain" };
@@ -63,13 +66,7 @@ export const useWallet = (): [
       chainId,
     }).prepareMessage();
 
-    const signedMessage = await signMessage({ message });
-
-    if (signedMessage.error) {
-      return {
-        error: "Something went wrong while signing the message",
-      };
-    }
+    const signature = await signMessageAsync({ message });
 
     /**
      * Verify everything with our backend, by sending the
@@ -77,9 +74,7 @@ export const useWallet = (): [
      * containing the nonce.
      */
     try {
-      const { token, user } = await connect([
-        { message, signature: signedMessage.data },
-      ]);
+      const { token, user } = await connect([{ message, signature }]);
 
       /**
        * Addresses must still match. Clear tokens if not.
@@ -102,19 +97,23 @@ export const useWallet = (): [
     }
   }, [
     accountData?.address,
+    activeChain?.id,
     connect,
     disconnect,
     getNonce,
-    networkData.chain?.id,
     setToken,
-    signMessage,
+    signMessageAsync,
   ]);
 
-  const isLoading =
-    !!isConnectLoading ||
-    isAccountLoading ||
-    !!isNetworkLoading ||
-    !!isSignLoading;
+  const isLoading = someTrue([
+    isAccountFetching,
+    isAccountRefetching,
+    isReconnecting,
+    isConnecting,
+    isAccountLoading,
+    isNetworkLoading,
+    isSignLoading,
+  ]);
 
-  return [isLoading, requestSignature];
+  return [isLoading, requestSignature] as const;
 };

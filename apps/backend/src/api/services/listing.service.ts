@@ -1,10 +1,15 @@
+import type { UploadedFile } from "express-fileupload";
+
 import type { ListingFull, ListingPreview } from "@neftie/common";
 import { areAddressesEqual, isValidAddress } from "@neftie/common";
 import { listingProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
+import { mediaBucket } from "modules/aws/s3-instances";
+import Log from "modules/Log";
 import logger from "modules/Logger/Logger";
 import { subgraphProvider } from "modules/subgraph-client";
-import type { Pagination } from "types/helpers";
+import type { Pagination, Result } from "types/helpers";
+import { isImage } from "utils/file";
 
 /**
  * Get a listing by its address and merge it
@@ -127,4 +132,76 @@ export const getSellerListings = async (data: {
   }
 
   return listings;
+};
+
+/**
+ * Updates off-chain data of a listing
+ */
+export const updateOffChainData = async (data: {
+  address: string;
+  sellerAddress: string;
+  description?: string;
+  file?: UploadedFile;
+}): Promise<Result<undefined, "noData" | "unprocessable">> => {
+  const { sellerAddress, description, file, address } = data;
+
+  if (!description && !file) {
+    return {
+      success: false,
+      error: "noData",
+    };
+  }
+
+  const seller = await userProvider.getByAddress(sellerAddress);
+
+  if (!seller) {
+    return {
+      success: false,
+      error: "unprocessable",
+    };
+  }
+
+  const listing = await listingProvider.get({
+    address,
+    sellerId: sellerAddress,
+  });
+
+  if (!listing) {
+    return {
+      success: false,
+      error: "unprocessable",
+    };
+  }
+
+  const isImageResult = isImage(file);
+  let coverUri: string | undefined = undefined;
+
+  try {
+    if (file && isImageResult.success) {
+      const result = await mediaBucket.upload({
+        file: file.data,
+        directory: "l",
+        extension: isImageResult.data.extension,
+        previousFile: listing.coverUri ?? undefined,
+      });
+
+      if (result) {
+        coverUri = result.key;
+      }
+    } else if (file && !isImageResult.success) {
+      return {
+        success: false,
+        error: "unprocessable",
+      };
+    }
+  } catch (error) {
+    new Log("listingService", "updateOffChainData").all(error);
+  }
+
+  await listingProvider.update(address, sellerAddress, {
+    description,
+    coverUri,
+  });
+
+  return { success: true };
 };

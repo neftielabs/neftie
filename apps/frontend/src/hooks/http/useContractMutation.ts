@@ -17,7 +17,7 @@ export const useContractMutation = <R, E, D>(
   handler: (data: InjectSigner<D>) => Promise<R>,
   options?: UseMutationOptions<R, E, D, unknown>
 ) => {
-  const [{ data: signer }] = useSigner();
+  const { data: signer } = useSigner();
 
   return useMutation<R, E, D, unknown>(async (data) => {
     if (!signer) {

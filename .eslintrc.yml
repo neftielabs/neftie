@@ -43,6 +43,8 @@ settings:
   import/extensions:
     - .tsx
     - .ts
+  import/ignore:
+    - subgraph\/src\/.*
   import/internal-regex: ^@neftie/
   import/parsers:
     "@typescript-eslint/parser":

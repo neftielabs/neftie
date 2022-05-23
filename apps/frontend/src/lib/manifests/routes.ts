@@ -24,6 +24,11 @@ export const routes = {
 
   listing: (address: string) => ({
     index: `/l/${address}`,
-    edit: `/l/${address}`,
+    edit: `/l/${address}/edit`,
+    order: `/l/${address}/order`,
   }),
+
+  me: {
+    orders: "/me/orders",
+  },
 };

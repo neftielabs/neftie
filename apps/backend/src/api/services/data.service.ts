@@ -1,10 +1,11 @@
 import type { ListingFull, ListingPreview } from "@neftie/common";
-import type { Listing, User } from "@neftie/prisma";
+import type { Listing, Order, User } from "@neftie/prisma";
 import type {
   ListingFullFragment,
   ListingMinimalFragment,
+  OrderMinimalFragment,
 } from "@neftie/subgraph";
-import { listingProvider, userProvider } from "api/providers";
+import { listingProvider, orderProvider, userProvider } from "api/providers";
 import Log from "modules/Log";
 import { pick } from "utils/pick";
 import { getMediaUrl } from "utils/url";
@@ -95,5 +96,33 @@ export const mergeFullListing = async (data: {
           }
         : null,
     },
+  };
+};
+
+/**
+ * Merge off-chain minimal order with on-chain data
+ */
+export const mergeMinimalOrder = async (data: {
+  onChain: OrderMinimalFragment & { listingId?: number };
+  offChain?: Order | null;
+  client?: User | null;
+}) => {
+  let { offChain } = data;
+  const { onChain, client } = data;
+
+  if (!offChain && client && onChain.listingId) {
+    try {
+      offChain = await orderProvider.create({
+        hexId: onChain.id,
+        tx: onChain.tx,
+        listingId: onChain.listingId,
+      });
+    } catch (error) {
+      new Log("dataService", "mergeMinimalOrder").all(error);
+    }
+  }
+
+  return {
+    ...onChain,
   };
 };

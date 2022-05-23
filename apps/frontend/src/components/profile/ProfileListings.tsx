@@ -51,16 +51,7 @@ export const ProfileListings: React.FC<ProfileListingsProps> = ({
         {listings?.pages.map((page, i) => (
           <React.Fragment key={i}>
             {page.items.map((listing) => (
-              <ListingCard
-                key={listing.id}
-                id={listing.id}
-                title={listing.title}
-                price={listing.price}
-                seller={{
-                  avatarUrl: listing.seller.user?.avatarUrl,
-                  username: listing.seller.user?.username,
-                }}
-              />
+              <ListingCard key={listing.id} listing={listing} />
             ))}
           </React.Fragment>
         ))}
@@ -69,18 +60,6 @@ export const ProfileListings: React.FC<ProfileListingsProps> = ({
       <Box ref={elementRef} tw="w-full py-4">
         {isFetchingNextPage ? <Loader centered /> : null}
       </Box>
-
-      {/* {guard<boolean, JSX.Element | null>([
-        [() => isFetchingNextPage, () => <Loader centered />],
-        [
-          () => !!hasNextPage,
-          () => (
-            <Button tw="mt-3 mx-auto" onClick={() => fetchNextPage()}>
-              Load more
-            </Button>
-          ),
-        ],
-      ])(() => null)(constTrue())} */}
     </>
   );
 };

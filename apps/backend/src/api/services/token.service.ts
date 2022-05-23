@@ -8,10 +8,16 @@ import { isProd } from "utils/constants";
 /**
  * Generates an access token
  */
-export const generateAccessToken = (payload: AccessTokenPayload) =>
-  jwt.sign(payload, config.tokens.access.secret, {
-    expiresIn: config.tokens.access.expires,
-  });
+export const generateAccessToken = (
+  payload: Omit<AccessTokenPayload, "version">
+) =>
+  jwt.sign(
+    { ...payload, version: config.tokens.access.currentVersion },
+    config.tokens.access.secret,
+    {
+      expiresIn: config.tokens.access.expires,
+    }
+  );
 
 /**
  * Verifies the validity of an access token

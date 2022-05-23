@@ -14,7 +14,13 @@ export const editListing = yup.object({
   bondFee: yup.number().nullable(),
   deliveryDays: yup.number().required().max(10).min(1),
   revisions: yup.number().required().min(0).max(5),
+
   coverUrl: yup.string().notRequired(),
-  coverFile: yup.mixed().required(),
-  description: yup.string().max(1000).required(),
+  coverFile: yup.mixed().notRequired(),
+  description: yup.string().max(1000).notRequired(),
+});
+
+export const serverEditListing = yup.object({
+  coverFile: yup.mixed().notRequired(),
+  description: yup.string().max(1000).notRequired(),
 });

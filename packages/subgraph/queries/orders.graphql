@@ -1,0 +1,40 @@
+# ---------------------------------------------------------------------------- #
+#                                   Fragments                                  #
+# ---------------------------------------------------------------------------- #
+
+fragment orderMinimal on Order {
+  id
+  tx
+  status
+}
+
+# ---------------------------------------------------------------------------- #
+#                                    Queries                                   #
+# ---------------------------------------------------------------------------- #
+
+#
+# Get an order by its transaction hash and seller id
+#
+
+query getMinimalListingOrdersByClient($listingId: String!, $clientId: ID!) {
+  client(id: $clientId) {
+    orders(where: { listing: $listingId }) {
+      ...orderMinimal
+    }
+  }
+}
+
+query getMinimalSellerOrders(
+  $sellerAddress: ID!
+  $cursor: ID = ""
+  $limit: Int
+) {
+  orders(
+    where: { seller: $sellerAddress, id_gt: $cursor }
+    first: $limit
+    orderBy: id
+    orderDirection: asc
+  ) {
+    ...listingMinimal
+  }
+}

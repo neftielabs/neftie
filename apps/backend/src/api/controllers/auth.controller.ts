@@ -103,7 +103,7 @@ export const verifySignature = createController(
 
         // Generate token
         const accessToken = tokenService.generateAccessToken({
-          userId: user.id,
+          userAddress: user.address,
         });
 
         authService.setClientToken(ctx.res, accessToken);
@@ -134,9 +134,9 @@ export const getUserToken = createController(
   strictLimited,
   (route) =>
     route.use(authMiddleware.withAuth("present")).handler(async (ctx) => {
-      const { token, userId } = ctx.auth;
+      const { token, userAddress } = ctx.auth;
 
-      if (!token || !userId) {
+      if (!token || !userAddress) {
         if (token) {
           authService.clearTokens(ctx.res);
         }
@@ -144,7 +144,7 @@ export const getUserToken = createController(
         throw new AppError(httpResponse("BAD_REQUEST"));
       }
 
-      const user = await userService.getUser({ userId });
+      const user = await userService.getUser({ address: userAddress });
 
       if (!user) {
         throw new AppError(httpResponse("BAD_REQUEST"));

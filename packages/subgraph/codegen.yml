@@ -3,7 +3,7 @@ schema:
   - https://api.thegraph.com/subgraphs/name/neftielabs/neftie-rinkeby
   - scalars.graphql
 documents:
-  - queries/listings.graphql
+  - queries/*.graphql
 generates:
   src/generated/index.ts:
     plugins:

@@ -35,6 +35,6 @@ export const getUserByUsername = createController(
         throw new AppError(httpResponse("NOT_FOUND"));
       }
 
-      return Response.ok({ user });
+      return Response.ok(user);
     })
 );

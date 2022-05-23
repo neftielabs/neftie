@@ -1,55 +1,52 @@
-import { useCallback, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
 
 import type { UserSafe } from "@neftie/common";
-import { isValidAddress } from "@neftie/common";
 import { routes } from "lib/manifests/routes";
-import { ProfileTab } from "types/ui";
-import { everyTrue } from "utils/fp";
+import type { ProfileTabs } from "types/ui";
+import { allowedProfileTabs } from "types/ui";
 
-export const useRedirectProfile = (user: UserSafe) => {
+export const useRedirectProfile = (user?: UserSafe | null) => {
   const { query, replace } = useRouter();
+  const [currentTab, setCurrentTab] = useState<ProfileTabs>("listings");
 
-  const getCurrentTab = useCallback(() => {
-    return query.tab && query.tab.length === 1 && query.tab[0] in ProfileTab
-      ? query.tab[0]
-      : null;
-  }, [query.tab]);
+  const isTabAllowed = useCallback((tab: string): tab is ProfileTabs => {
+    return allowedProfileTabs.includes(tab as any);
+  }, []);
 
-  const tabRedirect = useCallback(
-    (username: string) => {
-      if (!username) return;
+  /**
+   * Parse query params and determine which
+   * tab should be displayed
+   */
+  useEffect(() => {
+    const queryTab = !!query.tab && Array.isArray(query.tab) && query.tab[0];
 
-      const currentTab = getCurrentTab();
+    if (queryTab === currentTab) {
+      return;
+    }
 
-      if (!currentTab) {
-        // Redirect to default tab
-        replace(routes.user(username).listings, undefined, { shallow: true });
+    if (queryTab && isTabAllowed(queryTab)) {
+      setCurrentTab(queryTab);
+    } else {
+      setCurrentTab("listings");
+    }
+  }, [currentTab, isTabAllowed, query.tab, query.username, replace]);
+
+  /**
+   * Redirect to the current tab and username
+   */
+  useEffect(() => {
+    if (query.username && typeof query.username === "string") {
+      const username = user?.username || query.username;
+
+      if (username === query.username) {
         return;
       }
 
-      if (username !== query.username) {
-        // Redirect to same tab only changing the username path
-        replace(
-          routes.user(username)[
-            currentTab as keyof ReturnType<typeof routes["user"]>
-          ],
-          undefined,
-          { shallow: true }
-        );
-      }
-    },
-    [getCurrentTab, query.username, replace]
-  );
-
-  useEffect(() => {
-    if (everyTrue([isValidAddress(String(query.username)), !!user.username])) {
-      tabRedirect(user.username);
-    } else {
-      tabRedirect(String(query.username));
+      replace(routes.user(username)[currentTab]);
     }
-  }, [query.username, tabRedirect, user.username]);
+  }, [currentTab, query.username, replace, user?.username]);
 
-  return { getCurrentTab };
+  return currentTab;
 };

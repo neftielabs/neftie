@@ -36,23 +36,25 @@ type ListingPreviewCardProps =
 export const ListingPreviewCard: React.FC<ListingPreviewCardProps> = (
   props
 ) => {
-  const { user } = useGetUser({ currentUser: true });
+  const isFetchedAddress = "address" in props;
+
+  const { data: user } = useGetUser({ from: { currentUser: true } });
   const [listing, setListing] = useState<ListingPreviewMinimal>();
   const { data } = useTypedQuery(
     "verifyListingExists",
     {
-      enabled: "address" in props,
+      enabled: isFetchedAddress,
     },
-    "address" in props ? [props.address] : undefined
+    isFetchedAddress ? [props.address] : undefined
   );
 
   useEffect(() => {
-    if ("listing" in props) {
+    if (!isFetchedAddress) {
       setListing(props.listing);
-    } else if ("address" in props && props.address && data) {
+    } else if (isFetchedAddress && props.address && data) {
       setListing(data);
     }
-  }, [data, listing, props]);
+  }, [data, isFetchedAddress, listing, props]);
 
   if (!user || !listing) {
     return null;
@@ -64,15 +66,13 @@ export const ListingPreviewCard: React.FC<ListingPreviewCardProps> = (
       tw="w-full border border-gray-100 rounded-12 overflow-hidden shadow-xl"
       css={"address" in props ? {} : tw`sticky top-3`}
     >
-      {listing.coverUrl !== undefined ? (
-        <Box tw="h-15 w-full bg-gray-100">
-          {listing.coverUrl ? (
-            <Image src={listing.coverUrl} alt="" />
-          ) : (
-            <ImagePlaceholder />
-          )}
-        </Box>
-      ) : null}
+      <Box tw="h-15 w-full bg-gray-100">
+        {listing.coverUrl ? (
+          <Image src={listing.coverUrl} alt="" />
+        ) : (
+          <ImagePlaceholder />
+        )}
+      </Box>
 
       <Flex tw="py-2" column>
         <Flex

@@ -1,6 +1,6 @@
 import React from "react";
 
-import { useAccount } from "wagmi";
+import { useDisconnect } from "wagmi";
 
 import type { UserSafe } from "@neftie/common";
 import { Avatar } from "components/media/Avatar";
@@ -17,7 +17,7 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   user,
   isLoading = false,
 }) => {
-  const [, disconnect] = useAccount();
+  const { disconnect } = useDisconnect();
 
   return (
     <Box tw="rounded-full text-white relative" onClick={() => disconnect()}>

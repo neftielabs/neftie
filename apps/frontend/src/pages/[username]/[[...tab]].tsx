@@ -1,60 +1,45 @@
 import React from "react";
 
-import type { GetStaticPaths } from "next";
+import { useRouter } from "next/router";
 
+import { areAddressesEqual } from "@neftie/common";
 import { ProfileHeader } from "components/headers/ProfileHeader";
 import { Page } from "components/Page";
 import { ProfileTabs } from "components/tabs/ProfileTabs";
+import { Loader } from "components/ui/Loader";
 import { useGetUser } from "hooks/queries/useGetUser";
 import { useAuth } from "hooks/useAuth";
-import { serverClient } from "lib/http/serverClient";
-import { handleStaticProps } from "lib/server/handleStaticProps";
+import { useRedirectProfile } from "hooks/useRedirectProfile";
+import { routes } from "lib/manifests/routes";
 import type { PageComponent } from "types/tsx";
 
-export const getStaticProps = handleStaticProps(async (ctx) => {
-  const username = ctx.params?.username;
+const AccountPage: PageComponent<never> = () => {
+  const { replace } = useRouter();
 
-  if (!username || typeof username !== "string") {
-    return {
-      notFound: true,
-    };
-  }
-
-  try {
-    const { user } = await serverClient().query.getUser(username);
-
-    return {
-      props: {
-        user,
-      },
-      revalidate: 60 * 15, // refresh every 15 minutes
-    };
-  } catch {}
-
-  return { notFound: true };
-});
-
-export const getStaticPaths: GetStaticPaths = () => {
-  return {
-    paths: [],
-    fallback: "blocking",
-  };
-};
-
-const AccountPage: PageComponent<typeof getStaticProps> = ({ serverProps }) => {
-  const [, , { connectedAddress }] = useAuth();
-  const data = useGetUser(serverProps.user.address, {
-    initialData: serverProps.user,
+  const { connectedAddress } = useAuth();
+  const { data: user, isError } = useGetUser({
+    from: { queryParam: "username" },
   });
 
-  const user = data.user || serverProps.user;
+  const currentTab = useRedirectProfile(user);
 
-  const isCurrentUser = user.address === connectedAddress;
+  if (isError) {
+    replace(routes.notFound);
+  }
 
   return (
-    <Page title={`@${user.username}` || user.address}>
-      <ProfileHeader user={user} isCurrentUser={isCurrentUser} />
-      <ProfileTabs user={user} />
+    <Page title={user?.username}>
+      {user ? (
+        <>
+          <ProfileHeader
+            user={user}
+            isCurrentUser={areAddressesEqual(user?.address, connectedAddress)}
+          />
+          <ProfileTabs currentTab={currentTab} user={user} />
+        </>
+      ) : (
+        <Loader centered tw="py-10" />
+      )}
     </Page>
   );
 };

@@ -12,7 +12,7 @@ import { Text } from "components/ui/Text";
 interface ConnectWalletModalProps {}
 
 export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = () => {
-  const [{ data: connectData }, connect] = useConnect();
+  const { connectors, connect } = useConnect();
 
   return (
     <Flex tw="pt-4 pb-3 px-3" column>
@@ -34,7 +34,7 @@ export const ConnectWalletModal: React.FC<ConnectWalletModalProps> = () => {
         <FiExternalLink size="13" tw="mt-0.2" />
       </Link>
       <Box tw="mt-3">
-        {connectData.connectors.map((c) => (
+        {connectors.map((c) => (
           <WalletProvider
             key={c.id}
             connector={c}

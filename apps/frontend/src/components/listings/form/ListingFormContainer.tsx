@@ -18,7 +18,12 @@ interface ListingFormContainerProps extends React.ComponentProps<typeof Box> {
   notice?: string;
   sections: {
     title: string;
-    items: (InputCombinedProps | InputCombinedProps[] | FileDropProps)[];
+    items: (
+      | InputCombinedProps
+      | InputCombinedProps[]
+      | FileDropProps
+      | JSX.Element
+    )[];
   }[];
 }
 
@@ -66,7 +71,7 @@ export const ListingFormContainer: React.FC<ListingFormContainerProps> = ({
                     {"fileFieldName" in item ? (
                       <FileDrop {...item} />
                     ) : (
-                      <Input {...item} />
+                      <>{"name" in item ? <Input {...item} /> : item}</>
                     )}
                   </>
                 )}

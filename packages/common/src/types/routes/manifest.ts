@@ -12,6 +12,7 @@ export type RouteManifest = {
   /**
    * Healthchecks
    */
+
   "/health": {
     get: {
       response: [Response.Ok<string>];
@@ -21,21 +22,25 @@ export type RouteManifest = {
   /**
    * Auth
    */
+
   "/auth/nonce": {
     post: {
       response: [Response.Ok<string>];
     };
   };
+
   "/auth/connect": {
     post: {
       response: [Response.Ok<{ token: string; user: UserSafe }>];
     };
   };
+
   "/auth/token": {
     post: {
       response: [Response.Ok<{ token: string; user: UserSafe }>];
     };
   };
+
   "/auth/disconnect": {
     post: {
       response: [Response.NoContent];
@@ -45,11 +50,7 @@ export type RouteManifest = {
   /**
    * Authorized user
    */
-  "/me": {
-    get: {
-      response: [Response.Ok<{ user: UserSafe | null }>];
-    };
-  };
+
   "/me/upload": {
     post: {
       response: [Response.Created];
@@ -59,15 +60,17 @@ export type RouteManifest = {
   /**
    * Users
    */
+
   "/users/:addressOrUsername": {
     get: {
-      response: [Response.Ok<{ user: UserSafe }>];
+      response: [Response.Ok<UserSafe>];
     };
   };
 
   /**
    * Listings
    */
+
   "/listings/:address": {
     get: {
       response: [
@@ -76,7 +79,11 @@ export type RouteManifest = {
         Response.UnprocessableEntity
       ];
     };
+    patch: {
+      response: [Response.Ok, Response.UnprocessableEntity];
+    };
   };
+
   "/listings/:address/verify": {
     get: {
       response: [
@@ -86,6 +93,7 @@ export type RouteManifest = {
       ];
     };
   };
+
   "/listings/user/:address": {
     get: {
       response: [Response.Ok<Paginated<ListingPreview[]>>];
@@ -93,8 +101,25 @@ export type RouteManifest = {
   };
 
   /**
+   * Orders
+   */
+
+  "/orders/listing/:address/verify": {
+    get: {
+      response: [Response.Ok, Response.NotFound];
+    };
+  };
+
+  "/orders/user/:address": {
+    get: {
+      response: [Response.Ok<Paginated<never[]>>];
+    };
+  };
+
+  /**
    * Tools
    */
+
   "/tools/eth": {
     get: {
       response: [

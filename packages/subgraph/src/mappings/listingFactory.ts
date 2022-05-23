@@ -1,4 +1,4 @@
-import type { ListingCreated } from "../../generated/ListingFactory/ListingFactory";
+import { ListingCreated } from "../../generated/ListingFactory/ListingFactory";
 import { Listing } from "../../generated/templates";
 import { weiToEth } from "../utils/eth";
 import { getListingEntity, getSellerEntity } from "../utils/store";

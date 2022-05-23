@@ -1,10 +1,16 @@
 import { Response, applyMiddleware } from "typera-express";
 
-import { isValidAddress } from "@neftie/common";
-import { authMiddleware, filterMiddleware } from "api/middleware";
+import { isValidAddress, listingSchema } from "@neftie/common";
+import {
+  authMiddleware,
+  fileMiddleware,
+  filterMiddleware,
+} from "api/middleware";
+import { withBody } from "api/middleware/validation.middleware";
 import { listingService } from "api/services";
 import { createController, createReusableController } from "modules/controller";
-import { withPagination } from "utils/helpers";
+import { isValidSingleFile } from "utils/file";
+import { isErrorResult, withPagination } from "utils/helpers";
 
 const authController = createReusableController(
   applyMiddleware(authMiddleware.withAuth("required"))
@@ -32,6 +38,40 @@ export const getListing = createController(
 
       return Response.ok(listing);
     })
+);
+
+/**
+ * Allows updating off-chain data of a given listing
+ */
+export const patchListing = authController(
+  "/listings/:address",
+  "patch",
+  (route) =>
+    route
+      .use(withBody(listingSchema.serverEditListing))
+      .use(fileMiddleware.generic())
+      .handler(async (ctx) => {
+        const { userAddress } = ctx.auth;
+        const { description } = ctx.body;
+        const file = ctx.req.files?.coverFile;
+
+        if (file && !isValidSingleFile(file, 10 * 1024 * 1024)) {
+          return Response.unprocessableEntity();
+        }
+
+        const patchResult = await listingService.updateOffChainData({
+          address: ctx.routeParams.address,
+          sellerAddress: userAddress,
+          description,
+          file,
+        });
+
+        if (isErrorResult(patchResult, "unprocessable")) {
+          return Response.unprocessableEntity();
+        }
+
+        return Response.ok();
+      })
 );
 
 /**

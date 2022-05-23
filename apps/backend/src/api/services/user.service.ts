@@ -130,18 +130,18 @@ export async function getUser(
  * Handles profile avatar and banner uploads.
  */
 export const handleProfileUpload = async (data: {
-  userId: string;
+  userAddress: string;
   file: UploadedFile;
   entity: "avatar" | "banner";
 }) => {
-  const { userId, file, entity } = data;
+  const { userAddress, file, entity } = data;
 
-  const user = await userProvider.getById(userId);
+  const user = await userProvider.getByAddress(userAddress);
   if (!user) {
     return null;
   }
 
-  const isImageResult = isImage(file.name);
+  const isImageResult = isImage(file);
   if (!isImageResult.success) {
     return null;
   }
@@ -153,7 +153,7 @@ export const handleProfileUpload = async (data: {
     const result = await mediaBucket.upload({
       file: file.data,
       directory: `u/${entity}s`,
-      extension: isImageResult.extension,
+      extension: isImageResult.data.extension,
       previousFile: previousAsset || undefined,
     });
 
