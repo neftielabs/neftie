@@ -1,3 +1,4 @@
+/* eslint-disable camelcase */
 /* eslint-disable init-declarations */
 import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import type { Contract } from "ethers";

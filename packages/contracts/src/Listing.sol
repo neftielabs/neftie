@@ -34,6 +34,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
     uint256 bondFee;
     uint256 deliveryDays;
     uint256 revisions;
+    uint256 createdAt;
   }
 
   /**
@@ -109,14 +110,14 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Map of orders indexed by the order id
    */
-  mapping(bytes32 => Order) public orders;
+  mapping(uint256 => Order) public orders;
 
   /**
    * @notice When an order is placed and is waiting for
    * the seller approval
    */
   event OrderPlaced(
-    bytes32 indexed orderId,
+    uint256 indexed orderId,
     address indexed client,
     OrderStatus status,
     uint256 startedAt,
@@ -126,18 +127,18 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice When an order is approved by the seller
    */
-  event OrderApproved(bytes32 indexed orderId);
+  event OrderApproved(uint256 indexed orderId);
 
   /**
    * @notice When an order is dismissed by either the seller or the client
    */
-  event OrderDismissed(bytes32 indexed orderId, address author);
+  event OrderDismissed(uint256 indexed orderId, address author);
 
   /**
    * @notice When an order is cancelled
    */
   event OrderCancelled(
-    bytes32 indexed orderId,
+    uint256 indexed orderId,
     address author,
     uint256 cancelledAt
   );
@@ -145,27 +146,27 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice When an order is delivered
    */
-  event OrderDelivered(bytes32 indexed orderId, uint256 deliveredAt);
+  event OrderDelivered(uint256 indexed orderId, uint256 deliveredAt);
 
   /**
    * @notice When a revision is requested
    */
-  event RevisionRequested(bytes32 indexed orderId);
+  event RevisionRequested(uint256 indexed orderId);
 
   /**
    * @notice When a tip is sent to the seller
    */
-  event Tip(bytes32 indexed orderId, uint256 amount);
+  event Tip(uint256 indexed orderId, uint256 amount);
 
   /**
    * @notice When the seller withdraws funds from an order
    */
-  event OrderWithdrawn(bytes32 indexed orderId);
+  event OrderWithdrawn(uint256 indexed orderId);
 
   /**
    * @notice When the client withdraws the bond fee
    */
-  event BondFeeWithdrawn(bytes32 indexed orderId);
+  event BondFeeWithdrawn(uint256 indexed orderId);
 
   /**
    * @notice Allow only a moderator defined in the core contract
@@ -189,7 +190,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Allow only a given status
    */
-  modifier onlyStatus(bytes32 _orderId, OrderStatus _status) {
+  modifier onlyStatus(uint256 _orderId, OrderStatus _status) {
     require(orders[_orderId].status == _status, "Not allowed by order status");
     _;
   }
@@ -197,7 +198,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Allow only the client of an order
    */
-  modifier onlyClient(bytes32 _orderId) {
+  modifier onlyClient(uint256 _orderId) {
     require(orders[_orderId].client == msg.sender, "Only client");
     _;
   }
@@ -205,7 +206,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Allow either the client or the seller
    */
-  modifier bothSellerOrClient(bytes32 _orderId) {
+  modifier bothSellerOrClient(uint256 _orderId) {
     require(
       orders[_orderId].client == msg.sender || seller == msg.sender,
       "Only client or seller"
@@ -260,6 +261,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
     listing.bondFee = _bondFee;
     listing.deliveryDays = _deliveryDays * 1 days;
     listing.revisions = _revisions;
+    listing.createdAt = block.timestamp;
   }
 
   /**
@@ -290,9 +292,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
       lastOrderCount++;
     }
 
-    bytes32 orderId = keccak256(
-      abi.encodePacked(lastOrderCount, msg.sender, block.timestamp)
-    );
+    uint256 orderId = lastOrderCount;
 
     // Save order
 
@@ -317,7 +317,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Seller can approve an order in status PLACED
    */
-  function approveOrder(bytes32 _orderId)
+  function approveOrder(uint256 _orderId)
     external
     onlySeller
     onlyStatus(_orderId, OrderStatus.PLACED)
@@ -331,7 +331,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * @notice Seller or client can dismiss an order request before it is
    * approved and the client will be refunded the price and bond fee.
    */
-  function dismissOrder(bytes32 _orderId)
+  function dismissOrder(uint256 _orderId)
     external
     bothSellerOrClient(_orderId)
     onlyStatus(_orderId, OrderStatus.PLACED)
@@ -354,7 +354,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    *   to neftie's vault.
    *   If the order is past due, then the seller gets a full refund without any penalty.
    */
-  function cancelOrder(bytes32 _orderId)
+  function cancelOrder(uint256 _orderId)
     external
     bothSellerOrClient(_orderId)
     onlyStatus(_orderId, OrderStatus.ONGOING)
@@ -386,7 +386,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * the delivery. Also, the client can only request revisions before
    * a specified number of days after the delivery.
    */
-  function deliverOrder(bytes32 _orderId)
+  function deliverOrder(uint256 _orderId)
     external
     onlySeller
     onlyStatus(_orderId, OrderStatus.ONGOING)
@@ -404,7 +404,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * @notice Client can request a revision if there are any left.
    * @dev Details are kept off-chain.
    */
-  function requestRevision(bytes32 _orderId)
+  function requestRevision(uint256 _orderId)
     external
     onlyClient(_orderId)
     onlyStatus(_orderId, OrderStatus.DELIVERED)
@@ -429,7 +429,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * @notice Client can tip the seller once an order is delivered as many
    * times as they want. Neftie takes a cut.
    */
-  function tipSeller(bytes32 _orderId)
+  function tipSeller(uint256 _orderId)
     external
     payable
     onlyClient(_orderId)
@@ -451,7 +451,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
    * and client can withdraw the bond fee.
    * Only once x days have passed since it was marked as delivered.
    */
-  function withdrawOrderFunds(bytes32 _orderId)
+  function withdrawOrderFunds(uint256 _orderId)
     external
     bothSellerOrClient(_orderId)
     onlyStatus(_orderId, OrderStatus.DELIVERED)
@@ -503,14 +503,14 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
   /**
    * @notice Determines if an order is past due
    */
-  function isOrderPastDue(bytes32 _orderId) public view returns (bool) {
+  function isOrderPastDue(uint256 _orderId) public view returns (bool) {
     return block.timestamp > orders[_orderId].startedAt + listing.deliveryDays;
   }
 
   /**
    * @notice Refund the client the price and the bond fee
    */
-  function _refundClient(bytes32 _orderId) private {
+  function _refundClient(uint256 _orderId) private {
     orders[_orderId].client.sendValue(listing.price);
     orders[_orderId].client.sendValue(listing.bondFee);
   }

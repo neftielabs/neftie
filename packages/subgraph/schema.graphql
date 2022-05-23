@@ -30,8 +30,8 @@ type Tip @entity {
 }
 
 type Order @entity {
-  "The order id"
-  id: Bytes!
+  "Listing id + _ + order id"
+  id: String!
 
   "The transaction hash of the order placement"
   tx: String!

@@ -10,8 +10,8 @@
     "codegen:graph": "graph codegen",
     "codegen:all": "yarn clean && yarn codegen:graph && yarn codegen",
     "build": "graph build",
-    "predeploy": "yarn codegen",
-    "deploy:goerli": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-rinkeby ./subgraph.yaml"
+    "predeploy": "yarn codegen:graph",
+    "deploy:dev": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-dev ./subgraph.yaml"
   },
   "dependencies": {
     "@graphprotocol/graph-cli": "0.29.0",
