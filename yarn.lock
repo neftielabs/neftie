@@ -3308,7 +3308,7 @@ __metadata:
     "@neftie/contracts": "*"
     "@next/bundle-analyzer": 12.1.6
     "@react-hookz/web": 13.1.0
-    "@sentry/cli": 1.74.4
+    "@sentry/cli": 2.1.0
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.7
     "@types/node": 17.0.21
@@ -3986,7 +3986,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:1.74.4, @sentry/cli@npm:^1.73.0":
+"@sentry/cli@npm:2.1.0":
+  version: 2.1.0
+  resolution: "@sentry/cli@npm:2.1.0"
+  dependencies:
+    https-proxy-agent: ^5.0.0
+    node-fetch: ^2.6.7
+    npmlog: ^6.0.1
+    progress: ^2.0.3
+    proxy-from-env: ^1.1.0
+    which: ^2.0.2
+  bin:
+    sentry-cli: bin/sentry-cli
+  checksum: 5f1293b9042e4babd4cd28cea26d2fd7040529964a3f67a02c22049c041d56d4f45f4530fb3cbb8fa63ca0c32fe9350a361eaffa29a00a322d7ed2d66e9721cd
+  languageName: node
+  linkType: hard
+
+"@sentry/cli@npm:^1.73.0":
   version: 1.74.4
   resolution: "@sentry/cli@npm:1.74.4"
   dependencies:
@@ -17603,7 +17619,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npmlog@npm:^6.0.0":
+"npmlog@npm:^6.0.0, npmlog@npm:^6.0.1":
   version: 6.0.2
   resolution: "npmlog@npm:6.0.2"
   dependencies:

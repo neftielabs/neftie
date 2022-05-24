@@ -43,7 +43,7 @@
   },
   "devDependencies": {
     "@next/bundle-analyzer": "12.1.6",
-    "@sentry/cli": "1.74.4",
+    "@sentry/cli": "2.1.0",
     "@types/node": "17.0.21",
     "@types/nprogress": "0.2.0",
     "@types/react": "17.0.43",
