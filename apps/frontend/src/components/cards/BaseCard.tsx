@@ -12,8 +12,8 @@ export const BaseCard = styled(Box, {
     },
     border: {
       none: {},
-      light: tw`border-gray-150`,
-      dark: tw`border-gray-200`,
+      light: tw`border-gray-100`,
+      darker: tw`border-gray-150`,
     },
     rounded: {
       true: tw`rounded-12 overflow-hidden`,

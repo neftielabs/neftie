@@ -7,6 +7,11 @@ export const verifyOrderSchema = yup.object({
     .required(),
 });
 
-export const userOrdersSchema = yup.object({
-  role: yup.string().oneOf(["seller", "client"]).required().default("seller"),
+export const entityOrdersSchema = yup.object({
+  as: yup.string().oneOf(["seller", "client"]).required().default("seller"),
+});
+
+export const orderMessage = yup.object({
+  orderComposedId: yup.string().required(),
+  message: yup.string().min(1).max(500).required(),
 });

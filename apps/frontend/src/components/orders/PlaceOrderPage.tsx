@@ -1,6 +1,6 @@
 import React from "react";
 
-import type { ListingFull } from "@neftie/common";
+import type { IListingFull } from "@neftie/common";
 import { ListingCard } from "components/cards/ListingCard";
 import { OrderSummary } from "components/orders/OrderSummary";
 import { Box } from "components/ui/Box";
@@ -9,7 +9,7 @@ import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
 
 interface PlaceOrderPageProps {
-  listing: ListingFull;
+  listing: IListingFull;
   isTxLoading: boolean;
 }
 

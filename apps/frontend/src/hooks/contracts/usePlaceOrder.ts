@@ -2,15 +2,15 @@ import type { ContractTransaction } from "ethers";
 import { ethers } from "ethers";
 import type { UseMutationOptions } from "react-query";
 
-import type { ListingFull } from "@neftie/common";
+import type { IListingFull } from "@neftie/common";
 import { useContractMutation } from "hooks/http/useContractMutation";
 import { getListingContract } from "lib/web3/contracts";
 import { withGasMargin } from "lib/web3/gas";
 
 export const usePlaceOrder = (
-  listing?: ListingFull | null,
+  listing?: IListingFull | null,
   options?: UseMutationOptions<
-    { tx: ContractTransaction; orderListing: ListingFull },
+    { tx: ContractTransaction; orderListing: IListingFull },
     unknown,
     null
   >

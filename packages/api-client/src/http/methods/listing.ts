@@ -7,7 +7,7 @@ import type { Call } from "../types";
 export const listingMethods = (call: Call) => ({
   mutation: {
     updateListing: (
-      address: string,
+      listingId: string,
       data: Asserts<typeof listingSchema["editListing"]>
     ) => {
       const file = data.coverFile as File;
@@ -26,32 +26,40 @@ export const listingMethods = (call: Call) => ({
         formData.append("description", data.description);
       }
 
-      return call("/listings/:address", "patch", {
-        realUrl: `/listings/${address}`,
+      return call("/listings/:listingId", "patch", {
         data: formData,
         headers: {
           "content-type": "multipart/from-data",
+        },
+        routeParams: {
+          listingId,
         },
       });
     },
   },
   query: {
-    verifyListingExists: (address: string) =>
-      call("/listings/:address/verify", "get", {
-        realUrl: `/listings/${address}/verify`,
+    verifyListingExists: (listingId: string) =>
+      call("/listings/:listingId/verify", "get", {
+        routeParams: {
+          listingId,
+        },
       }),
 
-    getSellerListings: (data: { sellerAddress: string; pageParam?: string }) =>
-      call("/listings/user/:address", "get", {
-        realUrl: `/listings/user/${data.sellerAddress}`,
+    getSellerListings: (data: { sellerId: string; pageParam?: string }) =>
+      call("/users/:userId/listings", "get", {
+        routeParams: {
+          userId: data.sellerId,
+        },
         params: {
           cursor: data.pageParam,
         },
       }),
 
-    getListing: (address: string) =>
-      call("/listings/:address", "get", {
-        realUrl: `/listings/${address}`,
+    getListing: (listingId: string) =>
+      call("/listings/:listingId", "get", {
+        routeParams: {
+          listingId,
+        },
       }),
   },
 });

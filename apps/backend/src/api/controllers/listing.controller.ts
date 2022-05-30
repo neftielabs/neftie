@@ -9,6 +9,7 @@ import {
 import { withBody } from "api/middleware/validation.middleware";
 import { listingService } from "api/services";
 import { createController, createReusableController } from "modules/controller";
+import logger from "modules/Logger/Logger";
 import { isValidSingleFile } from "utils/file";
 import { isErrorResult, withPagination } from "utils/helpers";
 
@@ -20,17 +21,17 @@ const authController = createReusableController(
  * Returns a listing by its id
  */
 export const getListing = createController(
-  "/listings/:address",
+  "/listings/:listingId",
   "get",
   (route) =>
     route.handler(async (ctx) => {
-      const address = ctx.routeParams.address;
+      const listingId = ctx.routeParams.listingId;
 
-      if (!isValidAddress(address)) {
+      if (!isValidAddress(listingId)) {
         return Response.unprocessableEntity();
       }
 
-      const listing = await listingService.getListing(address);
+      const listing = await listingService.getListing(listingId);
 
       if (!listing) {
         return Response.notFound();
@@ -44,29 +45,31 @@ export const getListing = createController(
  * Allows updating off-chain data of a given listing
  */
 export const patchListing = authController(
-  "/listings/:address",
+  "/listings/:listingId",
   "patch",
   (route) =>
     route
       .use(withBody(listingSchema.serverEditListing))
       .use(fileMiddleware.generic())
       .handler(async (ctx) => {
-        const { userAddress } = ctx.auth;
+        const { userId } = ctx.auth;
         const { description } = ctx.body;
         const file = ctx.req.files?.coverFile;
 
         if (file && !isValidSingleFile(file, 10 * 1024 * 1024)) {
+          logger.debug("Invalid file");
           return Response.unprocessableEntity();
         }
 
         const patchResult = await listingService.updateOffChainData({
-          address: ctx.routeParams.address,
-          sellerAddress: userAddress,
+          listingId: ctx.routeParams.listingId,
+          sellerId: userId,
           description,
           file,
         });
 
         if (isErrorResult(patchResult, "unprocessable")) {
+          logger.debug("unprocessable");
           return Response.unprocessableEntity();
         }
 
@@ -79,17 +82,17 @@ export const patchListing = authController(
  * by checking if it has been indexed by the subgraph
  */
 export const verifyListingCreated = authController(
-  "/listings/:address/verify",
+  "/listings/:listingId/verify",
   "get",
   (route) =>
     route.handler(async (ctx) => {
-      const address = ctx.routeParams.address;
+      const listingId = ctx.routeParams.listingId;
 
-      if (!isValidAddress(address)) {
+      if (!isValidAddress(listingId)) {
         return Response.unprocessableEntity();
       }
 
-      const listing = await listingService.ensureListingExists(address);
+      const listing = await listingService.ensureListingExists(listingId);
 
       if (!listing) {
         return Response.notFound();
@@ -104,12 +107,12 @@ export const verifyListingCreated = authController(
  * seller
  */
 export const getUserListings = createController(
-  "/listings/user/:address",
+  "/users/:userId/listings",
   "get",
   (route) =>
     route.use(filterMiddleware.pagination).handler(async (ctx) => {
       const listings = await listingService.getSellerListings({
-        sellerAddress: ctx.routeParams.address,
+        sellerId: ctx.routeParams.userId,
         pagination: ctx.filters.pagination,
       });
 

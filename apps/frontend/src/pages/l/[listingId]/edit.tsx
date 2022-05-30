@@ -28,8 +28,9 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
   const { push } = useRouter();
 
   const [isUpdatingCover, setIsUpdatingCover] = useState(false);
+  const [formError, setFormError] = useState("");
 
-  const { data: listing, isError, refetch } = useGetListingFromQuery();
+  const { data: listing, isError } = useGetListingFromQuery();
   const { connectedAddress } = useAuth();
 
   const { mutateAsync: updateListing } = useTypedMutation("updateListing");
@@ -48,10 +49,15 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
   const handleSubmit = async (
     values: Asserts<typeof listingSchema["editListing"]>
   ) => {
+    setFormError("");
+
     try {
       await updateListing([listing.id, values]);
-      refetch();
-    } catch {}
+      push(routes.listing(listing.id).index);
+    } catch {
+      window.scrollTo({ top: 0, behavior: "smooth" });
+      setFormError("An error occurred upadting your listing");
+    }
   };
 
   return (
@@ -82,7 +88,19 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
               <Form tw="w-3/5">
                 <ListingFormContainer
                   css={tw`w-full`}
-                  description="The"
+                  description={
+                    <>
+                      Edit all off-chain data as much as you want!
+                      <br /> This data is not stored on the blockchain because
+                      it is not essential for a listing to work and helps reduce
+                      the overall cost, including transaction fees.
+                    </>
+                  }
+                  notice={
+                    formError
+                      ? { children: formError, props: { type: "error" } }
+                      : undefined
+                  }
                   sections={[
                     {
                       title: "Overview",

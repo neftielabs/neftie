@@ -6,6 +6,7 @@ import { WagmiConfig } from "wagmi";
 
 import { AuthProvider } from "context/AuthProvider";
 import { ModalProvider } from "context/ModalProvider";
+import { WebSocketProvider } from "context/WebSocketProvider";
 import { queryClient } from "lib/http/queryClient";
 import { wagmiClient } from "lib/web3/wagmi";
 import styles from "styles/globalStyles";
@@ -33,10 +34,15 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
     <QueryClientProvider client={queryClient}>
       <WagmiConfig client={wagmiClient}>
         <AuthProvider requiresAuth={!!Component.requiresAuth}>
-          <ModalProvider>
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-            {getLayout(<Component {...pageProps} key={asPath} />)}
-          </ModalProvider>
+          <WebSocketProvider needsWebSocket={!!Component.needsWebSocket}>
+            <ModalProvider>
+              <ReactQueryDevtools
+                initialIsOpen={false}
+                position="bottom-right"
+              />
+              {getLayout(<Component {...pageProps} key={asPath} />)}
+            </ModalProvider>
+          </WebSocketProvider>
         </AuthProvider>
       </WagmiConfig>
     </QueryClientProvider>

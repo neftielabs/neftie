@@ -41,7 +41,7 @@ export const NewListing: React.FC<NewListingProps> = ({
             listing on the Ethereum blockchain. Once verified, you'll be
             able to personalize it with off-chain data such as a description
             and cover image."
-          notice="These values cannot be changed afterwards."
+          notice={{ children: "These values cannot be changed afterwards." }}
           sections={[
             {
               title: "Overview",

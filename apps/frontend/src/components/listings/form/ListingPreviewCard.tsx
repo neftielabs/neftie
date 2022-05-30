@@ -3,7 +3,7 @@ import React, { useEffect, useState } from "react";
 import { FiStar } from "react-icons/fi";
 import tw from "twin.macro";
 
-import type { ListingFull, ListingPreview } from "@neftie/common";
+import type { IListingFull, IListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { Avatar } from "components/media/Avatar";
 import { LikePill } from "components/pills/LikePill";
@@ -17,7 +17,7 @@ import { useGetUser } from "hooks/queries/useGetUser";
 import { noop } from "utils/fp";
 
 type ListingPreviewMinimal = Omit<
-  ListingPreview,
+  IListingPreview,
   "seller" | "description" | "id" | "coverUrl" | "price"
 > & {
   coverUrl?: string | null;
@@ -27,7 +27,7 @@ type ListingPreviewMinimal = Omit<
 
 type ListingPreviewCardProps =
   | {
-      listing: ListingPreviewMinimal | ListingFull;
+      listing: ListingPreviewMinimal | IListingFull;
     }
   | {
       address: string;

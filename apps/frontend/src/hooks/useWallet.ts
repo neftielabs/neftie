@@ -3,6 +3,7 @@ import { useCallback } from "react";
 import { SiweMessage } from "siwe";
 import { useAccount, useConnect, useNetwork, useSignMessage } from "wagmi";
 
+import { areAddressesEqual } from "@neftie/common";
 import { useTypedMutation } from "hooks/http/useTypedMutation";
 import { useToken } from "hooks/useToken";
 import { someTrue } from "utils/fp";
@@ -79,7 +80,7 @@ export const useWallet = () => {
       /**
        * Addresses must still match. Clear tokens if not.
        */
-      if (accountData.address !== user.address) {
+      if (!areAddressesEqual(user.id, accountData.address)) {
         await disconnect([]);
         return {
           error: "An error occurred, please try again",
@@ -87,7 +88,7 @@ export const useWallet = () => {
       }
 
       setToken({
-        address: user.address,
+        address: user.id,
         value: token,
       });
     } catch {

@@ -14,8 +14,8 @@
     "deploy:dev": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-dev ./subgraph.yaml"
   },
   "dependencies": {
-    "@graphprotocol/graph-cli": "0.29.0",
-    "@graphprotocol/graph-ts": "0.26.0",
+    "@graphprotocol/graph-cli": "0.30.1",
+    "@graphprotocol/graph-ts": "0.27.0",
     "graphql": "16.5.0"
   },
   "devDependencies": {

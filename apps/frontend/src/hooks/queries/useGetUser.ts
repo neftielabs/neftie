@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
-import type { QueryOptions } from "react-query";
+import type { UseQueryOptions } from "react-query";
 
 import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useAuth } from "hooks/useAuth";
@@ -20,7 +20,7 @@ type UseGetUserOptions = {
       };
 };
 
-export const useGetUser = (opts: QueryOptions & UseGetUserOptions) => {
+export const useGetUser = (opts: UseQueryOptions & UseGetUserOptions) => {
   const [queryFrom, setQueryFrom] = useState<string>("");
   const { query } = useRouter();
 

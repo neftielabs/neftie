@@ -17,7 +17,7 @@ export const useGetListingFromQuery = (queryParam = "listingId") => {
   }, [query, queryParam]);
 
   return useTypedQuery(
-    "getListing",
+    ["getListing", listingId],
     {
       enabled: !!listingId,
     },

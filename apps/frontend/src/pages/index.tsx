@@ -6,10 +6,11 @@ import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
+import type { PageComponent } from "types/tsx";
 
 interface HomePageProps {}
 
-const HomePage: React.FC<HomePageProps> = () => {
+const HomePage: PageComponent<HomePageProps> = () => {
   return (
     <Page>
       <Box tw="py-10">
@@ -65,5 +66,7 @@ const HomePage: React.FC<HomePageProps> = () => {
     </Page>
   );
 };
+
+HomePage.needsWebSocket = true;
 
 export default HomePage;

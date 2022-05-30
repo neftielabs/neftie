@@ -83,7 +83,7 @@ export const verifySignature = createController(
         }
 
         // Lookup user
-        let user = await userProvider.getByAddress(verifyRes.data.address);
+        let user = await userProvider.getById(verifyRes.data.address);
 
         if (!user) {
           // Check if it has to be ratelimited
@@ -103,7 +103,7 @@ export const verifySignature = createController(
 
         // Generate token
         const accessToken = tokenService.generateAccessToken({
-          userAddress: user.address,
+          userId: user.id,
         });
 
         authService.setClientToken(ctx.res, accessToken);
@@ -134,9 +134,9 @@ export const getUserToken = createController(
   strictLimited,
   (route) =>
     route.use(authMiddleware.withAuth("present")).handler(async (ctx) => {
-      const { token, userAddress } = ctx.auth;
+      const { token, userId } = ctx.auth;
 
-      if (!token || !userAddress) {
+      if (!token || !userId) {
         if (token) {
           authService.clearTokens(ctx.res);
         }
@@ -144,13 +144,13 @@ export const getUserToken = createController(
         throw new AppError(httpResponse("BAD_REQUEST"));
       }
 
-      const user = await userService.getUser({ address: userAddress });
+      const user = await userProvider.getById(userId);
 
       if (!user) {
         throw new AppError(httpResponse("BAD_REQUEST"));
       }
 
-      return Response.ok({ token, user });
+      return Response.ok({ token, user: userService.toSafeUser(user) });
     })
 );
 

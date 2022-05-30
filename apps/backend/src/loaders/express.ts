@@ -65,6 +65,13 @@ export const expressLoader = (app: express.Application) => {
   app.use(express.json());
   app.use(express.urlencoded({ extended: true }));
 
+  // Set default application/json content-type
+
+  app.use((_, res, next) => {
+    res.contentType("application/json");
+    return next();
+  });
+
   // Gzip compression
 
   app.use(compression());

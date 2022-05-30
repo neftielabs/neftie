@@ -14,13 +14,13 @@ type ApiClient = typeof apiClient;
 // Query
 
 type QueryMethods = keyof ReturnType<ApiClient>["query"];
-type PaginatedQueryMethod<K extends QueryMethods> = [
+type CombinedQueryKey<K extends QueryMethods> = [
   K,
   ...(string | number | boolean)[]
 ];
 
 export type UseTypedQuery = <K extends QueryMethods>(
-  key: K | PaginatedQueryMethod<K>,
+  key: K | CombinedQueryKey<K>,
   opts?: UseQueryOptions,
   params?: Parameters<ReturnType<ApiClient>["query"][K]>
 ) => UseQueryResult<Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>>;
@@ -28,7 +28,7 @@ export type UseTypedQuery = <K extends QueryMethods>(
 // Infinite queries
 
 export type UseTypedInfQuery = <K extends QueryMethods>(
-  key: K,
+  key: K | CombinedQueryKey<K>,
   opts?: UseInfiniteQueryOptions<
     Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>
   >,
@@ -50,3 +50,12 @@ export type UseTypedMutation = <
   key: K,
   opts?: UseMutationOptions<R, any, P, any>
 ) => UseMutationResult<R, any, P, any>;
+
+// Query update
+
+export type UseTypedUpdateQuery = () => <K extends QueryMethods>(
+  key: K | CombinedQueryKey<K>,
+  updater: (
+    arg1: Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>
+  ) => Awaited<ReturnType<ReturnType<ApiClient>["query"][K]>>
+) => void;

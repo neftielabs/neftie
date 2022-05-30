@@ -19,21 +19,16 @@ const SwitchOption = styled(Text, {
 
 interface RoleSwitchProps<T extends readonly [string, string]> {
   options: T;
-  onSwitch: (active: T[number]) => Promise<void>;
+  onSwitch: (active: T[number]) => void;
+  isLoading?: boolean;
 }
 
 export const RoleSwitch = <T extends readonly [string, string]>({
   options,
   onSwitch,
+  isLoading = false,
 }: RoleSwitchProps<T>) => {
   const [activeIndex, setActiveIndex] = useState(0);
-  const [isSwitchLoading, setIsSwitchLoading] = useState(false);
-
-  const handleSwitch = async (o: T[number]) => {
-    setIsSwitchLoading(true);
-    await onSwitch(o);
-    setIsSwitchLoading(false);
-  };
 
   return (
     <Flex tw="relative border border-gray-150 rounded-12 overflow-hidden">
@@ -42,10 +37,10 @@ export const RoleSwitch = <T extends readonly [string, string]>({
           raw
           key={o + i}
           tw="z-10"
-          onClick={() => pipe(i, setActiveIndex, () => handleSwitch(o))}
-          disabled={isSwitchLoading && i === activeIndex}
+          onClick={() => pipe(i, setActiveIndex, () => onSwitch(o))}
+          disabled={isLoading && i === activeIndex}
           css={
-            isSwitchLoading && i === activeIndex
+            isLoading && i === activeIndex
               ? tw`cursor-not-allowed pointer-events-none`
               : {}
           }
@@ -54,14 +49,14 @@ export const RoleSwitch = <T extends readonly [string, string]>({
             <Loader
               tw="opacity-0 transition-opacity"
               absoluteCentered
-              active={isSwitchLoading && i === activeIndex}
+              active={isLoading && i === activeIndex}
               svgProps={{ width: 16 }}
-              css={isSwitchLoading && i === activeIndex ? tw`opacity-100` : {}}
+              css={isLoading && i === activeIndex ? tw`opacity-100` : {}}
             />
             <Text
               as="span"
               tw="opacity-100 transition-opacity"
-              css={isSwitchLoading && i === activeIndex ? tw`opacity-0` : {}}
+              css={isLoading && i === activeIndex ? tw`opacity-0` : {}}
             >
               {options[i]}
             </Text>

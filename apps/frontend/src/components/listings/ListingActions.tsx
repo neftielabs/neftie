@@ -3,21 +3,27 @@ import React from "react";
 import { HiDotsHorizontal } from "react-icons/hi";
 import tw from "twin.macro";
 
-import type { ListingFull } from "@neftie/common";
+import type { IListingFull } from "@neftie/common";
+import { areAddressesEqual } from "@neftie/common";
 import { EthPrice } from "components/typography/EthPrice";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
+import { useAuth } from "hooks/useAuth";
 import { useEthPrice } from "hooks/useEthPrice";
 import { routes } from "lib/manifests/routes";
 
 interface ListingActionsProps {
-  listing: ListingFull;
+  listing: IListingFull;
 }
 
 export const ListingActions: React.FC<ListingActionsProps> = ({ listing }) => {
   const { formattedUsdPrice } = useEthPrice(listing.price);
+  const { connectedAddress, isAuthed } = useAuth();
+
+  const isOwnListing =
+    connectedAddress && areAddressesEqual(connectedAddress, listing.seller.id);
 
   return (
     <Flex column tw="flex-basis[35%] sticky top-0">
@@ -50,11 +56,17 @@ export const ListingActions: React.FC<ListingActionsProps> = ({ listing }) => {
             ({formattedUsdPrice})
           </Text>
         </Flex>
-        <Link href={routes.listing(listing.id).order}>
-          <Button tw="mt-2 w-full" theme="gradientOrange">
-            Place order
+        {isOwnListing ? (
+          <Button disabled theme="gray" tw="mt-2">
+            Can&apos;t place order in own listing
           </Button>
-        </Link>
+        ) : (
+          <Link href={routes.listing(listing.id).order}>
+            <Button tw="mt-2 w-full" theme="gradientOrange">
+              Place order
+            </Button>
+          </Link>
+        )}
       </Flex>
     </Flex>
   );

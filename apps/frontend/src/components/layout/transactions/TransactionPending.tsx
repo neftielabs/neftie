@@ -6,7 +6,7 @@ import { ExternalLink } from "components/ui/ExternalLink";
 import { Flex } from "components/ui/Flex";
 import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
-import { getEtherscanLink } from "utils/transaction";
+import { getEtherscanLink } from "utils/web3";
 
 interface TransactionPendingProps {
   title: string;

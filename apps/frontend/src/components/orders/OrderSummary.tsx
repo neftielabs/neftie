@@ -1,8 +1,9 @@
 import React from "react";
 
-import type { ListingFull } from "@neftie/common";
+import type { IListingFull } from "@neftie/common";
 import { BaseCard } from "components/cards/BaseCard";
 import { EthPrice } from "components/typography/EthPrice";
+import { TruncatedText } from "components/typography/TruncatedText";
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Flex } from "components/ui/Flex";
@@ -10,7 +11,7 @@ import { Text } from "components/ui/Text";
 import { useOrderSummary } from "hooks/useOrderSummary";
 
 interface OrderSummaryProps {
-  listing: ListingFull;
+  listing: IListingFull;
   isTxLoading: boolean;
 }
 
@@ -35,7 +36,8 @@ export const OrderSummary: React.FC<OrderSummaryProps> = ({
       </Text>
       <Flex justifyBetween tw="gap-2 items-start mb-3">
         <Box>
-          <Text weight="bold">{listing.title}</Text>
+          <TruncatedText weight="bold" text={listing.title} max={30} />
+          {/* <Text weight="bold">{listing.title}</Text> */}
           <Text color="gray500" size="13">
             by {listing.seller.user?.username || listing.seller.id}
           </Text>

@@ -20,7 +20,7 @@ import type { PageComponent } from "types/tsx";
 interface OrderConfirmationPageProps {}
 
 const OrderConfirmationPage: PageComponent<OrderConfirmationPageProps> = () => {
-  const { push } = useRouter();
+  const { push, replace } = useRouter();
 
   const { connectedAddress } = useAuth();
   const { data: listing, isError } = useGetListingFromQuery();
@@ -34,16 +34,18 @@ const OrderConfirmationPage: PageComponent<OrderConfirmationPageProps> = () => {
     handleOrderPlaced(orderListing.id, tx.hash);
   }, [handleOrderPlaced, placeOrder]);
 
-  if (
-    isError ||
-    (connectedAddress &&
-      listing &&
-      areAddressesEqual(listing.seller.id, connectedAddress))
-  ) {
-    push(routes.notFound);
-  }
+  const isOwnListing =
+    connectedAddress &&
+    listing &&
+    areAddressesEqual(listing.seller.id, connectedAddress);
 
-  if (!listing) {
+  if (!listing || isError || isOwnListing) {
+    if (isError) {
+      push(routes.notFound);
+    } else if (listing && isOwnListing) {
+      replace(routes.listing(listing.id).index);
+    }
+
     return <Loader centered tw="py-30" />;
   }
 
@@ -66,9 +68,9 @@ const OrderConfirmationPage: PageComponent<OrderConfirmationPageProps> = () => {
             subtitle:
               "You can now track the order status and message the seller in the order page",
             component: (
-              <Link>
+              <Link href={routes.me.orders}>
                 <Button type="button" spring size="lg">
-                  Go to order page
+                  See your orders
                 </Button>
               </Link>
             ),

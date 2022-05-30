@@ -40,16 +40,17 @@ export const prisma = PrismaFactory.getInstance("db-main", () => {
     });
   }
 
-  const addressModels = ["User", "Listing"];
+  const addressModelExcludeList = [""];
 
   /**
-   * Based on the assumption that all fields named
-   * `address` use checksum addresses, this middleware intercepts
+   * Based on the assumption that almost all fields named
+   * `id` use checksum addresses, this middleware intercepts
    * and converts them to checksum.
+   *
    * Models can be filtered if there's any conflicts.
    */
   client.$use((params, next) => {
-    if (!params.model || !addressModels.includes(params.model)) {
+    if (!params.model || addressModelExcludeList.includes(params.model)) {
       return next(params);
     }
 
@@ -62,9 +63,10 @@ export const prisma = PrismaFactory.getInstance("db-main", () => {
     // #todo measure performance impact of this
 
     const args = JSON.parse(
-      JSON.stringify(params.args).replace(/(0x[a-fA-F0-9]{40})/g, (a) =>
-        toChecksum(a)
-      )
+      JSON.stringify(params.args).replace(/\b(0x[a-fA-F0-9]{40})\b/g, (a) => {
+        logger.debug(`[Prisma - ${params.model}] Matched ${a}`);
+        return toChecksum(a);
+      })
     );
 
     params.args = args;

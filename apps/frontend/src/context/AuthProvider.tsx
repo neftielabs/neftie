@@ -3,6 +3,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/router";
 import { useAccount } from "wagmi";
 
+import { areAddressesEqual } from "@neftie/common";
 import { WaitForAuth } from "components/layout/WaitForAuth";
 import { useTypedMutation } from "hooks/http/useTypedMutation";
 import { useToken } from "hooks/useToken";
@@ -70,7 +71,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
            * Check if the user received matches the current
            * connected wallet address
            */
-          if (result.user.address !== accountData?.address) {
+          if (!areAddressesEqual(result.user.id, accountData?.address)) {
             logger.debug(`[Auth] Received address and connected mismatch`);
 
             /**
@@ -92,7 +93,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
              * We store it together with the address in order
              * to be able to react to a wallet account change.
              */
-            setToken({ value: result.token, address: result.user.address });
+            setToken({ value: result.token, address: result.user.id });
           }
         })
         .catch(() => {

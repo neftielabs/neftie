@@ -32,7 +32,7 @@ export const uploadFile = authController("/me/upload", "post", (route) =>
       }
 
       const uploadResult = await userService.handleProfileUpload({
-        userAddress: ctx.auth.userAddress,
+        userId: ctx.auth.userId,
         file,
         entity,
       });

@@ -52,6 +52,7 @@ export const Input = ({
   name,
   containerProps,
   help,
+  children,
   ...props
 }: InputProps | TextareaProps): JSX.Element => {
   const [field, meta] = useField(name);
@@ -85,6 +86,8 @@ export const Input = ({
         ) : (
           <InputElement id={name} {...field} {...props} />
         )}
+
+        {children}
       </InputContainer>
       {meta.error && meta.touched ? (
         <Box tw="mt-1">

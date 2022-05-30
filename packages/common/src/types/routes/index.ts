@@ -2,7 +2,9 @@ import type { Response as TResponse } from "typera-common";
 import type { Route } from "typera-express";
 
 import type { RouteManifest } from "./manifest";
-export type { RouteManifest };
+import type { WsOpManifest } from "./ws-manifest";
+
+export type { RouteManifest, WsOpManifest };
 
 /**
  * Ensure the manifest's specified response is applicable

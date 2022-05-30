@@ -12,8 +12,7 @@ datasource db {
 // -------------------------------------------------------------------------- //
 
 model User {
-  id           String         @id @default(uuid())
-  address      String         @unique
+  id           String         @id
   name         String?
   email        String?        @unique
   username     String         @unique
@@ -22,7 +21,8 @@ model User {
   listings     Listing[]
   OrderMessage OrderMessage[]
 
-  @@index([address])
+  Order Order[]
+  @@index([username])
 }
 
 // -------------------------------------------------------------------------- //
@@ -30,13 +30,11 @@ model User {
 // -------------------------------------------------------------------------- //
 
 model Listing {
-  id          Int      @id @default(autoincrement())
-  address     String   @unique
+  id          String   @id
   seller      User     @relation(fields: [sellerId], references: [id])
   sellerId    String
   coverUri    String?
   description String?
-  isExternal  Boolean  @default(false) // Created calling the contract directly or not completed
   orders      Order[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -47,23 +45,27 @@ model Listing {
 // --------------------------------------------------------------------------- //
 
 model Order {
-  id         Int            @id @default(autoincrement())
-  hexId      String         @unique
+  id         Int
+  composedId String         @unique
   tx         String         @unique
   listing    Listing        @relation(fields: [listingId], references: [id])
-  listingId  Int
-  isExternal Boolean        @default(false)
+  listingId  String
+  client     User           @relation(fields: [clientId], references: [id])
+  clientId   String
   createdAt  DateTime       @default(now())
   updatedAt  DateTime       @updatedAt
   messages   OrderMessage[]
+
+  @@id([id, listingId])
+  @@index([composedId])
 }
 
 model OrderMessage {
-  id        Int      @id @default(autoincrement())
-  message   String
-  sender    User     @relation(fields: [userId], references: [id])
-  userId    String
-  order     Order    @relation(fields: [orderId], references: [id])
-  orderId   Int
-  timestamp DateTime @default(now())
+  id              Int      @id @default(autoincrement())
+  message         String
+  sender          User     @relation(fields: [senderId], references: [id])
+  senderId        String
+  order           Order    @relation(fields: [orderComposedId], references: [composedId])
+  orderComposedId String
+  timestamp       DateTime @default(now())
 }

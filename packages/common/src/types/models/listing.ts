@@ -1,20 +1,17 @@
-import type { UserSafe } from "./user";
+import type {
+  ListingFullFragment,
+  ListingMinimalFragment,
+} from "@neftie/subgraph";
 
-export type ListingPreview = {
-  id: string;
-  title: string;
-  price: string;
+import type { MergedUser } from "./user";
+
+export interface IListingPreview
+  extends Pick<ListingMinimalFragment, "id" | "title" | "price"> {
   coverUrl: string | null;
   description: string | null;
-  seller: {
-    id: string;
-    user: Pick<UserSafe, "username" | "avatarUrl" | "address"> | null;
-  };
-};
+  seller: MergedUser;
+}
 
-export type ListingFull = ListingPreview & {
-  bondFee: string;
-  deliveryDays: string;
-  revisions: string;
-  orders: [];
-};
+export interface IListingFull
+  extends IListingPreview,
+    Pick<ListingFullFragment, "deliveryDays" | "bondFee" | "revisions"> {}

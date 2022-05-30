@@ -6,9 +6,14 @@ on:
     paths:
       - packages/contracts/**
       - .github/workflows/contracts_ci.yml
+      - .yarn.lock
     branches:
       - main
   pull_request:
+    paths:
+      - packages/contracts/**
+      - .github/workflows/contracts_ci.yml
+      - .yarn.lock
     branches:
       - main
 

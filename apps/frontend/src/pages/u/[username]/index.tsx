@@ -9,7 +9,6 @@ import { ProfileTabs } from "components/tabs/ProfileTabs";
 import { Loader } from "components/ui/Loader";
 import { useGetUser } from "hooks/queries/useGetUser";
 import { useAuth } from "hooks/useAuth";
-import { useRedirectProfile } from "hooks/useRedirectProfile";
 import { routes } from "lib/manifests/routes";
 import type { PageComponent } from "types/tsx";
 
@@ -19,9 +18,8 @@ const AccountPage: PageComponent<never> = () => {
   const { connectedAddress } = useAuth();
   const { data: user, isError } = useGetUser({
     from: { queryParam: "username" },
+    keepPreviousData: true,
   });
-
-  const currentTab = useRedirectProfile(user);
 
   if (isError) {
     replace(routes.notFound);
@@ -33,9 +31,9 @@ const AccountPage: PageComponent<never> = () => {
         <>
           <ProfileHeader
             user={user}
-            isCurrentUser={areAddressesEqual(user?.address, connectedAddress)}
+            isCurrentUser={areAddressesEqual(user?.id, connectedAddress)}
           />
-          <ProfileTabs currentTab={currentTab} user={user} />
+          <ProfileTabs user={user} />
         </>
       ) : (
         <Loader centered tw="py-10" />

@@ -54,9 +54,16 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
       {user ? (
         <OverlayWrapper visible={visible}>
           <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
-            <Link href={routes.user(user.address).index}>
+            <Link href={routes.user(user.id).index}>
               <Text weight="bold" color="gray600">
                 Profile
+              </Text>
+            </Link>
+          </Button>
+          <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
+            <Link href={routes.me.orders}>
+              <Text weight="bold" color="gray600">
+                Orders
               </Text>
             </Link>
           </Button>

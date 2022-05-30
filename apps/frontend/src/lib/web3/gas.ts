@@ -1,6 +1,13 @@
-import type { Contract, Overrides } from "ethers";
+import type { BigNumber, Contract, Overrides } from "ethers";
 
 import { GAS_MARGIN } from "lib/constants/web3";
+
+/**
+ * Adds GAS_MARGIN % to a given estimated gas (in gas unit) and returns
+ * the new estimated gas + gas margin in gas unit.
+ */
+export const addGasMargin = (estimatedGas: BigNumber) =>
+  estimatedGas.add(estimatedGas.mul(GAS_MARGIN).div(100));
 
 /**
  * Wraps a contract call with the gas limits
@@ -19,11 +26,9 @@ export const withGasMargin = async <
 
   // Add 10% to the estimated gas
 
-  const gasLimit = Math.ceil(
-    estimatedGas.add(estimatedGas.mul(GAS_MARGIN).div(100)).toNumber()
-  );
+  const gasLimit = Math.ceil(addGasMargin(estimatedGas).toNumber());
 
-  if ("value" in data[0] && data.length === 1) {
+  if (typeof data[0] === "object" && "value" in data[0] && data.length === 1) {
     const param = data[0];
     return await contract[method]({
       gasLimit,
