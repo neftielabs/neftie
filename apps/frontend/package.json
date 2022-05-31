@@ -46,7 +46,7 @@
     "@sentry/cli": "1.74.4",
     "@types/node": "17.0.21",
     "@types/nprogress": "0.2.0",
-    "@types/react": "17.0.45",
+    "@types/react": "18.0.10",
     "autoprefixer": "10.4.7",
     "babel-plugin-macros": "3.1.0",
     "babel-plugin-twin": "1.0.2",
