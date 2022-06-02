@@ -4,7 +4,7 @@ import type { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import type { Contract } from "ethers";
 import { ethers, upgrades } from "hardhat";
 
-import type { Listing, ListingFactory, NeftieCore } from "../../typechain";
+import type { ListingFactory, NeftieCore } from "../../typechain";
 import {
   ListingFactory__factory,
   Listing__factory,
@@ -90,7 +90,7 @@ export const deployListingImpl = async (
 
   await listingImplementation.deployed();
 
-  return listingImplementation as Listing;
+  return listingImplementation;
 };
 
 /**

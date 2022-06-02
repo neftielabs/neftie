@@ -7,7 +7,7 @@ import type { listingSchema } from "@neftie/common";
 import { useContractMutation } from "hooks/http/useContractMutation";
 import { getListingFactoryContract } from "lib/web3/contracts";
 import { withGasMargin } from "lib/web3/gas";
-import { getNumericNonce } from "utils/number";
+import { getNumericNonce } from "utils/web3";
 
 type CreateListingVariables = Asserts<
   typeof listingSchema["createOnChainListing"]

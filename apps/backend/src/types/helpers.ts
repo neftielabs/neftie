@@ -22,6 +22,6 @@ export type OmitFirstArg<F> = F extends (x: any, ...args: infer P) => infer R
   : never;
 
 export type Pagination = {
-  cursor: string | null;
+  cursor: string;
   limit: number;
 };

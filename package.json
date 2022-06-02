@@ -12,6 +12,9 @@
       "**/@typechain/*"
     ]
   },
+  "resolutions": {
+    "@types/react": "17.0.43"
+  },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "5.26.0",
     "@typescript-eslint/parser": "5.26.0",

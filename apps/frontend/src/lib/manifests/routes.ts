@@ -9,11 +9,7 @@ export const routes = {
   termsOfService: "/terms", // tbd
 
   user: (u: string) => ({
-    index: `/${u}`,
-    work: `/${u}/work`,
-    reviews: `/${u}/reviews`,
-    listings: `/${u}/listings`,
-    about: `/${u}/about`,
+    index: `/u/${u}`,
   }),
 
   create: "/create",
@@ -31,4 +27,8 @@ export const routes = {
   me: {
     orders: "/me/orders",
   },
+
+  order: (listingId: string, orderId: number) => ({
+    index: `/order/${listingId}/${orderId}`,
+  }),
 };

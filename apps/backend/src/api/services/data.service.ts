@@ -1,14 +1,47 @@
-import type { ListingFull, ListingPreview } from "@neftie/common";
-import type { Listing, Order, User } from "@neftie/prisma";
+import type {
+  IListingFull,
+  IListingPreview,
+  IOrderEvent,
+  IOrderFull,
+  IOrderPreview,
+  MergedUser,
+} from "@neftie/common";
+import { areAddressesEqual } from "@neftie/common";
+import type { Listing, Order, OrderMessage, User } from "@neftie/prisma";
 import type {
   ListingFullFragment,
   ListingMinimalFragment,
+  OrderFullFragment,
   OrderMinimalFragment,
 } from "@neftie/subgraph";
 import { listingProvider, orderProvider, userProvider } from "api/providers";
 import Log from "modules/Log";
+import { splitOrderId } from "utils/helpers";
 import { pick } from "utils/pick";
 import { getMediaUrl } from "utils/url";
+
+const mergeUser = (data: {
+  onChain: { id: string };
+  offChain?: User | null;
+}): MergedUser => {
+  const { onChain, offChain } = data;
+
+  return {
+    ...onChain,
+    user: offChain
+      ? {
+          ...pick(offChain, ["id", "username"]),
+          avatarUrl: getMediaUrl(offChain.avatarUri),
+        }
+      : null,
+  };
+};
+
+export const getFrom = (
+  order: OrderFullFragment | OrderMinimalFragment,
+  id: string
+): "client" | "seller" =>
+  areAddressesEqual(id, order.seller.id) ? "seller" : "client";
 
 /**
  * Merge an off-chain preview listing with
@@ -18,20 +51,19 @@ export const mergeMinimalListing = async (data: {
   onChain: ListingMinimalFragment;
   offChain?: Listing | null;
   user?: User | null;
-}): Promise<ListingPreview> => {
+}): Promise<IListingPreview> => {
   const { onChain } = data;
   let { offChain, user } = data;
 
   if (!user) {
-    user = await userProvider.getByAddress(onChain.seller.id);
+    user = await userProvider.getById(onChain.seller.id);
   }
 
   if (!offChain && user) {
     try {
       offChain = await listingProvider.create({
-        address: onChain.id,
+        id: onChain.id,
         sellerId: user?.id || onChain.seller.id,
-        isExternal: true,
       });
     } catch (error) {
       new Log("dataService", "mergeMinimalListing").all(error);
@@ -42,15 +74,7 @@ export const mergeMinimalListing = async (data: {
     ...onChain,
     coverUrl: getMediaUrl(offChain?.coverUri ?? null),
     description: offChain?.description ?? null,
-    seller: {
-      ...onChain.seller,
-      user: user
-        ? {
-            ...pick(user, ["address", "username"]),
-            avatarUrl: getMediaUrl(user.avatarUri),
-          }
-        : null,
-    },
+    seller: mergeUser({ onChain: onChain.seller, offChain: user }),
   };
 };
 
@@ -62,20 +86,19 @@ export const mergeFullListing = async (data: {
   onChain: ListingFullFragment;
   offChain?: Listing | null;
   user?: User | null;
-}): Promise<ListingFull> => {
+}): Promise<IListingFull> => {
   const { onChain } = data;
   let { offChain, user } = data;
 
   if (!user) {
-    user = await userProvider.getByAddress(onChain.seller.id);
+    user = await userProvider.getById(onChain.seller.id);
   }
 
   if (!offChain && user) {
     try {
       offChain = await listingProvider.create({
-        address: onChain.id,
+        id: onChain.id,
         sellerId: user?.id || onChain.seller.id,
-        isExternal: true,
       });
     } catch (error) {
       new Log("dataService", "mergeFullListing").all(error);
@@ -86,16 +109,7 @@ export const mergeFullListing = async (data: {
     ...onChain,
     coverUrl: getMediaUrl(offChain?.coverUri ?? null),
     description: offChain?.description ?? null,
-    orders: [],
-    seller: {
-      ...onChain.seller,
-      user: user
-        ? {
-            ...pick(user, ["address", "username"]),
-            avatarUrl: getMediaUrl(user.avatarUri),
-          }
-        : null,
-    },
+    seller: mergeUser({ onChain: onChain.seller, offChain: user }),
   };
 };
 
@@ -103,26 +117,132 @@ export const mergeFullListing = async (data: {
  * Merge off-chain minimal order with on-chain data
  */
 export const mergeMinimalOrder = async (data: {
-  onChain: OrderMinimalFragment & { listingId?: number };
+  onChain: OrderMinimalFragment;
   offChain?: Order | null;
   client?: User | null;
-}) => {
+  seller?: User | null;
+}): Promise<IOrderPreview> => {
   let { offChain } = data;
-  const { onChain, client } = data;
+  const { onChain: _onChain, client, seller } = data;
+  const { tx, id: composedId, ...onChain } = _onChain;
 
-  if (!offChain && client && onChain.listingId) {
+  const { id, listingId } = splitOrderId(composedId);
+
+  if (!offChain && client) {
     try {
       offChain = await orderProvider.create({
-        hexId: onChain.id,
-        tx: onChain.tx,
-        listingId: onChain.listingId,
+        id,
+        listingId,
+        composedId,
+        tx,
+        clientId: client.id,
       });
     } catch (error) {
       new Log("dataService", "mergeMinimalOrder").all(error);
     }
   }
 
+  const lastEvent = onChain.events.sort(
+    (a, b) => Number(a.timestamp) - Number(b.timestamp)
+  )[0];
+
   return {
     ...onChain,
+    id,
+    composedId,
+    lastEventAt: lastEvent.timestamp,
+    client: mergeUser({ onChain: onChain.client, offChain: client }),
+    seller: mergeUser({ onChain: onChain.seller, offChain: seller }),
+  };
+};
+
+/**
+ * Build order events, ordered by date. These include contract-defined
+ * events such as order placement, cancellation, mixed with messages between
+ * seller-client.
+ *
+ * #todo lazy load this and extract it to another endpoint
+ */
+export const buildOrderEvents = (data: {
+  order: OrderFullFragment;
+  messages: OrderMessage[];
+}): IOrderEvent[] => {
+  const { order, messages } = data;
+  const events: IOrderEvent[] = [];
+
+  // Push messages
+
+  events.push(
+    ...messages.map(
+      (m) =>
+        ({
+          type: "message",
+          timestamp: String(m.timestamp.getTime() / 1000),
+          message: m.message,
+          from: getFrom(order, m.senderId),
+        } as const)
+    )
+  );
+
+  // Handle order native events
+
+  events.push(
+    ...order.events.map((ev) => ({
+      timestamp: ev.timestamp,
+      from: getFrom(order, ev.from.id),
+      type: ev.type,
+    }))
+  );
+
+  return events.sort((a, b) => Number(a.timestamp) - Number(b.timestamp));
+};
+
+/**
+ * Merge full order
+ */
+export const mergeFullOrder = async (data: {
+  onChain: OrderFullFragment;
+  offChain?: (Order & { listing: Listing }) | null;
+  client?: User | null;
+  seller?: User | null;
+  isSeller: boolean;
+}): Promise<IOrderFull> => {
+  let { offChain } = data;
+  const { onChain: _onChain, client, seller, isSeller } = data;
+  const { tx, id: composedId, ...onChain } = _onChain;
+
+  const { id, listingId } = splitOrderId(composedId);
+
+  if (!offChain && client) {
+    try {
+      offChain = await orderProvider.create({
+        id,
+        listingId,
+        composedId,
+        tx,
+        clientId: client.id,
+      });
+    } catch (error) {
+      new Log("dataService", "mergeFullOrder").all(error);
+    }
+  }
+
+  const messages = offChain
+    ? await orderProvider.getMessages(offChain.composedId)
+    : [];
+
+  return {
+    ...onChain,
+    id,
+    composedId,
+    isSeller,
+    listing: {
+      ...onChain.listing,
+      coverUrl: getMediaUrl(offChain?.listing.coverUri ?? null),
+      description: offChain?.listing.description ?? null,
+    },
+    events: buildOrderEvents({ order: data.onChain, messages }),
+    client: mergeUser({ onChain: onChain.client, offChain: client }),
+    seller: mergeUser({ onChain: onChain.seller, offChain: seller }),
   };
 };

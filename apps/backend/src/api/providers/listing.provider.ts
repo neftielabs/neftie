@@ -18,13 +18,13 @@ export const getMany = async (where: Prisma.ListingWhereInput) => {
 };
 
 export const update = async (
-  address: string,
+  id: string,
   sellerId: string,
   data: Prisma.ListingUncheckedUpdateManyInput
 ) => {
   return await prisma.listing.updateMany({
     where: {
-      address,
+      id,
       sellerId,
     },
     data,

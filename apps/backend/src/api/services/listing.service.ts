@@ -1,13 +1,13 @@
 import type { UploadedFile } from "express-fileupload";
 
-import type { ListingFull, ListingPreview } from "@neftie/common";
+import type { IListingFull, IListingPreview } from "@neftie/common";
 import { areAddressesEqual, isValidAddress } from "@neftie/common";
 import { listingProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
 import { mediaBucket } from "modules/aws/s3-instances";
 import Log from "modules/Log";
 import logger from "modules/Logger/Logger";
-import { subgraphProvider } from "modules/subgraph-client";
+import { subgraphQuery } from "modules/subgraph-client";
 import type { Pagination, Result } from "types/helpers";
 import { isImage } from "utils/file";
 
@@ -16,19 +16,19 @@ import { isImage } from "utils/file";
  * with onchain data
  */
 export const getListing = async (
-  address: string
-): Promise<ListingFull | null> => {
-  const { listing } = await subgraphProvider.getFullListing({
-    address,
+  listingId: string
+): Promise<IListingFull | null> => {
+  const { listing } = await subgraphQuery("getFullListing", {
+    id: listingId,
   });
 
   if (!listing) {
     return null;
   }
 
-  const seller = await userProvider.getByAddress(listing.seller.id);
+  const seller = await userProvider.getById(listing.seller.id);
 
-  const offChainListing = await listingProvider.get({ address });
+  const offChainListing = await listingProvider.get({ id: listingId });
 
   return await dataService.mergeFullListing({
     onChain: listing,
@@ -42,10 +42,10 @@ export const getListing = async (
  * by querying the subgraph by the predicted listing address..
  */
 export const ensureListingExists = async (
-  address: string
-): Promise<ListingPreview | null> => {
-  const { listing } = await subgraphProvider.getMinimalListing({
-    address: address.toLowerCase(),
+  listingId: string
+): Promise<IListingPreview | null> => {
+  const { listing } = await subgraphQuery("getMinimalListing", {
+    id: listingId,
   });
 
   if (!listing) {
@@ -55,9 +55,9 @@ export const ensureListingExists = async (
   // Listing exists, check if we have it ourselves too
   // and if not, create it
 
-  const seller = await userProvider.getByAddress(listing.seller.id);
+  const seller = await userProvider.getById(listing.seller.id);
 
-  const offChainListing = await listingProvider.get({ address });
+  const offChainListing = await listingProvider.get({ id: listingId });
 
   return await dataService.mergeMinimalListing({
     onChain: listing,
@@ -72,12 +72,12 @@ export const ensureListingExists = async (
  * combines it with off-chain data
  */
 export const getSellerListings = async (data: {
-  sellerAddress: string;
+  sellerId: string;
   pagination: Pagination;
-}): Promise<ListingPreview[]> => {
-  const { sellerAddress, pagination } = data;
+}): Promise<IListingPreview[]> => {
+  const { sellerId, pagination } = data;
 
-  const user = await userProvider.getByAddress(sellerAddress);
+  const user = await userProvider.getById(sellerId);
 
   if (!user) {
     return [];
@@ -89,13 +89,13 @@ export const getSellerListings = async (data: {
     ? pagination.cursor
     : "";
 
-  const onChainListingsData = await subgraphProvider.getSellerMinimalListings({
-    sellerAddress: sellerAddress.toLowerCase(),
+  const onChainListingsData = await subgraphQuery("getSellerMinimalListings", {
+    sellerId,
     limit: pagination.limit,
     cursor,
   });
 
-  const onChainListings = onChainListingsData.seller?.listings;
+  const onChainListings = onChainListingsData.listings;
 
   if (!onChainListings || !onChainListings.length) {
     return [];
@@ -103,11 +103,10 @@ export const getSellerListings = async (data: {
 
   // Get off-chain complementary data
 
-  const addresses = onChainListings.map((l) => l.id);
   const offChainListings = await listingProvider.getMany({
     sellerId: user.id,
-    address: {
-      in: addresses,
+    id: {
+      in: onChainListings.map((l) => l.id),
     },
   });
 
@@ -115,11 +114,11 @@ export const getSellerListings = async (data: {
     logger.warn(`On and off-chain listing count mismatch for user ${user.id}`);
   }
 
-  const listings: ListingPreview[] = [];
+  const listings: IListingPreview[] = [];
 
   for (const listing of onChainListings) {
-    const offChainListing = offChainListings.find((o) =>
-      areAddressesEqual(o.address, listing.id)
+    const offChainListing = offChainListings.find((ocListing) =>
+      areAddressesEqual(ocListing.id, listing.id)
     );
 
     listings.push(
@@ -138,12 +137,12 @@ export const getSellerListings = async (data: {
  * Updates off-chain data of a listing
  */
 export const updateOffChainData = async (data: {
-  address: string;
-  sellerAddress: string;
+  listingId: string;
+  sellerId: string;
   description?: string;
   file?: UploadedFile;
 }): Promise<Result<undefined, "noData" | "unprocessable">> => {
-  const { sellerAddress, description, file, address } = data;
+  const { sellerId, description, file, listingId } = data;
 
   if (!description && !file) {
     return {
@@ -152,9 +151,11 @@ export const updateOffChainData = async (data: {
     };
   }
 
-  const seller = await userProvider.getByAddress(sellerAddress);
+  const seller = await userProvider.getById(sellerId);
 
   if (!seller) {
+    logger.debug("No seller");
+
     return {
       success: false,
       error: "unprocessable",
@@ -162,11 +163,13 @@ export const updateOffChainData = async (data: {
   }
 
   const listing = await listingProvider.get({
-    address,
-    sellerId: sellerAddress,
+    id: listingId,
+    sellerId: seller.id,
   });
 
   if (!listing) {
+    logger.debug("No listing");
+
     return {
       success: false,
       error: "unprocessable",
@@ -189,6 +192,8 @@ export const updateOffChainData = async (data: {
         coverUri = result.key;
       }
     } else if (file && !isImageResult.success) {
+      logger.debug("file error");
+
       return {
         success: false,
         error: "unprocessable",
@@ -198,7 +203,7 @@ export const updateOffChainData = async (data: {
     new Log("listingService", "updateOffChainData").all(error);
   }
 
-  await listingProvider.update(address, sellerAddress, {
+  await listingProvider.update(listingId, seller.id, {
     description,
     coverUri,
   });

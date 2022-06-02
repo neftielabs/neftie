@@ -17,6 +17,7 @@ const AvatarComponent = styled(Box, {
       xxs: tw`w-2 h-2`,
       xs: tw`w-2.5 h-2.5`,
       sm: tw`w-3.5 h-3.5`,
+      md: tw`w-5 h-5`,
       xl: tw`w-13 h-13`,
     },
   },

@@ -14,8 +14,11 @@ import { Text } from "components/ui/Text";
 type InputCombinedProps = InputProps | TextareaProps;
 
 interface ListingFormContainerProps extends React.ComponentProps<typeof Box> {
-  description: string;
-  notice?: string;
+  description: string | JSX.Element;
+  notice?: {
+    children: string | JSX.Element;
+    props?: React.ComponentProps<typeof NoticeBox>;
+  };
   sections: {
     title: string;
     items: (
@@ -41,8 +44,8 @@ export const ListingFormContainer: React.FC<ListingFormContainerProps> = ({
       </Text>
 
       {notice ? (
-        <NoticeBox type="info" style="minimal" tw="mb-3">
-          {notice}
+        <NoticeBox type="info" style="minimal" tw="mb-3" {...notice.props}>
+          {notice.children}
         </NoticeBox>
       ) : null}
 

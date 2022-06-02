@@ -9,7 +9,7 @@ export const useTypedInfQuery: UseTypedInfQuery = (key, opts?, params?) => {
   return useInfiniteQuery(
     key,
     (ctx) => {
-      const fn = client.query[key] as any;
+      const fn = client.query[typeof key === "string" ? key : key[0]] as any;
       return fn({ ...(params as any), ...ctx });
     },
     opts as any

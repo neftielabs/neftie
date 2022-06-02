@@ -1,12 +1,12 @@
 import type { UploadedFile } from "express-fileupload";
 
 import type { UserSafe } from "@neftie/common";
-import { range, typedObjectKeys } from "@neftie/common";
+import { isValidAddress, range } from "@neftie/common";
 import type { User } from "@neftie/prisma";
 import { userProvider } from "api/providers";
+import AppError from "errors/AppError";
 import { mediaBucket } from "modules/aws/s3-instances";
 import Log from "modules/Log";
-import usernames from "resources/misc/usernames.json";
 import { isImage } from "utils/file";
 import { getMediaUrl } from "utils/url";
 
@@ -15,13 +15,13 @@ import { getMediaUrl } from "utils/url";
  * without any sensitive data.
  */
 export const toSafeUser = (user: User): UserSafe => {
-  const { address, name, username, avatarUri, bannerUri } = user;
+  const { id, name, username, avatarUri, bannerUri } = user;
 
   const avatarUrl = getMediaUrl(avatarUri);
   const bannerUrl = bannerUri && getMediaUrl(bannerUri);
 
   return {
-    address,
+    id,
     name,
     username,
     avatarUrl,
@@ -30,40 +30,28 @@ export const toSafeUser = (user: User): UserSafe => {
 };
 
 /**
- * Generates a random username by picking
- * two words from random dictionaries and checking
- * that it doesn't already exist.
- *
- * "grizzled" + "crimson" = "grizzled_crimson"
- *
- * Wordlist taken from {@link https://github.com/cupcakearmy/canihazusername},
- * MIT licensed.
+ * Generates a username based on the first 4 digits of an address (0x3f for example).
+ * If that username already exists, appends a counter to the generated id (0x3f.01).
  */
-export const generateRandomUsername = async () => {
-  const randomIndex = (k: any[]) => (k.length * Math.random()) << 0;
+export const generateUsername = async (address: string) => {
+  const currentCount = 1;
 
-  const generate = () => {
-    const keys = typedObjectKeys(usernames);
-    const firstKey = keys[randomIndex(keys)];
-    let secondKey = firstKey;
-
-    while (secondKey === firstKey) {
-      secondKey = keys[randomIndex(keys)];
-    }
-
-    return [firstKey, secondKey]
-      .map((k) => usernames[k][randomIndex(usernames[k])])
-      .join("_")
-      .toLowerCase();
-  };
-
-  let username = generate();
-
-  while ((await userProvider.getByUsername(username)) !== null) {
-    username = generate();
+  if (!isValidAddress) {
+    throw new AppError("Invalid address", 500);
   }
 
-  return username;
+  let id = address.slice(0, 4).toLowerCase();
+
+  while ((await userProvider.getById(id)) !== null) {
+    let separator = "";
+    if (currentCount > 1) {
+      separator = ".";
+    }
+
+    id += separator + String(currentCount).padStart(2, "0");
+  }
+
+  return id;
 };
 
 /**
@@ -74,69 +62,35 @@ export const getDefaultAvatarUri = () => `u/avatars/default_${range(1, 5)}.jpg`;
 
 /**
  * Given an address, look up if there's any
- * user or create a new one.
+ * user or create a new user.
  */
-export const registerUser = async (address: string) => {
-  const user = await userProvider.getByAddress(address);
+export const registerUser = async (id: string) => {
+  const user = await userProvider.getById(id);
 
   if (user) {
     return user;
   }
 
+  const username = await generateUsername(id);
+
   return await userProvider.create({
-    address,
-    username: await generateRandomUsername(),
+    id,
+    username,
     avatarUri: getDefaultAvatarUri(),
   });
 };
 
 /**
- * Get a user either by id, address or username and
- * in a client-safe format.
- */
-export async function getUser(data: {
-  address: string;
-}): Promise<UserSafe | null>;
-export async function getUser(data: {
-  userId: string;
-}): Promise<UserSafe | null>;
-export async function getUser(data: {
-  username: string;
-}): Promise<UserSafe | null>;
-export async function getUser(
-  data:
-    | { userId: string; address?: undefined; username?: undefined }
-    | { userId?: undefined; address: string; username?: undefined }
-    | { userId?: undefined; address?: undefined; username: string }
-): Promise<UserSafe | null> {
-  let user: User | null = null;
-
-  if (data.userId) {
-    user = await userProvider.getById(data.userId);
-  } else if (data.address) {
-    user = await userProvider.getByAddress(data.address);
-  } else if (data.username) {
-    user = await userProvider.getByUsername(data.username);
-  }
-
-  if (!user) {
-    return null;
-  }
-
-  return toSafeUser(user);
-}
-
-/**
  * Handles profile avatar and banner uploads.
  */
 export const handleProfileUpload = async (data: {
-  userAddress: string;
+  userId: string;
   file: UploadedFile;
   entity: "avatar" | "banner";
 }) => {
-  const { userAddress, file, entity } = data;
+  const { userId, file, entity } = data;
 
-  const user = await userProvider.getByAddress(userAddress);
+  const user = await userProvider.getById(userId);
   if (!user) {
     return null;
   }

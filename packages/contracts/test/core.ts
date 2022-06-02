@@ -27,6 +27,9 @@ describe("NeftieCore", () => {
       to: core.address,
       value,
     });
+
+    // tests are broken with typechain
+    (core as any).getAddress = () => core.address;
   });
 
   describe("roles", () => {

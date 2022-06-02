@@ -1,11 +1,13 @@
-import { Router, useRouter } from "next/router";
+import { Router } from "next/router";
 import nProgress from "nprogress";
 import { QueryClientProvider } from "react-query";
 import { ReactQueryDevtools } from "react-query/devtools";
 import { WagmiConfig } from "wagmi";
 
+import { Toast } from "components/ui/Toast";
 import { AuthProvider } from "context/AuthProvider";
 import { ModalProvider } from "context/ModalProvider";
+import { WebSocketProvider } from "context/WebSocketProvider";
 import { queryClient } from "lib/http/queryClient";
 import { wagmiClient } from "lib/web3/wagmi";
 import styles from "styles/globalStyles";
@@ -25,19 +27,24 @@ Router.events.on("routeChangeError", () => nProgress.done());
 
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   styles();
-  const { asPath } = useRouter();
 
   const getLayout = Component.getLayout ?? ((page) => page);
 
   return (
     <QueryClientProvider client={queryClient}>
       <WagmiConfig client={wagmiClient}>
-        <AuthProvider requiresAuth={!!Component.requiresAuth}>
-          <ModalProvider>
-            <ReactQueryDevtools initialIsOpen={false} position="bottom-right" />
-            {getLayout(<Component {...pageProps} key={asPath} />)}
-          </ModalProvider>
-        </AuthProvider>
+        <WebSocketProvider noWebSocket={!!Component.noWebSocket}>
+          <AuthProvider requiresAuth={!!Component.requiresAuth}>
+            <ModalProvider>
+              <ReactQueryDevtools
+                initialIsOpen={false}
+                position="bottom-right"
+              />
+              {getLayout(<Component {...pageProps} />)}
+              <Toast />
+            </ModalProvider>
+          </AuthProvider>
+        </WebSocketProvider>
       </WagmiConfig>
     </QueryClientProvider>
   );

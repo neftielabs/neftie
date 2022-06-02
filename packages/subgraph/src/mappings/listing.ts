@@ -6,17 +6,18 @@ import {
   OrderDismissed,
   OrderPlaced,
   OrderWithdrawn,
+  RevisionRequested,
   Tip,
 } from "../../generated/templates/Listing/Listing";
 import { buildOrderId, mapOrderStatus } from "../utils/order";
 import { weiToEth } from "../utils/eth";
 import {
-  getClientEntity,
   getListingEntity,
   getOrderEntity,
   getTipEntity,
+  getUserEntity,
+  registerOrderEvent,
 } from "../utils/store";
-import { BigInt } from "@graphprotocol/graph-ts";
 
 enum OrderStatus {
   PLACED,
@@ -29,19 +30,23 @@ enum OrderStatus {
 
 export function handleOrderPlaced(event: OrderPlaced): void {
   const listing = getListingEntity(event.address.toHex());
+  const seller = getUserEntity(listing.seller);
 
-  const client = getClientEntity(event.params.client.toHex());
+  const client = getUserEntity(event.params.client.toHex());
   client.save();
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.tx = event.transaction.hash.toHex();
   order.listing = listing.id;
   order.client = client.id;
+  order.seller = seller.id;
   order.status = mapOrderStatus(event.params.status);
   order.bondFeeWithdrawn = false;
+  order.underRevision = false;
   order.revisionsLeft = event.params.revisionsLeft.toI32();
-  order.startedAt = event.params.startedAt;
   order.save();
+
+  registerOrderEvent(event, "PLACED", client.id, order.id);
 }
 
 export function handleOrderApproved(event: OrderApproved): void {
@@ -50,6 +55,8 @@ export function handleOrderApproved(event: OrderApproved): void {
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.ONGOING);
   order.save();
+
+  registerOrderEvent(event, "STARTED", order.seller, order.id);
 }
 
 export function handleOrderDismissed(event: OrderDismissed): void {
@@ -58,6 +65,8 @@ export function handleOrderDismissed(event: OrderDismissed): void {
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DISMISSED);
   order.save();
+
+  registerOrderEvent(event, "DISMISSED", event.params.author.toHex(), order.id);
 }
 
 export function handleOrderCancelled(event: OrderCancelled): void {
@@ -65,8 +74,9 @@ export function handleOrderCancelled(event: OrderCancelled): void {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.CANCELLED);
-  order.cancelledAt = event.params.cancelledAt;
   order.save();
+
+  registerOrderEvent(event, "CANCELLED", event.params.author.toHex(), order.id);
 }
 
 export function handleOrderDelivered(event: OrderDelivered): void {
@@ -74,8 +84,21 @@ export function handleOrderDelivered(event: OrderDelivered): void {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DELIVERED);
-  order.deliveredAt = event.params.deliveredAt;
+  order.underRevision = false;
   order.save();
+
+  registerOrderEvent(event, "DELIVERED", order.seller, order.id);
+}
+
+export function handleRevisionRequested(event: RevisionRequested): void {
+  const listing = getListingEntity(event.address.toHex());
+
+  const order = getOrderEntity(event.params.orderId, listing.id);
+  order.underRevision = true;
+  order.status = mapOrderStatus(OrderStatus.ONGOING);
+  order.save();
+
+  registerOrderEvent(event, "REVISION", order.client, order.id);
 }
 
 export function handleTip(event: Tip): void {
@@ -108,6 +131,7 @@ export const handleOrderWithdrawn = (event: OrderWithdrawn): void => {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.COMPLETED);
-  order.completedAt = event.block.timestamp;
   order.save();
+
+  registerOrderEvent(event, "COMPLETED", order.seller, order.id);
 };

@@ -9,13 +9,9 @@ fragment listingFull on Listing {
   bondFee
   deliveryDays
   revisions
+
   seller {
     id
-  }
-  orders {
-    id
-    startedAt
-    status
   }
 }
 
@@ -36,14 +32,14 @@ fragment listingMinimal on Listing {
 # Get a listing by its address
 #
 
-query getMinimalListing($address: ID!) {
-  listing(id: $address) {
+query getMinimalListing($id: ID!) {
+  listing(id: $id) {
     ...listingMinimal
   }
 }
 
-query getFullListing($address: ID!) {
-  listing(id: $address) {
+query getFullListing($id: ID!) {
+  listing(id: $id) {
     ...listingFull
   }
 }
@@ -53,18 +49,16 @@ query getFullListing($address: ID!) {
 #
 
 query getSellerMinimalListings(
-  $sellerAddress: ID!
+  $sellerId: String!
   $cursor: ID = ""
   $limit: Int
 ) {
-  seller(id: $sellerAddress) {
-    listings(
-      first: $limit
-      where: { id_gt: $cursor }
-      orderBy: id
-      orderDirection: asc
-    ) {
-      ...listingMinimal
-    }
+  listings(
+    first: $limit
+    where: { id_gt: $cursor, seller: $sellerId }
+    orderBy: id
+    orderDirection: asc
+  ) {
+    ...listingMinimal
   }
 }

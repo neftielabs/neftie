@@ -4,8 +4,68 @@
 
 fragment orderMinimal on Order {
   id
+  status
+  tx
+
+  events {
+    timestamp
+  }
+
+  client {
+    id
+  }
+
+  seller {
+    id
+  }
+
+  listing {
+    id
+    title
+    price
+    bondFee
+    deliveryDays
+    revisions
+  }
+}
+
+fragment orderFull on Order {
+  id
   tx
   status
+  revisionsLeft
+  underRevision
+  bondFeeWithdrawn
+
+  events {
+    type
+    timestamp
+    from {
+      id
+    }
+  }
+
+  listing {
+    id
+    title
+    price
+    bondFee
+    deliveryDays
+    revisions
+  }
+
+  tips {
+    amount
+    timestamp
+  }
+
+  client {
+    id
+  }
+
+  seller {
+    id
+  }
 }
 
 # ---------------------------------------------------------------------------- #
@@ -13,28 +73,82 @@ fragment orderMinimal on Order {
 # ---------------------------------------------------------------------------- #
 
 #
-# Get an order by its transaction hash and seller id
+# Get all orders from a client on a listing
 #
 
-query getMinimalListingOrdersByClient($listingId: String!, $clientId: ID!) {
-  client(id: $clientId) {
-    orders(where: { listing: $listingId }) {
-      ...orderMinimal
-    }
+query getMinimalOrdersByTx(
+  $listingId: String!
+  $clientId: String!
+  $txHash: String!
+) {
+  orders(where: { listing: $listingId, client: $clientId, tx: $txHash }) {
+    ...orderMinimal
   }
 }
 
-query getMinimalSellerOrders(
-  $sellerAddress: ID!
-  $cursor: ID = ""
-  $limit: Int
-) {
+#
+# Get a all orders received by a seller
+#
+
+query getSellerOrders($sellerId: String!, $cursor: String = "", $limit: Int) {
   orders(
-    where: { seller: $sellerAddress, id_gt: $cursor }
+    where: { seller: $sellerId, id_gt: $cursor }
     first: $limit
     orderBy: id
-    orderDirection: asc
+    orderDirection: desc
   ) {
-    ...listingMinimal
+    ...orderMinimal
+  }
+}
+
+#
+# Get a all orders placed by a client
+#
+
+query getClientOrders($clientId: String!, $cursor: String = "", $limit: Int) {
+  orders(
+    where: { client: $clientId, id_gt: $cursor }
+    first: $limit
+    orderBy: id
+    orderDirection: desc
+  ) {
+    ...orderMinimal
+  }
+}
+
+#
+# Get an order by ud
+#
+
+query getOrderById($composedOrderId: ID!) {
+  order(id: $composedOrderId) {
+    ...orderFull
+  }
+}
+
+#
+# Get an order event by timestamp
+#
+
+query getOrderEvent(
+  $composedOrderId: String!
+  $type: OrderEventType!
+  $minTimestamp: BigInt!
+  $maxTimestamp: BigInt!
+) {
+  orderEvents(
+    where: {
+      order: $composedOrderId
+      type: $type
+      timestamp_gte: $minTimestamp
+      timestamp_lte: $maxTimestamp
+    }
+  ) {
+    id
+    type
+    timestamp
+    from {
+      id
+    }
   }
 }

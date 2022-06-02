@@ -1,18 +1,42 @@
-import React from "react";
+import React, { useState } from "react";
+
+import { useRouter } from "next/router";
 
 import { BaseCard } from "components/cards/BaseCard";
-import { Avatar } from "components/media/Avatar";
+import { OrdersTable } from "components/orders/OrdersTable";
 import { Page } from "components/Page";
 import { RoleSwitch } from "components/pills/RoleSwitch";
 import { Box } from "components/ui/Box";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
+import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
+import { useGetUser } from "hooks/queries/useGetUser";
+import { logger } from "lib/logger/instance";
+import { routes } from "lib/manifests/routes";
 import type { PageComponent } from "types/tsx";
 
 interface OrdersPageProps {}
 
 const OrdersPage: PageComponent<OrdersPageProps> = () => {
+  const entities = ["Seller", "Client"] as const;
+  const [currentEntity, setCurrentEntity] =
+    useState<typeof entities[number]>("Seller");
+  const [isLoading, setIsLoading] = useState(false);
+
+  const { push } = useRouter();
+
+  const { data: user, isError } = useGetUser({ from: { currentUser: true } });
+
+  if (isError) {
+    logger.debug("[orders.tsx] Redirect to home (getUser error)");
+    push(routes.home);
+  }
+
+  if (!user) {
+    return <Loader centered tw="py-30" />;
+  }
+
   return (
     <Page title="Your orders">
       <Box tw="bg-gray-25">
@@ -24,57 +48,15 @@ const OrdersPage: PageComponent<OrdersPageProps> = () => {
             <Flex column tw="gap-4">
               <Flex tw="w-full" center>
                 <RoleSwitch
-                  options={["Seller", "Client"] as const}
-                  onSwitch={() =>
-                    new Promise((r) => {
-                      setTimeout(r, 2000);
-                    })
-                  }
+                  options={entities}
+                  onSwitch={(c) => setCurrentEntity(c)}
+                  isLoading={isLoading}
                 />
               </Flex>
-              <Flex column>
-                <table tw="w-full">
-                  <thead>
-                    <tr>
-                      {[
-                        "Client",
-                        "Listing",
-                        "Deadline at",
-                        "Total",
-                        "Status",
-                      ].map((h) => (
-                        <th key={h} tw="py-1 border-t border-b border-gray-100">
-                          <Text weight="medium" size="13" color="gray500">
-                            {h}
-                          </Text>
-                        </th>
-                      ))}
-                    </tr>
-                  </thead>
-                  <tbody>
-                    <tr>
-                      <td tw="py-1 flex items-center gap-1">
-                        <Avatar size="xs" />
-                        <Text size="13" color="gray500">
-                          whoever
-                        </Text>
-                      </td>
-                    </tr>
-                  </tbody>
-                </table>
-                <Flex
-                  tw="border-t border-b border-gray-100 py-1 px-3"
-                  justifyBetween
-                >
-                  {["Client", "Listing", "Deadline at", "Total", "Status"].map(
-                    (h) => (
-                      <Text key={h} weight="medium" size="13" color="gray500">
-                        {h}
-                      </Text>
-                    )
-                  )}
-                </Flex>
-              </Flex>
+              <OrdersTable
+                entity={currentEntity}
+                setLoading={(v) => setIsLoading(v)}
+              />
             </Flex>
           </BaseCard>
         </Container>

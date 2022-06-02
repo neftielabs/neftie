@@ -10,7 +10,7 @@ import { Text } from "components/ui/Text";
 import { queryClient } from "lib/http/queryClient";
 import { handleProfileAssetUpload } from "lib/user";
 import { onlyTrue } from "utils/fp";
-import { shortenAddress } from "utils/wallet";
+import { shortenAddress } from "utils/web3";
 
 interface ProfileHeaderProps {
   user: UserSafe;
@@ -59,7 +59,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
               {user.username}
             </Text>
             <CopyButton
-              textToCopy={user.address}
+              textToCopy={user.id}
               tw="text-gray-500 hover:text-gray-700"
               copiedComponent={
                 <Text color="gray500" weight="bold" tw="mt-0.5" size="13">
@@ -73,7 +73,7 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
                 tw="mt-0.5 hover:text-gray-700"
                 size="13"
               >
-                {shortenAddress(user?.address || "")}
+                {shortenAddress(user?.id || "")}
               </Text>
             </CopyButton>
           </Flex>

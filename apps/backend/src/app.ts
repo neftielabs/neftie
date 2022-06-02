@@ -5,6 +5,7 @@ import express from "express";
 
 import { config } from "config/main";
 import logger from "modules/Logger/Logger";
+import { createWebSocketServer } from "modules/websocket/server";
 
 dotenv.config();
 
@@ -54,6 +55,12 @@ const startServer = async () => {
       process.send("ready");
     }
   });
+
+  /**
+   * Initialize websocket server
+   */
+
+  createWebSocketServer(server);
 
   /**
    * Graceful shutdown

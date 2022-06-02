@@ -1,6 +1,6 @@
 import httpStatus from "http-status";
 
-import type { HttpStatus } from "types/httpStatus";
+import type { HttpStatus } from "types/extends/httpStatus";
 
 type HttpResponse = (key: keyof HttpStatus) => [string, number];
 

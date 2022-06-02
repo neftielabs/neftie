@@ -12,7 +12,7 @@ import { isError, withPagination } from "utils/helpers";
  * by querying it by its transaction hash and client id
  */
 export const verifyOrderExists = createController(
-  "/orders/listing/:address/verify",
+  "/listings/:listingId/orders/verify",
   "get",
   (route) =>
     route
@@ -20,8 +20,8 @@ export const verifyOrderExists = createController(
       .use(withQuery(orderSchema.verifyOrderSchema))
       .handler(async (ctx) => {
         const orderExists = await orderService.onChainOrderExists({
-          clientAddress: ctx.auth.userAddress,
-          listingId: ctx.routeParams.address,
+          clientId: ctx.auth.userId,
+          listingId: ctx.routeParams.listingId,
           txHash: ctx.query.txHash,
         });
 
@@ -29,29 +29,56 @@ export const verifyOrderExists = createController(
           return Response.notFound();
         }
 
-        return Response.ok();
+        return Response.ok(orderExists.data);
       })
 );
 
 /**
- * Get all seller orders (paginated)
+ * Get all orders from a user (paginated)
+ * Since orders can have confidential information, such as
+ * chats, we only return the orders from the currently authenticated
+ * user.
  */
-export const getSellerOrders = createController(
-  "/orders/user/:address",
+export const getUserOrders = createController("/me/orders", "get", (route) =>
+  route
+    .use(authMiddleware.withAuth("required"))
+    .use(withQuery(orderSchema.entityOrdersSchema))
+    .use(filterMiddleware.pagination)
+    .handler(async (ctx) => {
+      const entity = ctx.query.as as "seller" | "client";
+      const orders = await orderService.getUserOrders({
+        entity,
+        userId: ctx.auth.userId,
+        pagination: ctx.filters.pagination,
+      });
+
+      return Response.ok(
+        withPagination(orders, {
+          cursor: "id",
+          limit: ctx.filters.pagination.limit,
+        })
+      );
+    })
+);
+
+/**
+ * Get an order from a user.
+ * Same as /me/orders, only an order from the authenticated user
+ */
+export const getUserOrder = createController(
+  "/me/orders/:composedOrderId",
   "get",
   (route) =>
-    route
-      .use(authMiddleware.withAuth("required"))
-      .use(withQuery(orderSchema.userOrdersSchema))
-      .use(filterMiddleware.pagination)
-      .handler((ctx) => {
-        const role = ctx.query.role as "seller" | "client";
+    route.use(authMiddleware.withAuth("required")).handler(async (ctx) => {
+      const order = await orderService.getUserOrder({
+        userId: ctx.auth.userId,
+        composedId: ctx.routeParams.composedOrderId,
+      });
 
-        return Response.ok(
-          withPagination([], {
-            cursor: "",
-            limit: ctx.filters.pagination.limit,
-          })
-        );
-      })
+      if (!order) {
+        return Response.notFound();
+      }
+
+      return Response.ok(order);
+    })
 );

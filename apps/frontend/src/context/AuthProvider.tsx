@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/router";
+import { useQueryClient } from "react-query";
 import { useAccount } from "wagmi";
 
+import { areAddressesEqual } from "@neftie/common";
 import { WaitForAuth } from "components/layout/WaitForAuth";
 import { useTypedMutation } from "hooks/http/useTypedMutation";
 import { useToken } from "hooks/useToken";
@@ -38,6 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const [token, { setToken }] = useToken();
   const [isWalletLoading] = useWallet();
 
+  const queryClient = useQueryClient();
   const { mutateAsync: getToken } = useTypedMutation("getAuthToken");
   const { mutateAsync: disconnect } = useTypedMutation("disconnect");
 
@@ -70,7 +73,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
            * Check if the user received matches the current
            * connected wallet address
            */
-          if (result.user.address !== accountData?.address) {
+          if (!areAddressesEqual(result.user.id, accountData?.address)) {
             logger.debug(`[Auth] Received address and connected mismatch`);
 
             /**
@@ -79,6 +82,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
              */
             disconnect([])
               .then(() => {
+                queryClient.clear();
+
                 if (requiresAuth) {
                   redirectToConnect();
                 }
@@ -92,10 +97,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
              * We store it together with the address in order
              * to be able to react to a wallet account change.
              */
-            setToken({ value: result.token, address: result.user.address });
+            setToken({ value: result.token, address: result.user.id });
           }
         })
         .catch(() => {
+          queryClient.clear();
+
           /**
            * If the current page requires auth, redirect to the
            * connect page and store the intended path in the query params
@@ -124,6 +131,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     ) {
       logger.debug("[Auth] Accounts mismatch");
 
+      queryClient.clear();
+
       /**
        * Token address and current connected address don't match
        * clear all tokens (server & client)
@@ -143,6 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     disconnect,
     isAuthenticating,
     isWalletLoading,
+    queryClient,
     redirectToConnect,
     requiresAuth,
     setToken,

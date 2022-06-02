@@ -56,3 +56,18 @@ export const isError = <D, E>(
 export const isErrorResult = <D, E>(result: Result<D, E>, error: E) => {
   return !result.success && "error" in result && result.error === error;
 };
+
+/**
+ * From a composed order id (that is listingId_orderId), extract
+ * the numeric order id.
+ */
+export const splitOrderId = (orderId: string) => {
+  const [listingId, stringOrderId] = orderId.split("_");
+
+  return {
+    id: Number(stringOrderId),
+    composedId: orderId,
+    listingId,
+    stringOrderId,
+  };
+};

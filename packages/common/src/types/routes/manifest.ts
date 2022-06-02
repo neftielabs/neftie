@@ -1,6 +1,11 @@
 import type { Response } from "typera-express";
 
-import type { ListingFull, ListingPreview } from "../models";
+import type {
+  IListingFull,
+  IListingPreview,
+  IOrderFull,
+  IOrderPreview,
+} from "../models";
 import type { UserSafe } from "../models/user";
 import type { Paginated } from "../utils";
 
@@ -61,7 +66,7 @@ export type RouteManifest = {
    * Users
    */
 
-  "/users/:addressOrUsername": {
+  "/users/:userIdOrUsername": {
     get: {
       response: [Response.Ok<UserSafe>];
     };
@@ -71,10 +76,10 @@ export type RouteManifest = {
    * Listings
    */
 
-  "/listings/:address": {
+  "/listings/:listingId": {
     get: {
       response: [
-        Response.Ok<ListingFull>,
+        Response.Ok<IListingFull>,
         Response.NotFound,
         Response.UnprocessableEntity
       ];
@@ -84,19 +89,19 @@ export type RouteManifest = {
     };
   };
 
-  "/listings/:address/verify": {
+  "/listings/:listingId/verify": {
     get: {
       response: [
-        Response.Ok<ListingPreview>,
+        Response.Ok<IListingPreview>,
         Response.NotFound,
         Response.UnprocessableEntity
       ];
     };
   };
 
-  "/listings/user/:address": {
+  "/users/:userId/listings": {
     get: {
-      response: [Response.Ok<Paginated<ListingPreview[]>>];
+      response: [Response.Ok<Paginated<IListingPreview[]>>];
     };
   };
 
@@ -104,15 +109,21 @@ export type RouteManifest = {
    * Orders
    */
 
-  "/orders/listing/:address/verify": {
+  "/listings/:listingId/orders/verify": {
     get: {
-      response: [Response.Ok, Response.NotFound];
+      response: [Response.Ok<IOrderPreview>, Response.NotFound];
     };
   };
 
-  "/orders/user/:address": {
+  "/me/orders": {
     get: {
-      response: [Response.Ok<Paginated<never[]>>];
+      response: [Response.Ok<Paginated<IOrderPreview[]>>];
+    };
+  };
+
+  "/me/orders/:composedOrderId": {
+    get: {
+      response: [Response.Ok<IOrderFull>, Response.NotFound];
     };
   };
 

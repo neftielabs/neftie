@@ -40,7 +40,7 @@ export const Loader: React.FC<LoaderProps> = ({
         tw="animation-duration[1.05s] animation-timing-function[cubic-bezier(.39,.6,.81,.58)]"
         css={active ? tw`animate-spin` : {}}
         width="20"
-        viewBox="0 0 34 33.1"
+        viewBox="0 0 34 34"
         fill="currentColor"
         {...svgProps}
       >

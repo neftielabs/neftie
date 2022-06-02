@@ -1,6 +1,4 @@
-import React, { useEffect, useMemo, useState } from "react";
-
-import { useRouter } from "next/router";
+import React, { useState } from "react";
 
 import type { UserSafe } from "@neftie/common";
 import { ProfileListings } from "components/profile/ProfileListings";
@@ -8,20 +6,13 @@ import { TabItem } from "components/tabs/TabItem";
 import { Box } from "components/ui/Box";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
-import { routes } from "lib/manifests/routes";
-import type { ProfileTabs as ProfileTabsType } from "types/ui";
 
 interface ProfileTabsProps {
   user: UserSafe;
-  currentTab: ProfileTabsType;
 }
 
-export const ProfileTabs: React.FC<ProfileTabsProps> = ({
-  user,
-  currentTab,
-}) => {
+export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
   const [currentTabIdx, setCurrentTabIdx] = useState(0);
-  const { push } = useRouter();
 
   const [isHovering, setIsHovering] = useState(false);
   const [indicatorParams, setIndicatorParams] = useState({
@@ -29,42 +20,24 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
     x: 0,
   });
 
-  const tabs = useMemo(() => {
-    const username = user.username || user.address;
-    const route = routes.user(username);
-
-    return [
-      {
-        title: "Listings",
-        route: route.listings,
-        component: <ProfileListings sellerAddress={user.address} />,
-      },
-      {
-        title: "About",
-        route: route.about,
-        component: <></>,
-      },
-      {
-        title: "Work",
-        route: route.work,
-        component: <></>,
-      },
-      {
-        title: "Reviews",
-        route: route.reviews,
-        component: <></>,
-      },
-    ];
-  }, [user.address, user.username]);
-
-  useEffect(() => {
-    if (!currentTab) return;
-
-    const tabIdx = tabs.findIndex((t) => t.title.toLowerCase() === currentTab);
-    if (tabIdx !== -1) {
-      setCurrentTabIdx(tabIdx);
-    }
-  }, [currentTab, tabs]);
+  const tabs = [
+    {
+      title: "Listings",
+      component: <ProfileListings sellerAddress={user.id} />,
+    },
+    {
+      title: "About",
+      component: <></>,
+    },
+    {
+      title: "Work",
+      component: <></>,
+    },
+    {
+      title: "Reviews",
+      component: <></>,
+    },
+  ];
 
   return (
     <Container tw="mb-10">
@@ -85,10 +58,10 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({
         />
         {tabs.map((tab, i) => (
           <TabItem
-            key={tab.route}
+            key={tab.title}
             active={i === currentTabIdx}
             setIndicatorParams={setIndicatorParams}
-            onClick={() => push(tab.route, undefined, { shallow: true })}
+            onClick={() => setCurrentTabIdx(i)}
           >
             {tab.title}
           </TabItem>

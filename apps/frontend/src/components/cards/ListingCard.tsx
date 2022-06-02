@@ -2,7 +2,7 @@ import React from "react";
 
 import { FiStar } from "react-icons/fi";
 
-import type { ListingFull, ListingPreview } from "@neftie/common";
+import type { IListingFull, IListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { BaseCard } from "components/cards/BaseCard";
 import { Avatar } from "components/media/Avatar";
@@ -15,7 +15,7 @@ import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
 
 type ListingCardProps = React.ComponentProps<typeof Link> & {
-  listing: ListingFull | ListingPreview;
+  listing: IListingFull | IListingPreview;
 };
 
 export const ListingCard: React.FC<ListingCardProps> = ({

@@ -2,37 +2,30 @@
 /* eslint-disable no-console */
 import { ethers } from "hardhat";
 
-import { ListingFactory__factory, Listing__factory } from "../typechain";
+import addresses from "../addresses";
+import { Listing__factory } from "../typechain";
 
 async function main() {
   const admin = await ethers.getSigner(
     "0x2a09e1e008Aa84c481894737b3D7A22f1dB63c90"
   );
 
-  // const listingFactory = await ethers.getContractAt(
-  //   "ListingFactory",
-  //   addresses.development.listingFactory
-  // );
+  const listingFactory = await ethers.getContractAt(
+    "ListingFactory",
+    addresses.development.listingFactory
+  );
 
   const core = await ethers.getContractAt(
     "NeftieCore",
-    "0x90d9378476527818790557f00a438190f9b87d30"
+    addresses.development.core
   );
 
-  // console.log("Deploying core");
+  // console.log("Deploying listing factory");
 
-  // const _core = new NeftieCore__factory(admin);
-  // const core = (await upgrades.deployProxy(_core, [
-  //   admin.address,
-  // ])) as NeftieCore;
-  // await core.deployed();
-
-  console.log("Deploying listing factory");
-
-  const listingFactory = await new ListingFactory__factory(admin).deploy(
-    core.address
-  );
-  await listingFactory.deployed();
+  // const listingFactory = await new ListingFactory__factory(admin).deploy(
+  //   core.address
+  // );
+  // await listingFactory.deployed();
 
   console.log("Deploying listing implementation");
 

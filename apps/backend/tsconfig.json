@@ -12,6 +12,7 @@
     "esModuleInterop": true,
     "declaration": true,
     "baseUrl": ".",
+    "typeRoots": ["src/types/extends"],
     "paths": {
       "loaders/*": ["src/loaders/*"],
       "config/*": ["src/config/*"],

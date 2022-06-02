@@ -3,14 +3,15 @@ import { useEffect, useState } from "react";
 import { ethers } from "ethers";
 import { useFeeData, useProvider, useSigner } from "wagmi";
 
-import type { ListingFull } from "@neftie/common";
+import type { IListingFull } from "@neftie/common";
 import { number } from "@neftie/common";
 import { useAuth } from "hooks/useAuth";
 import { useEthPrice } from "hooks/useEthPrice";
 import { getListingContract } from "lib/web3/contracts";
+import { addGasMargin } from "lib/web3/gas";
 import { noop } from "utils/fp";
 
-export const useOrderSummary = (listing: ListingFull) => {
+export const useOrderSummary = (listing: IListingFull) => {
   const { data: signer } = useSigner();
   const provider = useProvider();
 
@@ -60,23 +61,24 @@ export const useOrderSummary = (listing: ListingFull) => {
     const price = ethers.utils.parseEther(totals.itemTotal);
     const bondFee = ethers.utils.parseEther(totals.bondFeeTotal);
 
-    const contract = getListingContract(signer, listing.id);
+    getListingContract(signer, listing.id).then((contract) => {
+      contract.estimateGas
+        .placeOrder({
+          value: price.add(bondFee),
+        })
+        .then((gasUnits) => {
+          const realGasUnits = addGasMargin(gasUnits);
+          const formattedGas = ethers.utils.formatEther(
+            realGasUnits.mul(feeData.gasPrice!)
+          );
 
-    contract.estimateGas
-      .placeOrder({
-        value: price.add(bondFee),
-      })
-      .then((gasUnits) => {
-        const formattedGas = ethers.utils.formatEther(
-          gasUnits.mul(feeData.gasPrice!)
-        );
-
-        setTotals((t) => ({
-          ...t,
-          gasEstimate: number.limitDecimals(formattedGas, 6),
-        }));
-      })
-      .catch(noop);
+          setTotals((t) => ({
+            ...t,
+            gasEstimate: number.limitDecimals(formattedGas, 6),
+          }));
+        })
+        .catch(noop);
+    });
   }, [
     feeData,
     isAuthed,

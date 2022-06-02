@@ -26,7 +26,10 @@ const ConnectPage: PageComponent<never> = () => {
   const { isAuthed } = useAuth();
 
   const onConnect = async (c: Connector) => {
-    await connectAsync(c);
+    if (!isConnected) {
+      await connectAsync(c);
+    }
+
     setActiveModal(Modal.auth);
   };
 

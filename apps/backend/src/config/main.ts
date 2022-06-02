@@ -32,6 +32,7 @@ export const config = {
   tokens: {
     access: {
       key: "@neftie/at",
+      wsKey: "x-access-token",
       secret: env.ACCESS_TOKEN_SECRET,
       expires: "6d",
       currentVersion: 1,

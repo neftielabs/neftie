@@ -1,6 +1,6 @@
 import React from "react";
 
-import tw, { theme } from "twin.macro";
+import tw from "twin.macro";
 
 import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
@@ -30,11 +30,7 @@ const ButtonComponent = styled("button", {
       outlineWhite: tw`border border-white hover:border-gray-300`,
       gradientOrange: {
         ...gradientCommonProps,
-        backgroundImage: `linear-gradient(100deg, ${theme(
-          "colors.gradient.pink"
-        )}, ${theme("colors.gradient.orange")}, ${theme(
-          "colors.gradient.pink"
-        )})`,
+        backgroundImage: `linear-gradient(100deg, #FF0F7B, #F89B29, #FF0F7B)`,
       },
       gradientBlue: {
         ...gradientCommonProps,

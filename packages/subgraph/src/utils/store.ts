@@ -1,19 +1,19 @@
-import { BigDecimal, BigInt, Bytes } from "@graphprotocol/graph-ts";
+import { BigInt, ethereum } from "@graphprotocol/graph-ts";
 
-import { Client, Listing, Order, Seller, Tip } from "../../generated/schema";
+import { Listing, Order, OrderEvent, Tip, User } from "../../generated/schema";
 import { buildOrderId } from "./order";
 
 /**
- * Loads a seller
+ * Loads a user
  */
-export const getSellerEntity = (id: string): Seller => {
-  let seller = Seller.load(id);
+export const getUserEntity = (id: string): User => {
+  let user = User.load(id);
 
-  if (!seller) {
-    seller = new Seller(id);
+  if (!user) {
+    user = new User(id);
   }
 
-  return seller;
+  return user;
 };
 
 /**
@@ -44,19 +44,6 @@ export const getOrderEntity = (orderId: BigInt, listingId: string): Order => {
 };
 
 /**
- * Loads a client
- */
-export const getClientEntity = (id: string): Client => {
-  let client = Client.load(id);
-
-  if (!client) {
-    client = new Client(id);
-  }
-
-  return client;
-};
-
-/**
  * Loads a tip
  */
 export const getTipEntity = (id: string): Tip => {
@@ -67,4 +54,37 @@ export const getTipEntity = (id: string): Tip => {
   }
 
   return tip;
+};
+
+/**
+ * Loads an order event
+ */
+export const getOrderEventEntity = (id: string): OrderEvent => {
+  let event = OrderEvent.load(id);
+
+  if (!event) {
+    event = new OrderEvent(id);
+  }
+
+  return event;
+};
+
+/**
+ * Registers an order event
+ */
+export const registerOrderEvent = (
+  event: ethereum.Event,
+  type: string,
+  from: string,
+  orderId: string
+): void => {
+  const orderEventId = event.transaction.hash
+    .toHex()
+    .concat("_".concat(event.logIndex.toString()));
+  const orderEvent = getOrderEventEntity(orderEventId);
+  orderEvent.type = type;
+  orderEvent.timestamp = event.block.timestamp;
+  orderEvent.from = from;
+  orderEvent.order = orderId;
+  orderEvent.save();
 };
