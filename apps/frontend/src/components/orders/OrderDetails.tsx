@@ -3,6 +3,7 @@ import React from "react";
 import type { IOrderFull } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { BaseCard } from "components/cards/BaseCard";
+import { OrderStatus } from "components/pills/OrderStatus";
 import { RatingStars } from "components/rating/RatingStars";
 import { EthPrice } from "components/typography/EthPrice";
 import { TruncatedText } from "components/typography/TruncatedText";
@@ -56,6 +57,14 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
         <Flex column tw="gap-1 border-t border-gray-100 pt-1.5">
           {(
             [
+              [
+                "Status",
+                <OrderStatus
+                  key="o"
+                  status={order.status}
+                  underRevision={order.underRevision}
+                />,
+              ],
               ["Delivery days", getDisplayDays(listing.deliveryDays)],
               ["Revisions left", `${order.revisionsLeft}/${listing.revisions}`],
               [
@@ -71,7 +80,11 @@ export const OrderDetails: React.FC<OrderDetailsProps> = ({ order }) => {
               <Text color="gray600" size="14">
                 {e[0]}
               </Text>
-              <Text weight="bold">{e[1]}</Text>
+              {typeof e[1] === "string" ? (
+                <Text weight="bold">{e[1]}</Text>
+              ) : (
+                e[1]
+              )}
             </Flex>
           ))}
         </Flex>

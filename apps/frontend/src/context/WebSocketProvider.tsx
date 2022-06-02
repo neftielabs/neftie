@@ -7,48 +7,52 @@ import { WS_BASEURL } from "lib/constants/app";
 import { logger } from "lib/logger/instance";
 
 export const WebSocketContext = React.createContext<{
-  conn?: WsConnection;
+  conn: WsConnection | null;
   isConnecting: boolean;
 }>({
+  conn: null,
   isConnecting: false,
 });
 
 interface WebSocketProviderProps {
-  needsWebSocket: boolean;
+  noWebSocket: boolean;
 }
 
 export const WebSocketProvider: React.FC<WebSocketProviderProps> = ({
   children,
-  needsWebSocket,
+  noWebSocket,
 }) => {
   const [token] = useToken();
   const [isConnecting, setIsConnecting] = useState(false);
-  const [connection, setConnection] = useState<WsConnection>();
+  const [connection, setConnection] = useState<WsConnection | null>(null);
 
   useEffect(() => {
-    if (needsWebSocket && !connection && !isConnecting && token) {
-      ws.createWsConnection(token.value, {
+    if (!noWebSocket && !connection && !isConnecting && !!token) {
+      setIsConnecting(true);
+
+      ws.createWsConnection(token!.value, {
         url: WS_BASEURL,
         logger: (dir, op, data) =>
           logger.debug(`[ws - ${dir}] [${op}]`, { data }),
       })
-        .then((c) => setConnection(c))
-        .finally(() => setIsConnecting(false));
+        .then((c) => {
+          setConnection(c);
+        })
+        .finally(() => {
+          setIsConnecting(false);
+        });
+    } else if (!token && connection) {
+      connection.close();
+      setConnection(null);
     }
-
-    return () => {
-      if (connection) {
-        connection.close();
-      }
-    };
-  }, [connection, isConnecting, needsWebSocket, token]);
+  }, [token, noWebSocket, connection, isConnecting]);
 
   return (
     <WebSocketContext.Provider
       value={useMemo(
         () => ({
-          isConnecting,
           conn: connection,
+          isConnecting,
         }),
         [connection, isConnecting]
       )}

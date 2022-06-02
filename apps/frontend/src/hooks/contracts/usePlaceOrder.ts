@@ -20,7 +20,7 @@ export const usePlaceOrder = (
       throw new Error("No listing");
     }
 
-    const contract = getListingContract(signer, listing.id);
+    const contract = await getListingContract(signer, listing.id);
     const price = ethers.utils.parseEther(listing.price);
     const bondFee = ethers.utils.parseEther(listing.bondFee);
     const weiValue = price.add(bondFee);

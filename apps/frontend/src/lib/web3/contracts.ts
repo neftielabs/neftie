@@ -23,8 +23,9 @@ export const getListingFactoryContract = (signer: Signer) => {
 /**
  * @returns The Listing implementation contract instance
  */
-export const getListingImplementationContract = (signer: Signer) => {
-  const contractAddress = contractAddresses[currentEnv].listingImpl;
+export const getListingImplementationContract = async (signer: Signer) => {
+  const listingFactory = getListingFactoryContract(signer);
+  const contractAddress = await listingFactory.implementation();
   const listingImpl = ListingFactory.connect(contractAddress, signer);
   return listingImpl;
 };
@@ -32,7 +33,7 @@ export const getListingImplementationContract = (signer: Signer) => {
 /**
  * @returns The Listing contract instance
  */
-export const getListingContract = (signer: Signer, address: string) => {
-  const listingImpl = getListingImplementationContract(signer);
+export const getListingContract = async (signer: Signer, address: string) => {
+  const listingImpl = await getListingImplementationContract(signer);
   return listingImpl.attach(address);
 };

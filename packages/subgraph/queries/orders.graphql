@@ -125,3 +125,30 @@ query getOrderById($composedOrderId: ID!) {
     ...orderFull
   }
 }
+
+#
+# Get an order event by timestamp
+#
+
+query getOrderEvent(
+  $composedOrderId: String!
+  $type: OrderEventType!
+  $minTimestamp: BigInt!
+  $maxTimestamp: BigInt!
+) {
+  orderEvents(
+    where: {
+      order: $composedOrderId
+      type: $type
+      timestamp_gte: $minTimestamp
+      timestamp_lte: $maxTimestamp
+    }
+  ) {
+    id
+    type
+    timestamp
+    from {
+      id
+    }
+  }
+}

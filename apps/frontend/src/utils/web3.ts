@@ -3,8 +3,8 @@ import { isProd } from "utils/app";
 /**
  * Transforms it to something like 0x32a...45f
  */
-export const shortenAddress = (address: string) =>
-  address.slice(0, 6) + "..." + address.slice(-3);
+export const shortenAddress = (address: string, first = 6, last = 3) =>
+  address.slice(0, first) + "..." + address.slice(last * -1);
 
 /**
  * This is used to create new listings, where the seller + nonce

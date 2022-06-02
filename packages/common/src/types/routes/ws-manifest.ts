@@ -11,8 +11,6 @@ import type { IOrderEvent } from "../models";
  */
 export type WsOpManifest = {
   server: {
-    pong: "pong";
-
     "auth:reply": {
       success: boolean;
     };
@@ -21,12 +19,16 @@ export type WsOpManifest = {
       orderComposedId: string;
       event: IOrderEvent;
     };
+
+    "new_order_action:reply": {
+      success: boolean;
+    };
   };
   client: {
-    ping: {};
-
     auth: Asserts<typeof authSchema["wsAuthMessage"]>;
 
     order_message: Asserts<typeof orderSchema["orderMessage"]>;
+
+    new_order_action: Asserts<typeof orderSchema["newOrderAction"]>;
   };
 };

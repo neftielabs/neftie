@@ -6,16 +6,28 @@ import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
+import { useToastStore } from "stores/useToastStore";
 import type { PageComponent } from "types/tsx";
 
 interface HomePageProps {}
 
 const HomePage: PageComponent<HomePageProps> = () => {
+  const { showToast } = useToastStore();
+
   return (
     <Page>
-      <Box tw="py-10">
+      <Box tw="py-20">
         <Container as={Flex} justifyBetween>
-          <Text size="3xl" weight="medium">
+          <Text
+            size="3xl"
+            weight="medium"
+            onClick={() =>
+              showToast({
+                message: "Waiting for the transaction confirmation",
+                isLoading: true,
+              })
+            }
+          >
             Discover talented digital artists
           </Text>
           <Box tw="mr-6">
@@ -66,7 +78,5 @@ const HomePage: PageComponent<HomePageProps> = () => {
     </Page>
   );
 };
-
-HomePage.needsWebSocket = true;
 
 export default HomePage;

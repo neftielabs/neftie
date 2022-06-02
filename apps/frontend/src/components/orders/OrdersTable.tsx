@@ -4,6 +4,7 @@ import { useIntersectionObserver } from "@react-hookz/web";
 import { useRouter } from "next/router";
 
 import { Avatar } from "components/media/Avatar";
+import { OrderStatus } from "components/pills/OrderStatus";
 import { EthPrice } from "components/typography/EthPrice";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
@@ -32,7 +33,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   } = useTypedInfQuery(
     ["getMyOrders", entity],
     { getNextPageParam: (lastPage) => lastPage.meta?.cursor },
-    { as: entity }
+    { as: entity.toLowerCase() as "seller" | "client" }
   );
 
   const elementRef = useRef<HTMLTableRowElement>(null);
@@ -56,8 +57,8 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   ]);
 
   const heading: Record<typeof entity, string[]> = {
-    Client: ["Seller", "Listing", "Deadline at", "Total", "Status"],
-    Seller: ["Client", "Listing", "Deadline at", "Total", "Status"],
+    Client: ["Seller", "Listing", "Last activity", "Total", "Status"],
+    Seller: ["Client", "Listing", "Last activity", "Total", "Status"],
   };
 
   return (
@@ -111,13 +112,18 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                       </td>
                       <td>
                         {new Date(
-                          Number(order.startedAt) * 1000
+                          Number(order.lastEventAt) * 1000
                         ).toLocaleString()}
                       </td>
                       <td>
                         <EthPrice price={order.listing.price} />
                       </td>
-                      <td>{order.status}</td>
+                      <td>
+                        <OrderStatus
+                          status={order.status}
+                          underRevision={false}
+                        />
+                      </td>
                     </tr>
                   ))}
                 </React.Fragment>

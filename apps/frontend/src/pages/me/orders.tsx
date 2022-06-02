@@ -12,6 +12,7 @@ import { Flex } from "components/ui/Flex";
 import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
 import { useGetUser } from "hooks/queries/useGetUser";
+import { logger } from "lib/logger/instance";
 import { routes } from "lib/manifests/routes";
 import type { PageComponent } from "types/tsx";
 
@@ -28,6 +29,7 @@ const OrdersPage: PageComponent<OrdersPageProps> = () => {
   const { data: user, isError } = useGetUser({ from: { currentUser: true } });
 
   if (isError) {
+    logger.debug("[orders.tsx] Redirect to home (getUser error)");
     push(routes.home);
   }
 

@@ -16,30 +16,44 @@ import { useGetOrderFromQuery } from "hooks/useGetOrderFromQuery";
 import { useTypedUpdateQuery } from "hooks/ws/useTypedUpdateQuery";
 import { useWs } from "hooks/ws/useWs";
 import { routes } from "lib/manifests/routes";
+import { useToastStore } from "stores/useToastStore";
 import type { PageComponent } from "types/tsx";
 
 interface OrderPageProps {}
 
 const OrderPage: PageComponent<OrderPageProps> = () => {
-  const { data: order, isError } = useGetOrderFromQuery();
+  const {
+    data: order,
+    isError,
+    refetch,
+  } = useGetOrderFromQuery({ keepPreviousData: true });
   const updateQuery = useTypedUpdateQuery();
 
   const { conn } = useWs();
+  const { hideToast } = useToastStore();
 
   const { push } = useRouter();
 
   useEffect(() => {
     if (!conn || !order) return;
 
-    const unsub = conn.listenFor("order_event", ({ orderComposedId, event }) =>
-      updateQuery(["getMyOrder", orderComposedId], (data) => ({
-        ...data,
-        events: [...data.events, event],
-      }))
+    const unsub = conn.listenFor(
+      "order_event",
+      ({ orderComposedId, event }) => {
+        updateQuery(["getMyOrder", orderComposedId], (data) => ({
+          ...data,
+          events: [...data.events, event],
+        }));
+
+        if (event.type !== "message") {
+          refetch();
+          hideToast();
+        }
+      }
     );
 
     return () => unsub();
-  }, [conn, order, updateQuery]);
+  }, [conn, hideToast, order, refetch, updateQuery]);
 
   if (isError) {
     push(routes.notFound);
@@ -74,6 +88,5 @@ const OrderPage: PageComponent<OrderPageProps> = () => {
 };
 
 OrderPage.requiresAuth = true;
-OrderPage.needsWebSocket = true;
 
 export default OrderPage;

@@ -1,5 +1,6 @@
 import WebSocket from "isomorphic-ws";
 import ReconnectingWebsocket from "reconnecting-websocket";
+import { v4 as uuidv4 } from "uuid";
 
 import { validateIncomingWsMessage } from "../utils";
 import type {
@@ -13,7 +14,6 @@ import type {
 // Constants
 
 const CONNECTION_TIMEOUT = 15 * 1000;
-const PING_INTERVAL = 10 * 1000;
 
 /**
  * Establish a new authenticated websocket connection
@@ -24,14 +24,7 @@ const PING_INTERVAL = 10 * 1000;
  */
 export const createWsConnection: CreateWsConnection = (token, options) =>
   new Promise((resolve) => {
-    const {
-      url,
-      logger = () => {},
-      onUnauthorized,
-      onNotFound,
-      onBadRequest,
-      onError,
-    } = options;
+    const { url, logger = () => {}, onClose } = options;
 
     const ws = new ReconnectingWebsocket(url, [], {
       WebSocket,
@@ -45,16 +38,33 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
      * @param op - The op code
      * @param d - The data to include in the message
      */
-    const wsSend: WsSend = (op, d) => {
+    const wsSend: WsSend = (op, d, ref) => {
       if (ws.readyState !== ws.OPEN) {
         logger("warn", op, `Connection not open (${ws.readyState})`);
         return;
       }
 
-      const message = JSON.stringify({ op, d });
+      const message = JSON.stringify({ op, d, ...(ref ? { ref } : {}) });
       ws.send(message);
 
       logger("out", op, d, message);
+    };
+
+    /**
+     * Max timeout to terminate the connection
+     */
+    let pingTimeout: NodeJS.Timeout | null = null;
+
+    /**
+     * Closes the connection if the server is unable
+     * to reply to pings
+     */
+    const heartbeat = () => {
+      if (pingTimeout) clearTimeout(pingTimeout);
+
+      pingTimeout = setTimeout(() => {
+        ws.close();
+      }, 10 * 1000 + 2000);
     };
 
     /**
@@ -62,15 +72,7 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
      * sends a ping on a specified interval.
      */
     ws.addEventListener("open", () => {
-      const intervalId = setInterval(() => {
-        if (ws.readyState === ws.CLOSED) {
-          clearInterval(intervalId);
-          return;
-        }
-
-        wsSend("ping", {});
-      }, PING_INTERVAL);
-
+      heartbeat();
       wsSend("auth", { token });
     });
 
@@ -81,23 +83,8 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
      */
     ws.addEventListener("close", (error) => {
       logger("warn", "WS_CLOSE_EVENT", error);
-
-      switch (error.code) {
-        case 4001:
-          // Connection must be authenticated, so we
-          // close it no matter what.
-          ws.close();
-          onUnauthorized?.();
-          break;
-        case 4004:
-          onNotFound?.(ws);
-          break;
-        case 4000:
-          onBadRequest?.(ws);
-          break;
-        default:
-          onError?.(ws);
-      }
+      ws.close();
+      onClose?.();
     });
 
     /**
@@ -110,6 +97,17 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
      * until the auth response is received.
      */
     ws.addEventListener("message", (event) => {
+      /**
+       * Filter out ping/pong messages
+       */
+      if (["ping", '"ping"'].includes(event.data)) {
+        heartbeat();
+        logger("in", "ping");
+        ws.send("pong");
+        logger("out", "pong");
+        return;
+      }
+
       let message: WsServerMessage | null = null;
 
       try {
@@ -125,27 +123,54 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
       }
 
       /**
-       * Filter out ping/pong messages
-       */
-      if (message.op === "pong") {
-        logger("in", "pong");
-        return;
-      }
-
-      /**
        * Handle auth reply by resolving to the connection
        * object.
        */
       if (message.op === "auth:reply") {
         const wsConnection: WsConnection = {
+          // Close connection
           close: () => ws.close(),
+          // Send a regular message
           send: wsSend,
+          // Listen for an incoming message
           listenFor: (op, handler) => {
             const listener = { op, handler };
             listeners.push(listener);
 
             return () => listeners.splice(listeners.indexOf(listener), 1);
           },
+          // Send a message and wait for a reply
+          sendReplied: (op, params, timeout) =>
+            new Promise((resolveSend, rejectSend) => {
+              if (ws.readyState !== ws.OPEN) {
+                rejectSend(new Error("WebSocket not connected"));
+                return;
+              }
+
+              const ref = uuidv4();
+              let timeoutId: NodeJS.Timeout | null = null;
+
+              const unsubscribe = wsConnection.listenFor(
+                `${op}:reply`,
+                (data, replyRef) => {
+                  if (replyRef !== ref) return;
+
+                  if (timeoutId) clearTimeout(timeoutId);
+
+                  unsubscribe();
+                  resolveSend(data);
+                }
+              );
+
+              if (timeout) {
+                timeoutId = setTimeout(() => {
+                  unsubscribe();
+                  rejectSend(new Error("Request timed out"));
+                }, timeout);
+              }
+
+              wsSend(op, params, ref);
+            }),
         };
 
         resolve(wsConnection);

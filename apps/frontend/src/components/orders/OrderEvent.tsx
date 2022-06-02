@@ -9,7 +9,7 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import { getDisplayName } from "utils/misc";
+import { getDisplayName, usernameOrId } from "utils/misc";
 import { styleUtils } from "utils/style";
 
 interface OrderEventProps {
@@ -58,7 +58,7 @@ export const OrderEvent: React.FC<OrderEventProps> = ({
     }
 
     return (
-      <Link href={routes.user(user.id).index} variant="blackToDim">
+      <Link href={routes.user(usernameOrId(user)).index} variant="blackToDim">
         <Text weight="bold" as="span">
           {getDisplayName(user)}
         </Text>

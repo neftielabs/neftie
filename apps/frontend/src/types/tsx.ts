@@ -19,7 +19,7 @@ export type PageComponent<
     : T
 > & {
   requiresAuth?: boolean;
-  needsWebSocket?: boolean;
+  noWebSocket?: boolean;
   getLayout?: (page: React.ReactElement) => React.ReactNode;
 };
 

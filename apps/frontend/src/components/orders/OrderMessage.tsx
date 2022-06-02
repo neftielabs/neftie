@@ -10,7 +10,7 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import { getDisplayName } from "utils/misc";
+import { getDisplayName, usernameOrId } from "utils/misc";
 
 interface OrderMessageProps {
   message: IOrderMessageEvent;
@@ -46,7 +46,10 @@ export const OrderMessage: React.FC<OrderMessageProps> = ({
         {from === "You" ? (
           "You"
         ) : (
-          <Link href={routes.user(from.id).index} variant="blackToDim">
+          <Link
+            href={routes.user(usernameOrId(from)).index}
+            variant="blackToDim"
+          >
             <Text weight="medium" as="span">
               {getDisplayName(from)}
             </Text>
@@ -56,7 +59,7 @@ export const OrderMessage: React.FC<OrderMessageProps> = ({
         {to === "you" ? (
           "you"
         ) : (
-          <Link href={routes.user(to.id).index} variant="blackToDim">
+          <Link href={routes.user(usernameOrId(to)).index} variant="blackToDim">
             <Text weight="medium" as="span">
               {getDisplayName(to)}
             </Text>
@@ -89,7 +92,9 @@ export const OrderMessage: React.FC<OrderMessageProps> = ({
               }).format(Number(message.timestamp) * 1000)}
             </Text>
           </Flex>
-          <Text color="gray900">{message.message}</Text>
+          <Text color="gray900" tw="word-break[break-all]">
+            {message.message}
+          </Text>
         </Flex>
       </Flex>
     </Flex>

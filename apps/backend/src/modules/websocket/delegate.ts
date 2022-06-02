@@ -16,8 +16,8 @@ import type {
  */
 const controllers: Record<WsClientOpCodes, WsControllerDispatcher> = {
   auth: wsControllers.auth,
-  ping: wsControllers.ping,
   order_message: wsControllers.sendOrderMessage,
+  new_order_action: wsControllers.checkOrderAction,
 };
 
 /**
@@ -30,12 +30,14 @@ export const delegateWsOp = async (
     return;
   }
 
+  const { auth } = ctx.ws;
+
   /**
    * Deny access to non authenticated requests
    */
 
-  if (!["auth", "ping"].includes(ctx.message.op) && !ctx.auth) {
-    ctx.ws.instance.close(4001);
+  if (!["auth", "ping"].includes(ctx.message.op) && !auth) {
+    ctx.ws.close(4001);
     return;
   }
 
@@ -43,21 +45,21 @@ export const delegateWsOp = async (
    * Validate access token
    */
 
-  if (!["auth", "ping"].includes(ctx.message.op) && ctx.auth) {
+  if (!["auth", "ping"].includes(ctx.message.op) && auth) {
     try {
-      const tokenPayload = await tokenService.verifyAccessToken(ctx.auth.token);
+      const tokenPayload = await tokenService.verifyAccessToken(auth.token);
 
       if (
         !tokenPayload.userId ||
-        tokenPayload.userId !== ctx.auth.userId ||
+        tokenPayload.userId !== auth.userId ||
         Number(tokenPayload.version) !== config.tokens.access.currentVersion
       ) {
-        ctx.clients.remove(ctx.auth.userId, { close: 4001 });
+        ctx.clients.remove(4001);
         return;
       }
     } catch (error) {
       logger.debug(error);
-      ctx.clients.remove(ctx.auth.userId, { close: 4001 });
+      ctx.clients.remove(4001);
       return;
     }
   }

@@ -1,7 +1,11 @@
-import type { IOrderPreview } from "@neftie/common";
-import { areAddressesEqual } from "@neftie/common";
+import type { IOrderFull, IOrderPreview, OrderEventType } from "@neftie/common";
+import { areAddressesEqual, string } from "@neftie/common";
 import type { Prisma, User } from "@neftie/prisma";
-import type { OrderMinimalFragment } from "@neftie/subgraph";
+import type {
+  GetOrderEventQuery,
+  OrderMinimalFragment,
+} from "@neftie/subgraph";
+import { OrderEventType as OrderEventTypeEnum } from "@neftie/subgraph";
 import { orderProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
 import { subgraphQuery } from "modules/subgraph-client";
@@ -179,4 +183,75 @@ export const getUserOrder = async (data: {
     client,
     seller,
   });
+};
+
+/**
+ * Check if an action has been registered on the blockchain by
+ * querying the subgraph on an interval.
+ */
+export const lookupOrderEvent = (data: {
+  composedOrderId: string;
+  type: OrderEventType;
+  interval: number;
+  maxRetries: number;
+  timestamps: [number, number];
+}) =>
+  new Promise<GetOrderEventQuery["orderEvents"][number]>((resolve, reject) => {
+    const { composedOrderId, type, interval, maxRetries, timestamps } = data;
+
+    let retries = maxRetries;
+    const capitalizedType = string.capitalize(type, true);
+
+    const intervalId = setInterval(async () => {
+      console.log("querying", {
+        composedOrderId,
+        type: OrderEventTypeEnum[capitalizedType],
+        minTimestamp: "" + timestamps[0],
+        maxTimestamp: "" + timestamps[1],
+      });
+
+      if (retries === 0) {
+        reject(new Error("No event found"));
+        clearInterval(intervalId);
+        return;
+      }
+
+      const events = await subgraphQuery("getOrderEvent", {
+        composedOrderId,
+        type: OrderEventTypeEnum[capitalizedType],
+        minTimestamp: "" + timestamps[0],
+        maxTimestamp: "" + timestamps[1],
+      });
+
+      if (events.orderEvents.length !== 0) {
+        resolve(events.orderEvents[0]);
+        clearInterval(intervalId);
+        return;
+      }
+
+      retries--;
+    }, interval);
+  });
+
+/**
+ * Check if a user is either a seller or a client of
+ * a given order
+ */
+export const is = (
+  order: Pick<IOrderFull, "client" | "seller">,
+  userId: string,
+  target: "client" | "seller" | "some"
+) => {
+  const isSeller = areAddressesEqual(userId, order.seller.id);
+  const isClient = areAddressesEqual(userId, order.client.id);
+
+  if ((isClient || isSeller) && target === "some") {
+    return true;
+  } else if (isClient && target === "client") {
+    return true;
+  } else if (isSeller && target === "seller") {
+    return true;
+  }
+
+  return false;
 };

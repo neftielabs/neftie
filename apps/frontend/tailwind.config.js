@@ -131,10 +131,6 @@ module.exports = {
         white: "var(--color-brand-white)",
         black: "var(--color-brand-black)",
       },
-      gradient: {
-        pink: "var(--color-gradient-pink)",
-        orange: "var(--color-gradient-orange)",
-      },
       error: {
         DEFAULT: "var(--color-error)",
         lighter: "var(--color-error-lighter)",

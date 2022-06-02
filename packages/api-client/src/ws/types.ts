@@ -1,5 +1,3 @@
-import type ReconnectingWebsocket from "reconnecting-websocket";
-
 import type { WsOpManifest } from "@neftie/common";
 
 type ServerOpCodes = keyof WsOpManifest["server"];
@@ -7,8 +5,27 @@ type ClientOpCodes = keyof WsOpManifest["client"];
 
 export type WsSend = <Op extends ClientOpCodes>(
   op: Op,
-  data: WsOpManifest["client"][Op]
+  data: WsOpManifest["client"][Op],
+  ref?: string
 ) => void;
+
+type RepliableOnly<T> = T extends string
+  ? `${T}:reply` extends ServerOpCodes
+    ? WsOpManifest["server"][`${T}:reply`]
+    : never
+  : never;
+
+type RepliableOp<T> = T extends string
+  ? `${T}:reply` extends ServerOpCodes
+    ? T
+    : never
+  : never;
+
+export type WsSendReplied = <Op extends RepliableOp<ClientOpCodes>>(
+  op: Op,
+  data: WsOpManifest["client"][Op],
+  timeout?: number
+) => Promise<WsOpManifest["server"][`${Op}:reply`]>;
 
 export interface WsConnection {
   /**
@@ -28,6 +45,11 @@ export interface WsConnection {
    * Sends a message to the server
    */
   send: WsSend;
+
+  /**
+   * Send a message and wait for a reply
+   */
+  sendReplied: WsSendReplied;
 }
 
 export type WsLogger = (
@@ -42,10 +64,7 @@ export type CreateWsConnection = (
   options: {
     url: string;
     logger?: WsLogger;
-    onUnauthorized?: () => void;
-    onNotFound?: (ws: ReconnectingWebsocket) => void;
-    onBadRequest?: (ws: ReconnectingWebsocket) => void;
-    onError?: (ws: ReconnectingWebsocket) => void;
+    onClose?: () => void;
   }
 ) => Promise<WsConnection>;
 

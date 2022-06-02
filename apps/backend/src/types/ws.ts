@@ -6,6 +6,7 @@ export type WsClientManifestToMessage = {
   [K in keyof WsOpManifest["client"]]: {
     op: K;
     d: WsOpManifest["client"][K];
+    ref?: string;
   };
 };
 
@@ -21,7 +22,8 @@ export type WsServerOpCodes = keyof WsOpManifest["server"];
 
 export type WsSendWrapper = <Op extends WsServerOpCodes>(
   op: Op,
-  data: WsOpManifest["server"][Op]
+  data: WsOpManifest["server"][Op],
+  ref?: string
 ) => void;
 
 export type WsBroadcast = <Op extends WsServerOpCodes>(
@@ -35,16 +37,9 @@ export type WsControllerContext<
   Auth = WsAuthContext
 > = {
   message: WsClientManifestToMessage[Op];
-  auth: Auth;
-  ws: {
-    instance: WebSocket;
-    send: WsSendWrapper;
-  };
+  ws: Omit<WebSocket, "auth"> & { auth: Auth };
   clients: {
-    set: (id: string) => void;
-    remove: (id: string, opts?: { close?: number }) => void;
-    get: (id: string) => void;
-    getAll: () => WsClients;
+    remove: (close?: number) => void;
     broadcast: WsBroadcast;
     setAuthenticated: (auth: WsAuthContext) => void;
   };

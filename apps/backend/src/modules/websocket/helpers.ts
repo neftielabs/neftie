@@ -1,6 +1,5 @@
 import type stream from "stream";
 
-import type { WebSocket } from "ws";
 import type { AnyObjectSchema } from "yup";
 
 import logger from "modules/Logger/Logger";
@@ -8,7 +7,6 @@ import type {
   WsClientOpCodes,
   WsControllerContext,
   WsControllerDispatcher,
-  WsSendWrapper,
 } from "types/ws";
 
 /**
@@ -75,22 +73,7 @@ export function createWsController<Op extends WsClientOpCodes>(
       .catch((err) => {
         logger.debug(err);
         const errorMessage = err.errors.join(", ");
-        ctx.ws.instance.close(4000, errorMessage);
+        ctx.ws.close(4000, errorMessage);
       });
   };
 }
-
-/**
- * Wraps the `ws.send` function in order to provide
- * type-safety according to what the manifest says
- */
-export const wrappedWsSend =
-  (ws: WebSocket): WsSendWrapper =>
-  (op, d) => {
-    ws.send(
-      JSON.stringify({
-        op,
-        d,
-      })
-    );
-  };

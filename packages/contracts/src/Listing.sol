@@ -363,6 +363,7 @@ contract Listing is Initializable, IListingInitializer, ReentrancyGuard {
 
     uint256 cancelledAt = block.timestamp;
     orders[_orderId].cancelledAt = cancelledAt;
+    orders[_orderId].underRevision = false;
 
     if (msg.sender == seller || isOrderPastDue(_orderId)) {
       // Order was cancelled by seller or was past due

@@ -1,6 +1,7 @@
 import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/router";
+import { useQueryClient } from "react-query";
 import { useAccount } from "wagmi";
 
 import { areAddressesEqual } from "@neftie/common";
@@ -39,6 +40,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const [token, { setToken }] = useToken();
   const [isWalletLoading] = useWallet();
 
+  const queryClient = useQueryClient();
   const { mutateAsync: getToken } = useTypedMutation("getAuthToken");
   const { mutateAsync: disconnect } = useTypedMutation("disconnect");
 
@@ -80,6 +82,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
              */
             disconnect([])
               .then(() => {
+                queryClient.clear();
+
                 if (requiresAuth) {
                   redirectToConnect();
                 }
@@ -97,6 +101,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           }
         })
         .catch(() => {
+          queryClient.clear();
+
           /**
            * If the current page requires auth, redirect to the
            * connect page and store the intended path in the query params
@@ -125,6 +131,8 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     ) {
       logger.debug("[Auth] Accounts mismatch");
 
+      queryClient.clear();
+
       /**
        * Token address and current connected address don't match
        * clear all tokens (server & client)
@@ -144,6 +152,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     disconnect,
     isAuthenticating,
     isWalletLoading,
+    queryClient,
     redirectToConnect,
     requiresAuth,
     setToken,

@@ -1,16 +1,10 @@
-import { areAddressesEqual, authSchema, orderSchema } from "@neftie/common";
+import type { OrderEventType } from "@neftie/common";
+import { authSchema, orderSchema } from "@neftie/common";
 import { orderService, tokenService } from "api/services";
 import { prisma } from "config/database";
 import { config } from "config/main";
 import logger from "modules/Logger/Logger";
 import { createWsController } from "modules/websocket/helpers";
-
-/**
- * Connection healthcheck
- */
-export const ping = createWsController("ping", (ctx) => {
-  ctx.ws.send("pong", "pong");
-});
 
 /**
  * Auth controller. If this doesn't succeed, no client will
@@ -30,12 +24,12 @@ export const auth = createWsController(
         Number(tokenPayload.version) === config.tokens.access.currentVersion
       ) {
         ctx.clients.setAuthenticated({ userId: tokenPayload.userId, token });
-        ctx.ws.send("auth:reply", { success: true });
+        ctx.ws.safeSend("auth:reply", { success: true });
       }
     } catch (error) {
       logger.debug(error);
 
-      ctx.ws.send("auth:reply", {
+      ctx.ws.safeSend("auth:reply", {
         success: false,
       });
     }
@@ -50,18 +44,14 @@ export const sendOrderMessage = createWsController(
   orderSchema.orderMessage,
   async (ctx) => {
     const { orderComposedId, message } = ctx.message.d;
-    const { userId } = ctx.auth;
+    const { userId } = ctx.ws.auth;
 
     const order = await orderService.getUserOrder({
       userId,
       composedId: orderComposedId,
     });
 
-    if (
-      !order ||
-      (!areAddressesEqual(order.client.id, userId) &&
-        !areAddressesEqual(order.seller.id, userId))
-    ) {
+    if (!order || !orderService.is(order, userId, "some")) {
       return;
     }
 
@@ -69,7 +59,7 @@ export const sendOrderMessage = createWsController(
       data: {
         orderComposedId,
         message,
-        senderId: ctx.auth.userId,
+        senderId: ctx.ws.auth.userId,
       },
     });
 
@@ -89,5 +79,76 @@ export const sendOrderMessage = createWsController(
       order.client.id,
       order.seller.id
     );
+  }
+);
+
+/**
+ * Query a specific order action and wait for its
+ * indexing
+ */
+export const checkOrderAction = createWsController(
+  "new_order_action",
+  orderSchema.newOrderAction,
+  async (ctx) => {
+    const {
+      orderComposedId,
+      action,
+      timestamp = Math.round(Date.now() / 1000),
+    } = ctx.message.d;
+    const ref = ctx.message.ref;
+    const { userId } = ctx.ws.auth;
+
+    const order = await orderService.getUserOrder({
+      userId,
+      composedId: orderComposedId,
+    });
+
+    if (!order || !orderService.is(order, userId, "some")) {
+      return;
+    }
+
+    const roleMap: Record<"seller" | "client" | "both", OrderEventType[]> = {
+      seller: ["COMPLETED", "DELIVERED", "STARTED"],
+      client: ["PLACED", "REVISION"],
+      both: ["DISMISSED", "CANCELLED"],
+    };
+
+    if (
+      (roleMap.seller.includes(action) &&
+        orderService.is(order, userId, "seller")) ||
+      (roleMap.seller.includes(action) &&
+        orderService.is(order, userId, "client")) ||
+      (roleMap.both.includes(action) && orderService.is(order, userId, "some"))
+    ) {
+      return await orderService
+        .lookupOrderEvent({
+          composedOrderId: orderComposedId,
+          type: action,
+          interval: 5000,
+          maxRetries: 30,
+          timestamps: [timestamp - 1000, timestamp + 1000],
+        })
+        .then((eventData) => {
+          console.log("got event");
+          ctx.ws.safeSend("new_order_action:reply", { success: true }, ref);
+          ctx.clients.broadcast(
+            "order_event",
+            {
+              orderComposedId,
+              event: {
+                ...eventData,
+                from: orderService.is(order, userId, "client")
+                  ? "client"
+                  : "seller",
+              },
+            },
+            order.seller.id,
+            order.client.id
+          );
+        })
+        .catch((error) => console.log(error));
+    }
+
+    ctx.ws.safeSend("new_order_action:reply", { success: false }, ref);
   }
 );

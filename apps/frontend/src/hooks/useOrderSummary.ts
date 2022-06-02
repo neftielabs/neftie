@@ -61,24 +61,24 @@ export const useOrderSummary = (listing: IListingFull) => {
     const price = ethers.utils.parseEther(totals.itemTotal);
     const bondFee = ethers.utils.parseEther(totals.bondFeeTotal);
 
-    const contract = getListingContract(signer, listing.id);
+    getListingContract(signer, listing.id).then((contract) => {
+      contract.estimateGas
+        .placeOrder({
+          value: price.add(bondFee),
+        })
+        .then((gasUnits) => {
+          const realGasUnits = addGasMargin(gasUnits);
+          const formattedGas = ethers.utils.formatEther(
+            realGasUnits.mul(feeData.gasPrice!)
+          );
 
-    contract.estimateGas
-      .placeOrder({
-        value: price.add(bondFee),
-      })
-      .then((gasUnits) => {
-        const realGasUnits = addGasMargin(gasUnits);
-        const formattedGas = ethers.utils.formatEther(
-          realGasUnits.mul(feeData.gasPrice!)
-        );
-
-        setTotals((t) => ({
-          ...t,
-          gasEstimate: number.limitDecimals(formattedGas, 6),
-        }));
-      })
-      .catch(noop);
+          setTotals((t) => ({
+            ...t,
+            gasEstimate: number.limitDecimals(formattedGas, 6),
+          }));
+        })
+        .catch(noop);
+    });
   }, [
     feeData,
     isAuthed,

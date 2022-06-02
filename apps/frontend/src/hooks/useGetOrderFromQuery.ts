@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
 
 import { useRouter } from "next/router";
+import type { UseQueryOptions } from "react-query";
 
 import { useTypedQuery } from "hooks/http/useTypedQuery";
 
 export const useGetOrderFromQuery = (
+  options?: UseQueryOptions,
   listingIdParam = "listingId",
   orderIdParam = "orderId"
 ) => {
@@ -29,6 +31,7 @@ export const useGetOrderFromQuery = (
     ["getMyOrder", composedId],
     {
       enabled: !!composedId,
+      ...options,
     },
     [composedId]
   );

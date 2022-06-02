@@ -10,6 +10,7 @@ import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
 import { styled } from "stitches.config";
+import { usernameOrId } from "utils/misc";
 
 const OverlayWrapper = styled(Box, {
   ...tw`bg-white rounded-12 shadow-lg
@@ -54,7 +55,7 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
       {user ? (
         <OverlayWrapper visible={visible}>
           <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
-            <Link href={routes.user(user.id).index}>
+            <Link href={routes.user(usernameOrId(user)).index}>
               <Text weight="bold" color="gray600">
                 Profile
               </Text>
