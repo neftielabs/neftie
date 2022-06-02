@@ -60,6 +60,10 @@ describe("Listing", () => {
         })
       ).address
     );
+
+    // tests are broken with typechain
+    (listing as any).getAddress = () => listing.address;
+    (core as any).getAddress = () => core.address;
   });
 
   describe("initialization", () => {
@@ -82,9 +86,15 @@ describe("Listing", () => {
         data.title,
         data.price,
         data.bondFee,
-        data.deliveryDays.div(24).div(60).div(60),
-        data.revisions,
-      ]).to.have.deep.members(getListingParams().slice(0, -1));
+        data.deliveryDays.div(24).div(60).div(60).toNumber(),
+        data.revisions.toNumber(),
+      ]).to.have.deep.members(
+        getListingParams()
+          .map((e, i) =>
+            BigNumber.isBigNumber(e) && ![1, 2].includes(i) ? e.toNumber() : e
+          )
+          .slice(0, -1)
+      );
     });
 
     it("should validate data", async () => {
