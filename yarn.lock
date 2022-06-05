@@ -3492,12 +3492,12 @@ __metadata:
     "@types/node": 17.0.21
     "@types/uuid": 8.3.4
     axios: 0.26.1
-    eslint: 8.16.0
+    eslint: 8.17.0
     form-data: 4.0.0
     isomorphic-ws: 4.0.1
     reconnecting-websocket: 4.4.0
     rimraf: 3.0.2
-    typescript: 4.7.2
+    typescript: 4.7.3
     uuid: 8.3.2
     yup: 0.32.11
   languageName: unknown
@@ -3533,7 +3533,7 @@ __metadata:
     cors: 2.8.5
     dotenv: 16.0.1
     env2ts: 1.4.0
-    eslint: 8.16.0
+    eslint: 8.17.0
     ethers: 5.6.6
     express: 4.17.3
     express-fileupload: 1.3.1
@@ -3552,7 +3552,7 @@ __metadata:
     tsc-watch: 4.6.2
     tsconfig-paths: 4.0.0
     typera-express: 2.4.4
-    typescript: 4.7.2
+    typescript: 4.7.3
     winston: 3.6.0
     winston-daily-rotate-file: 4.6.1
     ws: 8.7.0
@@ -3568,9 +3568,9 @@ __metadata:
     "@types/yargs": 17.0.10
     chalk: 4.1.2
     commander: 9.3.0
-    eslint: 8.16.0
-    ts-node: 10.8.0
-    typescript: 4.7.2
+    eslint: 8.17.0
+    ts-node: 10.8.1
+    typescript: 4.7.3
     yargs: 17.5.1
   bin:
     cli: ./src/index.js
@@ -3584,11 +3584,11 @@ __metadata:
     "@neftie/prisma": "*"
     "@neftie/subgraph": "*"
     "@types/node": 17.0.21
-    eslint: 8.16.0
+    eslint: 8.17.0
     ethers: 5.6.6
     rimraf: 3.0.2
     typera-express: 2.4.4
-    typescript: 4.7.2
+    typescript: 4.7.3
     yup: 0.32.11
   languageName: unknown
   linkType: soft
@@ -3602,7 +3602,7 @@ __metadata:
     "@nomiclabs/hardhat-waffle": 2.0.3
     "@openzeppelin/contracts": 4.6.0
     "@openzeppelin/contracts-upgradeable": 4.6.0
-    "@openzeppelin/hardhat-upgrades": 1.18.0
+    "@openzeppelin/hardhat-upgrades": 1.18.1
     "@typechain/ethers-v5": 10.0.0
     "@typechain/hardhat": 6.0.0
     "@types/chai": 4.3.1
@@ -3610,7 +3610,7 @@ __metadata:
     "@types/node": 17.0.21
     chai: 4.3.6
     dotenv: 16.0.1
-    eslint: 8.16.0
+    eslint: 8.17.0
     ethereum-waffle: 3.4.4
     ethers: 5.6.8
     hardhat: 2.9.7
@@ -3619,9 +3619,9 @@ __metadata:
     rimraf: 3.0.2
     solhint: 3.3.7
     solidity-coverage: 0.7.21
-    ts-node: 10.8.0
+    ts-node: 10.8.1
     typechain: 8.0.0
-    typescript: 4.7.2
+    typescript: 4.7.3
   languageName: unknown
   linkType: soft
 
@@ -3647,9 +3647,9 @@ __metadata:
     axios: 0.26.1
     babel-plugin-macros: 3.1.0
     babel-plugin-twin: 1.0.2
-    dotenv-vault: 1.2.1
+    dotenv-vault: 1.2.3
     env2ts: 1.4.0
-    eslint: 8.16.0
+    eslint: 8.17.0
     eslint-config-next: 12.1.6
     ethers: 5.6.6
     form-data: 4.0.0
@@ -3672,7 +3672,7 @@ __metadata:
     siwe: 1.1.6
     tailwindcss: 2.2.19
     twin.macro: 2.8.2
-    typescript: 4.7.2
+    typescript: 4.7.3
     wagmi: 0.4.1
     yup: 0.32.11
     zustand: 3.7.1
@@ -3685,11 +3685,11 @@ __metadata:
   dependencies:
     "@prisma/client": 3.11.1
     "@types/node": 17.0.21
-    eslint: 8.16.0
+    eslint: 8.17.0
     prisma: 3.14.0
     prisma-exclude: 1.0.2
     rimraf: 3.0.2
-    typescript: 4.7.2
+    typescript: 4.7.3
   languageName: unknown
   linkType: soft
 
@@ -4158,9 +4158,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@openzeppelin/hardhat-upgrades@npm:1.18.0":
-  version: 1.18.0
-  resolution: "@openzeppelin/hardhat-upgrades@npm:1.18.0"
+"@openzeppelin/hardhat-upgrades@npm:1.18.1":
+  version: 1.18.1
+  resolution: "@openzeppelin/hardhat-upgrades@npm:1.18.1"
   dependencies:
     "@openzeppelin/upgrades-core": ^1.15.0
     chalk: ^4.1.0
@@ -4174,7 +4174,7 @@ __metadata:
       optional: true
   bin:
     migrate-oz-cli-project: dist/scripts/migrate-oz-cli-project.js
-  checksum: 399380e327e3f3e094abed9706cdcb009302ce3c23cf12b387bf16f3a31e26ee0d2d8e46ba1161e4b0ae6e8a87e925ffbc4768f7532b02a66cdcb8c9423f44d9
+  checksum: e432734395e21fce724e3cb341acb4a648b70a85522c57d6ddf663d4482dfc0dfaac62e72f179a1e010587bae4581edda4425f9970d99c26734342ad679f973e
   languageName: node
   linkType: hard
 
@@ -9975,9 +9975,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"dotenv-vault@npm:1.2.1":
-  version: 1.2.1
-  resolution: "dotenv-vault@npm:1.2.1"
+"dotenv-vault@npm:1.2.3":
+  version: 1.2.3
+  resolution: "dotenv-vault@npm:1.2.3"
   dependencies:
     "@oclif/core": ^1
     "@oclif/plugin-help": ^5.1.12
@@ -9985,14 +9985,14 @@ __metadata:
     "@oclif/plugin-update": ^3.0.0
     "@oclif/plugin-warn-if-update-available": ^2.0.4
     axios: ^0.27.2
-    dotenv: ^16.0.0
+    dotenv: ^16.0.1
   bin:
     dotenv-vault: bin/run
-  checksum: 02b1e9b5cab2281f8b3ab229dc3c1421d446d792b5e1c458b68548c2b72d36bb7bdbfeaf1be39edc663e1a0b655142e7365a195833be4f3d1f7bdab3246dfdc0
+  checksum: fea0c5a979bfcd9ca1f14cb88215b87c126096657414710e3a0e042d7768193e3c126f67071b48a5f60f9cc2e2fb1ae221ffe60296cfe7228f8398ae1ed539cb
   languageName: node
   linkType: hard
 
-"dotenv@npm:16.0.1, dotenv@npm:^16.0.0":
+"dotenv@npm:16.0.1, dotenv@npm:^16.0.0, dotenv@npm:^16.0.1":
   version: 16.0.1
   resolution: "dotenv@npm:16.0.1"
   checksum: f459ffce07b977b7f15d8cc4ee69cdff77d4dd8c5dc8c85d2d485ee84655352c2415f9dd09d42b5b5985ced3be186130871b34e2f3e2569ebc72fbc2e8096792
@@ -10712,9 +10712,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"eslint@npm:8.16.0":
-  version: 8.16.0
-  resolution: "eslint@npm:8.16.0"
+"eslint@npm:8.17.0":
+  version: 8.17.0
+  resolution: "eslint@npm:8.17.0"
   dependencies:
     "@eslint/eslintrc": ^1.3.0
     "@humanwhocodes/config-array": ^0.9.2
@@ -10753,7 +10753,7 @@ __metadata:
     v8-compile-cache: ^2.0.3
   bin:
     eslint: bin/eslint.js
-  checksum: 654a0200b49dc07280673fee13cdfb04326466790e031dfa9660b69fba3b1cf766a51504328f9de56bd18e6b5eb7578985cf29dc7f016c5ec851220ff9db95eb
+  checksum: b484c96681c6b19f5b437f664623f1cd310d3ee9be88400d8450e086e664cd968a9dc202f0b0678578fd50e7a445b92586efe8c787de5073ff2f83213b00bb7b
   languageName: node
   linkType: hard
 
@@ -17634,7 +17634,7 @@ __metadata:
   dependencies:
     "@typescript-eslint/eslint-plugin": 5.27.0
     "@typescript-eslint/parser": 5.27.0
-    eslint: 8.16.0
+    eslint: 8.17.0
     eslint-import-resolver-typescript: 2.7.1
     eslint-plugin-import: 2.26.0
     eslint-plugin-tsdoc: 0.2.16
@@ -22839,9 +22839,9 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ts-node@npm:10.8.0":
-  version: 10.8.0
-  resolution: "ts-node@npm:10.8.0"
+"ts-node@npm:10.8.1":
+  version: 10.8.1
+  resolution: "ts-node@npm:10.8.1"
   dependencies:
     "@cspotcode/source-map-support": ^0.8.0
     "@tsconfig/node10": ^1.0.7
@@ -22873,7 +22873,7 @@ __metadata:
     ts-node-script: dist/bin-script.js
     ts-node-transpile-only: dist/bin-transpile.js
     ts-script: dist/bin-script-deprecated.js
-  checksum: 1c22dc8dd80d0ba4dd4250b82cc032b63f6fbe8c87f8197cef43e7f9e2d43f5b333b445ed712e3006e24119257b4bff2c46605f7da61ab6f5e9514885d296f0c
+  checksum: 7d1aa7aa3ae1c0459c4922ed0dbfbade442cfe0c25aebaf620cdf1774f112c8d7a9b14934cb6719274917f35b2c503ba87bcaf5e16a0d39ba0f68ce3e7728363
   languageName: node
   linkType: hard
 
@@ -23177,23 +23177,23 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:4.7.2":
-  version: 4.7.2
-  resolution: "typescript@npm:4.7.2"
+"typescript@npm:4.7.3":
+  version: 4.7.3
+  resolution: "typescript@npm:4.7.3"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 5163585e6b56410f77d5483b698d9489bbee8902c99029eb70cf6d21525a186530ce19a00951af84eefd4a131cc51d0959f5118e25e70ab61f45ac4057dbd1ef
+  checksum: fd13a1ce53790a36bb8350e1f5e5e384b5f6cb9b0635114a6d01d49cb99916abdcfbc13c7521cdae2f2d3f6d8bc4a8ae7625edf645a04ee940588cd5e7597b2f
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@4.7.2#~builtin<compat/typescript>":
-  version: 4.7.2
-  resolution: "typescript@patch:typescript@npm%3A4.7.2#~builtin<compat/typescript>::version=4.7.2&hash=7ad353"
+"typescript@patch:typescript@4.7.3#~builtin<compat/typescript>":
+  version: 4.7.3
+  resolution: "typescript@patch:typescript@npm%3A4.7.3#~builtin<compat/typescript>::version=4.7.3&hash=7ad353"
   bin:
     tsc: bin/tsc
     tsserver: bin/tsserver
-  checksum: 7e2b9a9f4a70fb7616f1b0d986977f8e34a74f046202fa7f24fdee79589598277810fa216b3776c20c0683a9235872c73be34fdb93f67f98c1efaca40999422f
+  checksum: 137d18a77f52254a284960b16ab53d0619f57b69b5d585804b8413f798a1175ce3e774fb95e6a101868577aafe357d8fcfc9171f0dc9fc0c210e9ae59d107cc0
   languageName: node
   linkType: hard
 
