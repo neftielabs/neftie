@@ -62,6 +62,7 @@ jobs:
   # Run ESLint and Prettier
   #
   lint-format:
+    needs: install
     runs-on: ubuntu-latest
     steps:
       - name: Checkout commit
@@ -93,6 +94,7 @@ jobs:
   # Build the backend
   #
   build:
+    needs: lint-format
     runs-on: ubuntu-latest
     steps:
       - name: Checkout commit
