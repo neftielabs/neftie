@@ -8,7 +8,7 @@ export const listingMethods = (call: Call) => ({
   mutation: {
     updateListing: (
       listingId: string,
-      data: Asserts<typeof listingSchema["editListing"]>
+      data: Asserts<typeof listingSchema["serverEditListing"]>
     ) => {
       const file = data.coverFile as File;
 
@@ -23,7 +23,7 @@ export const listingMethods = (call: Call) => ({
       }
 
       if (data.description) {
-        formData.append("description", data.description);
+        formData.append("description", JSON.stringify(data.description));
       }
 
       return call("/listings/:listingId", "patch", {

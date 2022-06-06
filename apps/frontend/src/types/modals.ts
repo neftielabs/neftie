@@ -3,4 +3,6 @@
  */
 export enum Modal {
   auth,
+  editProfile,
+  fileDrop,
 }

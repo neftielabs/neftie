@@ -7,7 +7,13 @@ import type {
   MergedUser,
 } from "@neftie/common";
 import { areAddressesEqual } from "@neftie/common";
-import type { Listing, Order, OrderMessage, User } from "@neftie/prisma";
+import type {
+  Listing,
+  Order,
+  OrderMessage,
+  Prisma,
+  User,
+} from "@neftie/prisma";
 import type {
   ListingFullFragment,
   ListingMinimalFragment,
@@ -30,7 +36,7 @@ const mergeUser = (data: {
     ...onChain,
     user: offChain
       ? {
-          ...pick(offChain, ["id", "username"]),
+          ...pick(offChain, ["id", "username", "verified"]),
           avatarUrl: getMediaUrl(offChain.avatarUri),
         }
       : null,
@@ -42,6 +48,9 @@ export const getFrom = (
   id: string
 ): "client" | "seller" =>
   areAddressesEqual(id, order.seller.id) ? "seller" : "client";
+
+const stringifyDescription = (description?: Prisma.JsonValue | null) =>
+  description ? JSON.stringify(description) : null;
 
 /**
  * Merge an off-chain preview listing with
@@ -73,7 +82,7 @@ export const mergeMinimalListing = async (data: {
   return {
     ...onChain,
     coverUrl: getMediaUrl(offChain?.coverUri ?? null),
-    description: offChain?.description ?? null,
+    description: stringifyDescription(offChain?.description),
     seller: mergeUser({ onChain: onChain.seller, offChain: user }),
   };
 };
@@ -108,7 +117,7 @@ export const mergeFullListing = async (data: {
   return {
     ...onChain,
     coverUrl: getMediaUrl(offChain?.coverUri ?? null),
-    description: offChain?.description ?? null,
+    description: stringifyDescription(offChain?.description),
     seller: mergeUser({ onChain: onChain.seller, offChain: user }),
   };
 };
@@ -180,6 +189,7 @@ export const buildOrderEvents = (data: {
           timestamp: String(m.timestamp.getTime() / 1000),
           message: m.message,
           from: getFrom(order, m.senderId),
+          mediaUrl: getMediaUrl(m.mediaUri),
         } as const)
     )
   );
@@ -239,7 +249,7 @@ export const mergeFullOrder = async (data: {
     listing: {
       ...onChain.listing,
       coverUrl: getMediaUrl(offChain?.listing.coverUri ?? null),
-      description: offChain?.listing.description ?? null,
+      description: stringifyDescription(offChain?.listing.description),
     },
     events: buildOrderEvents({ order: data.onChain, messages }),
     client: mergeUser({ onChain: onChain.client, offChain: client }),

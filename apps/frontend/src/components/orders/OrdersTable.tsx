@@ -3,7 +3,6 @@ import React, { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "@react-hookz/web";
 import { useRouter } from "next/router";
 
-import { Avatar } from "components/media/Avatar";
 import { OrderStatus } from "components/pills/OrderStatus";
 import { EthPrice } from "components/typography/EthPrice";
 import { Box } from "components/ui/Box";
@@ -11,6 +10,7 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
+import { User } from "components/users/User";
 import { useTypedInfQuery } from "hooks/http/useTypedInfQuery";
 import { routes } from "lib/manifests/routes";
 import { hasPaginatedItems } from "utils/misc";
@@ -93,14 +93,13 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                         push(routes.order(order.listing.id, order.id).index)
                       }
                     >
-                      <td tw="py-1 flex items-center gap-1">
-                        <Avatar
-                          size="xs"
-                          avatarUrl={order.seller.user?.avatarUrl}
+                      <td tw="py-1">
+                        <User
+                          user={
+                            order[entity.toLowerCase() as "seller" | "client"]
+                          }
+                          size="sm"
                         />
-                        <Text size="14" color="gray500">
-                          {order.seller.user?.username || order.seller.id}
-                        </Text>
                       </td>
                       <td>
                         <Link

@@ -17,10 +17,11 @@ export const editListing = yup.object({
 
   coverUrl: yup.string().notRequired(),
   coverFile: yup.mixed().notRequired(),
-  description: yup.string().max(1000).notRequired(),
+  description: yup.object().notRequired(),
+  descriptionText: yup.string().notRequired().max(1000),
 });
 
 export const serverEditListing = yup.object({
   coverFile: yup.mixed().notRequired(),
-  description: yup.string().max(1000).notRequired(),
+  description: yup.string().notRequired(),
 });

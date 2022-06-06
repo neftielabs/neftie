@@ -1,4 +1,5 @@
 import WebSocket from "isomorphic-ws";
+import type { Message } from "reconnecting-websocket";
 import ReconnectingWebsocket from "reconnecting-websocket";
 import { v4 as uuidv4 } from "uuid";
 
@@ -102,9 +103,9 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
        */
       if (["ping", '"ping"'].includes(event.data)) {
         heartbeat();
-        logger("in", "ping");
+        // logger("in", "ping");
         ws.send("pong");
-        logger("out", "pong");
+        // logger("out", "pong");
         return;
       }
 
@@ -132,6 +133,12 @@ export const createWsConnection: CreateWsConnection = (token, options) =>
           close: () => ws.close(),
           // Send a regular message
           send: wsSend,
+          // Send a message in binary
+          sendBinary: (data: Message) => {
+            ws.binaryType = "arraybuffer";
+            ws.send(data);
+            ws.binaryType = "blob";
+          },
           // Listen for an incoming message
           listenFor: (op, handler) => {
             const listener = { op, handler };

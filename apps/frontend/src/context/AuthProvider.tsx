@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
-import { useAccount } from "wagmi";
+import { useAccount, useNetwork } from "wagmi";
 
 import { areAddressesEqual } from "@neftie/common";
 import { WaitForAuth } from "components/layout/WaitForAuth";
@@ -45,6 +45,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   const { mutateAsync: disconnect } = useTypedMutation("disconnect");
 
   const { data: accountData } = useAccount();
+  const { activeChain } = useNetwork();
 
   const router = useRouter();
 
@@ -82,7 +83,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
              */
             disconnect([])
               .then(() => {
-                queryClient.clear();
+                queryClient.resetQueries();
 
                 if (requiresAuth) {
                   redirectToConnect();
@@ -91,6 +92,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
               .catch();
           } else {
             logger.debug("[Auth] Auth ok, storing token");
+            queryClient.resetQueries();
 
             /**
              * All good to store the token in memory.
@@ -101,7 +103,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           }
         })
         .catch(() => {
-          queryClient.clear();
+          queryClient.resetQueries();
 
           /**
            * If the current page requires auth, redirect to the
@@ -125,11 +127,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   useEffect(() => {
     if (
       token &&
-      token.address !== accountData?.address &&
+      (token.address !== accountData?.address || activeChain?.unsupported) &&
       !isAuthenticating &&
       !isWalletLoading
     ) {
-      logger.debug("[Auth] Accounts mismatch");
+      logger.debug("[Auth] Accounts mismatch or wrong chain");
 
       queryClient.clear();
 
@@ -149,6 +151,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
   }, [
     accountData?.address,
+    activeChain?.unsupported,
     disconnect,
     isAuthenticating,
     isWalletLoading,

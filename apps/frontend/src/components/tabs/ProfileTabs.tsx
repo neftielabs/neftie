@@ -1,14 +1,16 @@
-import React, { useState } from "react";
+import React, { useMemo, useState } from "react";
 
-import type { UserSafe } from "@neftie/common";
+import type { UserFullSafe } from "@neftie/common";
+import { ProfileAbout } from "components/profile/ProfileAbout";
 import { ProfileListings } from "components/profile/ProfileListings";
 import { TabItem } from "components/tabs/TabItem";
 import { Box } from "components/ui/Box";
 import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
+import { Text } from "components/ui/Text";
 
 interface ProfileTabsProps {
-  user: UserSafe;
+  user: UserFullSafe;
 }
 
 export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
@@ -20,24 +22,35 @@ export const ProfileTabs: React.FC<ProfileTabsProps> = ({ user }) => {
     x: 0,
   });
 
-  const tabs = [
-    {
-      title: "Listings",
-      component: <ProfileListings sellerAddress={user.id} />,
-    },
-    {
-      title: "About",
-      component: <></>,
-    },
-    {
-      title: "Work",
-      component: <></>,
-    },
-    {
-      title: "Reviews",
-      component: <></>,
-    },
-  ];
+  const tabs = useMemo(
+    () => [
+      {
+        title: "Listings",
+        component: <ProfileListings sellerAddress={user.id} />,
+      },
+      {
+        title: "About",
+        component: <ProfileAbout user={user} />,
+      },
+      {
+        title: "Work",
+        component: (
+          <Text tw="italic py-5" color="gray600" align="center">
+            Coming soon 🙌🏼
+          </Text>
+        ),
+      },
+      {
+        title: "Reviews",
+        component: (
+          <Text tw="italic py-5" color="gray600" align="center">
+            Coming soon 🙌🏼
+          </Text>
+        ),
+      },
+    ],
+    [user]
+  );
 
   return (
     <Container tw="mb-10">

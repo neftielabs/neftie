@@ -9,7 +9,7 @@ export const Textarea = React.forwardRef<TextareaProps>((_props, ref) => {
     <textarea
       ref={ref}
       tw="w-full h-full outline-none bg-transparent
-placeholder:text-gray-600 py-1 px-1.5 "
+placeholder:text-gray-600 py-1 px-1.5"
       css={{ minHeight: 150 }}
       {...props}
     ></textarea>

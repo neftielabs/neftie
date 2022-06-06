@@ -29,6 +29,7 @@ export interface IOrderStatusEvent {
 export interface IOrderMessageEvent extends Omit<IOrderStatusEvent, "type"> {
   type: "message";
   message: string;
+  mediaUrl: string | null;
 }
 
 export type IOrderEvent = IOrderStatusEvent | IOrderMessageEvent;

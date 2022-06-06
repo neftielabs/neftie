@@ -5,7 +5,14 @@ import type { meSchema } from "@neftie/common";
 import type { Call } from "../types";
 
 export const meMethods = (call: Call) => ({
-  mutation: {},
+  mutation: {
+    updateProfile: (
+      data: Asserts<ReturnType<typeof meSchema["editProfile"]>>
+    ) =>
+      call("/me", "patch", {
+        data,
+      }),
+  },
   query: {
     uploadAsset: (
       data: Asserts<typeof meSchema["fileUpload"]> & { file: FormData }

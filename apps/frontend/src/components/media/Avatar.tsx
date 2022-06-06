@@ -7,7 +7,7 @@ import { Image } from "components/ui/Image";
 import { styled } from "stitches.config";
 
 const AvatarComponent = styled(Box, {
-  ...tw`rounded-full bg-gray-300 overflow-hidden relative`,
+  ...tw`rounded-full bg-gray-200 overflow-hidden relative`,
   variants: {
     border: {
       none: {},

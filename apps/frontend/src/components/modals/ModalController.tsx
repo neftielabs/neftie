@@ -13,11 +13,13 @@ import { RoundedIcon } from "components/ui/RoundedIcon";
 import { useModalStore } from "stores/useModalStore";
 import type { Modal } from "types/modals";
 import { isServer } from "utils/app";
+import { setPageScrollable } from "utils/misc";
 
 interface ModalControllerProps extends React.ComponentProps<typeof Flex> {
   type: Modal;
   onClose?: () => void;
   preventClose?: boolean;
+  raw?: boolean;
 }
 
 export const ModalController: React.FC<ModalControllerProps> = ({
@@ -25,6 +27,7 @@ export const ModalController: React.FC<ModalControllerProps> = ({
   onClose,
   preventClose,
   children,
+  raw = false,
   ...props
 }) => {
   const [isVisible, setIsVisible] = useState(false);
@@ -38,6 +41,10 @@ export const ModalController: React.FC<ModalControllerProps> = ({
     setIsVisible(activeModal === type);
   }, [activeModal, type]);
 
+  useEffect(() => {
+    setPageScrollable(!isVisible);
+  }, [isVisible]);
+
   const onModalClose = () => {
     if (onClose) onClose();
     closeModal();
@@ -48,19 +55,24 @@ export const ModalController: React.FC<ModalControllerProps> = ({
       {isMounted() && !isServer
         ? createPortal(
             <ModalContainer justifyCenter itemsCenter visible={isVisible}>
-              <ModalBox visible={isVisible} {...props}>
-                <Button
-                  raw
-                  tw="absolute right-2 top-2"
-                  onClick={() => onModalClose()}
-                >
-                  <RoundedIcon>
-                    <FiX size="25" />
-                  </RoundedIcon>
-                </Button>
+              {raw ? (
+                children
+              ) : (
+                <ModalBox visible={isVisible} {...props}>
+                  <Button
+                    raw
+                    tw="absolute right-2 top-2"
+                    onClick={() => onModalClose()}
+                  >
+                    <RoundedIcon>
+                      <FiX size="25" />
+                    </RoundedIcon>
+                  </Button>
 
-                {children}
-              </ModalBox>
+                  {children}
+                </ModalBox>
+              )}
+
               <Backdrop visible={true} onClick={() => onModalClose()} />
             </ModalContainer>,
             document.querySelector("#__next")!

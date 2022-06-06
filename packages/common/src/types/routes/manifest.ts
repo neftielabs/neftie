@@ -5,8 +5,9 @@ import type {
   IListingPreview,
   IOrderFull,
   IOrderPreview,
+  UserFullSafe,
+  UserSafe,
 } from "../models";
-import type { UserSafe } from "../models/user";
 import type { Paginated } from "../utils";
 
 /**
@@ -56,6 +57,12 @@ export type RouteManifest = {
    * Authorized user
    */
 
+  "/me": {
+    patch: {
+      response: [Response.NoContent, Response.BadRequest];
+    };
+  };
+
   "/me/upload": {
     post: {
       response: [Response.Created];
@@ -68,7 +75,19 @@ export type RouteManifest = {
 
   "/users/:userIdOrUsername": {
     get: {
-      response: [Response.Ok<UserSafe>];
+      response: [Response.Ok<UserFullSafe>];
+    };
+  };
+
+  "/users/:username/available": {
+    get: {
+      response: [Response.Ok<{ available: boolean }>];
+    };
+  };
+
+  "/users/:userId/stats": {
+    get: {
+      response: [Response.Ok];
     };
   };
 

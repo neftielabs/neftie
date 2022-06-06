@@ -1,3 +1,5 @@
+import type { Message } from "reconnecting-websocket";
+
 import type { WsOpManifest } from "@neftie/common";
 
 type ServerOpCodes = keyof WsOpManifest["server"];
@@ -8,12 +10,6 @@ export type WsSend = <Op extends ClientOpCodes>(
   data: WsOpManifest["client"][Op],
   ref?: string
 ) => void;
-
-type RepliableOnly<T> = T extends string
-  ? `${T}:reply` extends ServerOpCodes
-    ? WsOpManifest["server"][`${T}:reply`]
-    : never
-  : never;
 
 type RepliableOp<T> = T extends string
   ? `${T}:reply` extends ServerOpCodes
@@ -45,6 +41,11 @@ export interface WsConnection {
    * Sends a message to the server
    */
   send: WsSend;
+
+  /**
+   * Sends a binary message
+   */
+  sendBinary: (data: Message) => void;
 
   /**
    * Send a message and wait for a reply

@@ -14,6 +14,8 @@ import styles from "styles/globalStyles";
 import type { AppPropsWithLayout } from "types/tsx";
 
 import "styles/nprogress.css";
+import "react-loading-skeleton/dist/skeleton.css";
+import "draft-js/dist/Draft.css";
 
 // nprogress
 
@@ -35,7 +37,7 @@ const App = ({ Component, pageProps }: AppPropsWithLayout) => {
       <WagmiConfig client={wagmiClient}>
         <WebSocketProvider noWebSocket={!!Component.noWebSocket}>
           <AuthProvider requiresAuth={!!Component.requiresAuth}>
-            <ModalProvider>
+            <ModalProvider modals={Component.modals || []}>
               <ReactQueryDevtools
                 initialIsOpen={false}
                 position="bottom-right"

@@ -1,12 +1,15 @@
 import type { UploadedFile } from "express-fileupload";
+import parseUrl from "parse-url";
+import type { Asserts } from "yup";
 
-import type { UserSafe } from "@neftie/common";
+import type { UserSafe, meSchema } from "@neftie/common";
 import { isValidAddress, range } from "@neftie/common";
 import type { User } from "@neftie/prisma";
 import { userProvider } from "api/providers";
 import AppError from "errors/AppError";
 import { mediaBucket } from "modules/aws/s3-instances";
 import Log from "modules/Log";
+import type { Result } from "types/helpers";
 import { isImage } from "utils/file";
 import { getMediaUrl } from "utils/url";
 
@@ -15,7 +18,8 @@ import { getMediaUrl } from "utils/url";
  * without any sensitive data.
  */
 export const toSafeUser = (user: User): UserSafe => {
-  const { id, name, username, avatarUri, bannerUri } = user;
+  const { id, name, username, avatarUri, bannerUri, createdAt, verified } =
+    user;
 
   const avatarUrl = getMediaUrl(avatarUri);
   const bannerUrl = bannerUri && getMediaUrl(bannerUri);
@@ -23,9 +27,11 @@ export const toSafeUser = (user: User): UserSafe => {
   return {
     id,
     name,
+    verified,
     username,
     avatarUrl,
     bannerUrl,
+    createdAt,
   };
 };
 
@@ -123,4 +129,51 @@ export const handleProfileUpload = async (data: {
   }
 
   return null;
+};
+
+/**
+ * Update profile data
+ */
+export const updateProfile = async (data: {
+  userId: string;
+  body: Asserts<ReturnType<typeof meSchema["editProfile"]>>;
+}): Promise<Result> => {
+  const { userId, body } = data;
+
+  const user = await userProvider.getById(userId);
+
+  if (!user) {
+    return {
+      success: false,
+    };
+  }
+
+  let websiteUrl = body.website;
+
+  if (websiteUrl) {
+    try {
+      const parsedUrl = parseUrl(websiteUrl);
+      websiteUrl = parsedUrl.resource || parsedUrl.pathname || undefined;
+    } catch {}
+  }
+
+  try {
+    await userProvider.update(userId, {
+      username: body.username || user.username,
+      name: body.name || user.name,
+      twitterHandle: body.twitter || user.twitterHandle,
+      websiteUrl:
+        body.website?.replace(/((http|https):\/\/)/g, "") || user.websiteUrl,
+      location: body.location || user.location,
+      bio: body.bio?.split("\n\n\n").join("") || user.bio,
+    });
+
+    return {
+      success: true,
+    };
+  } catch {}
+
+  return {
+    success: false,
+  };
 };

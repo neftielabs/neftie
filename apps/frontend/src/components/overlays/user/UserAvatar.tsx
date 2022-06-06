@@ -25,11 +25,6 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
         avatarUrl={user?.avatarUrl}
       />
 
-      {/* <Avatar
-        avatarId={4}
-        tw="transition-opacity"
-        css={{ opacity: isLoading ? "0" : "1" }}
-      /> */}
       <Loader
         tw="transition-opacity text-black"
         css={{ opacity: isLoading ? "1" : "0", ...styleUtils.center.xy }}

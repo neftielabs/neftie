@@ -16,7 +16,11 @@ export const getNumericNonce = () => Math.floor(Math.random() * 10000000);
 /**
  * Get a link to a transaction
  */
-export const getEtherscanLink = (txHash: string) => {
+export const getEtherscanLink = (
+  data: { tx: string } | { address: string }
+) => {
   const chain = isProd ? "" : "goerli.";
-  return `https://${chain}etherscan.io/tx/${txHash}`;
+  return `https://${chain}etherscan.io/${Object.keys(data)[0]}/${
+    Object.values(data)[0]
+  }`;
 };

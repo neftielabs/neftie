@@ -48,10 +48,13 @@ const appStyles = {
       '"Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen, Ubuntu, Cantarell, "Open Sans", "Helvetica Neue", sans-serif;',
   },
   "h1,h2,h3,div": { "line-height": "1.4" },
-  "#__next.no-scroll": {
-    overflow: "hidden",
-    position: "fixed",
-    width: "100%",
+
+  "body.no-scroll": {
+    "overflow-y": "scroll",
+  },
+
+  "html.no-scroll": {
+    "overflow-y": "hidden",
   },
 };
 

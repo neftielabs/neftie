@@ -61,19 +61,29 @@ export const patchListing = authController(
           return Response.unprocessableEntity();
         }
 
-        const patchResult = await listingService.updateOffChainData({
-          listingId: ctx.routeParams.listingId,
-          sellerId: userId,
-          description,
-          file,
-        });
+        try {
+          // Double parsing JSON is necessary
+          const parsedDescription = description
+            ? JSON.parse(JSON.parse(description))
+            : null;
 
-        if (isErrorResult(patchResult, "unprocessable")) {
-          logger.debug("unprocessable");
+          const patchResult = await listingService.updateOffChainData({
+            listingId: ctx.routeParams.listingId,
+            sellerId: userId,
+            description: parsedDescription,
+            file,
+          });
+
+          if (isErrorResult(patchResult, "unprocessable")) {
+            logger.debug("unprocessable");
+            return Response.unprocessableEntity();
+          }
+
+          return Response.ok();
+        } catch {
+          logger.debug("bad description");
           return Response.unprocessableEntity();
         }
-
-        return Response.ok();
       })
 );
 

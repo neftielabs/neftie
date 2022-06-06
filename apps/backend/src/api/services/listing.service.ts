@@ -2,6 +2,7 @@ import type { UploadedFile } from "express-fileupload";
 
 import type { IListingFull, IListingPreview } from "@neftie/common";
 import { areAddressesEqual, isValidAddress } from "@neftie/common";
+import type { Prisma } from "@neftie/prisma";
 import { listingProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
 import { mediaBucket } from "modules/aws/s3-instances";
@@ -139,7 +140,7 @@ export const getSellerListings = async (data: {
 export const updateOffChainData = async (data: {
   listingId: string;
   sellerId: string;
-  description?: string;
+  description?: Record<string, unknown>;
   file?: UploadedFile;
 }): Promise<Result<undefined, "noData" | "unprocessable">> => {
   const { sellerId, description, file, listingId } = data;
@@ -204,7 +205,9 @@ export const updateOffChainData = async (data: {
   }
 
   await listingProvider.update(listingId, seller.id, {
-    description,
+    description: description as
+      | Prisma.JsonObject
+      | Prisma.NullableJsonNullValueInput,
     coverUri,
   });
 

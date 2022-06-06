@@ -7,6 +7,7 @@ import type { Asserts } from "yup";
 
 import { areAddressesEqual, listingSchema } from "@neftie/common";
 import { FileDropPreview } from "components/forms/file-drop/FileDropPreview";
+import { RichEditor } from "components/forms/rich-editor/RichEditor";
 import { ListingFormContainer } from "components/listings/form/ListingFormContainer";
 import { ListingPreviewCard } from "components/listings/form/ListingPreviewCard";
 import { Page } from "components/Page";
@@ -52,7 +53,17 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
     setFormError("");
 
     try {
-      await updateListing([listing.id, values]);
+      const { description, coverFile } = values;
+      const parsedDescription =
+        description && Object.keys(description).length
+          ? JSON.stringify(description)
+          : undefined;
+
+      await updateListing([
+        listing.id,
+        { coverFile, description: parsedDescription },
+      ]);
+
       push(routes.listing(listing.id).index);
     } catch {
       window.scrollTo({ top: 0, behavior: "smooth" });
@@ -80,7 +91,8 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
 
             coverUrl: listing.coverUrl || "",
             coverFile: null,
-            description: listing.description || "",
+            description: {},
+            descriptionText: "",
           }}
         >
           {(formikState) => (
@@ -113,13 +125,18 @@ const ListingEditPage: PageComponent<ListingEditPageProps> = () => {
                           disabled: true,
                           required: true,
                         },
-                        {
-                          name: "description",
-                          textarea: true,
-                          label: "Description",
-                          placeholder:
-                            "Provide a detailed description of the service you're offering",
-                        },
+                        <RichEditor
+                          key="editor"
+                          name="description"
+                          textName="descriptionText"
+                          placeholder="Provide a detailed description of the service you're offering"
+                          label="Description"
+                          content={
+                            listing.description
+                              ? JSON.parse(listing.description)
+                              : undefined
+                          }
+                        />,
                         ...[
                           listing.coverUrl && !isUpdatingCover ? (
                             <FileDropPreview

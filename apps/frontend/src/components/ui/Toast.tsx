@@ -48,7 +48,7 @@ export const Toast: React.FC<ToastProps> = () => {
       <ToastContainer justifyCenter visible={state === "open"}>
         <Flex
           center
-          tw="bg-gray-100 mb-3 rounded-12 bg-brand-black border border-gray-700 overflow-hidden"
+          tw="bg-gray-100 mb-3 rounded-12 bg-brand-black border border-gray-700 overflow-hidden shadow-lg"
         >
           {toast?.isLoading ? (
             <Loader tw="text-brand-white pl-2" svgProps={{ width: 20 }} />

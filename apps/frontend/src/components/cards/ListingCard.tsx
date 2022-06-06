@@ -5,13 +5,13 @@ import { FiStar } from "react-icons/fi";
 import type { IListingFull, IListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
 import { BaseCard } from "components/cards/BaseCard";
-import { Avatar } from "components/media/Avatar";
 import { EthPrice } from "components/typography/EthPrice";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Image } from "components/ui/Image";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
+import { User } from "components/users/User";
 import { routes } from "lib/manifests/routes";
 
 type ListingCardProps = React.ComponentProps<typeof Link> & {
@@ -35,12 +35,7 @@ export const ListingCard: React.FC<ListingCardProps> = ({
 
         <Flex column justifyBetween grow tw="px-1.5 gap-1.5">
           <Flex column tw="gap-1.5">
-            <Flex tw="gap-0.7" itemsCenter>
-              <Avatar avatarUrl={listing.seller?.user?.avatarUrl} size="xxs" />
-              <Text size="13" weight="medium" color="gray500">
-                {listing.seller?.user?.username}
-              </Text>
-            </Flex>
+            <User user={listing.seller} size="xs" />
 
             <Flex column tw="pr-0.5">
               <Text weight="medium" size="14">

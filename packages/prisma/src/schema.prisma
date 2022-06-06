@@ -12,16 +12,23 @@ datasource db {
 // -------------------------------------------------------------------------- //
 
 model User {
-  id           String         @id
-  name         String?
-  email        String?        @unique
-  username     String         @unique
-  avatarUri    String
-  bannerUri    String?
-  listings     Listing[]
-  OrderMessage OrderMessage[]
+  id            String         @id
+  name          String?
+  email         String?        @unique
+  username      String         @unique
+  verified      Boolean        @default(false)
+  avatarUri     String
+  bannerUri     String?
+  twitterHandle String?
+  websiteUrl    String?
+  bio           String?
+  location      String?
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  listings      Listing[]
+  orderMessages OrderMessage[]
+  orders        Order[]
 
-  Order Order[]
   @@index([username])
 }
 
@@ -34,7 +41,7 @@ model Listing {
   seller      User     @relation(fields: [sellerId], references: [id])
   sellerId    String
   coverUri    String?
-  description String?
+  description Json?
   orders      Order[]
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -67,5 +74,6 @@ model OrderMessage {
   senderId        String
   order           Order    @relation(fields: [orderComposedId], references: [composedId])
   orderComposedId String
+  mediaUri        String?
   timestamp       DateTime @default(now())
 }

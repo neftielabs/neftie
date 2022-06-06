@@ -21,6 +21,7 @@ export type PageComponent<
   requiresAuth?: boolean;
   noWebSocket?: boolean;
   getLayout?: (page: React.ReactElement) => React.ReactNode;
+  modals?: React.FC[];
 };
 
 export type AppPropsWithLayout = AppProps & {

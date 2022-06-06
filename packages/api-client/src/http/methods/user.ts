@@ -9,5 +9,11 @@ export const userMethods = (call: Call) => ({
           userIdOrUsername,
         },
       }),
+    checkUsernameAvailable: (username: string) =>
+      call("/users/:username/available", "get", {
+        routeParams: {
+          username,
+        },
+      }),
   },
 });

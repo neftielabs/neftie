@@ -37,6 +37,7 @@ interface CommonProps {
   label?: string;
   containerProps?: React.ComponentProps<typeof Box>;
   help?: string;
+  labelProps?: React.ComponentProps<typeof Label>;
 }
 
 export type InputProps = CommonProps &
@@ -53,6 +54,7 @@ export const Input = ({
   containerProps,
   help,
   children,
+  labelProps,
   ...props
 }: InputProps | TextareaProps): JSX.Element => {
   const [field, meta] = useField(name);
@@ -61,7 +63,7 @@ export const Input = ({
     <Box {...containerProps}>
       {label ? (
         <Box tw="mb-1 ml-0.5">
-          <Label htmlFor={name}>
+          <Label htmlFor={name} {...labelProps}>
             {label}{" "}
             {props.required ? (
               <Text as="span" color="error">

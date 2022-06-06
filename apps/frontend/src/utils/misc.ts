@@ -1,6 +1,7 @@
 import type { InfiniteData } from "react-query";
 
 import type { MergedUser, Paginated, UserSafe } from "@neftie/common";
+import { isServer } from "utils/app";
 import { shortenAddress } from "utils/web3";
 
 export const hasPaginatedItems = (
@@ -35,3 +36,18 @@ export const usernameOrId = (user: UserSafe | MergedUser) => {
  */
 export const getDisplayDays = (value: string | number) =>
   `${value} day${Number(value) === 1 ? "" : "s"}`;
+
+/**
+ * Toggle scroll/no-scroll modes
+ */
+export const setPageScrollable = (scroll: boolean) => {
+  if (isServer) return;
+
+  if (scroll) {
+    window.document.body.classList.remove("no-scroll");
+    window.document.documentElement.classList.remove("no-scroll");
+  } else {
+    window.document.body.classList.add("no-scroll");
+    window.document.documentElement.classList.add("no-scroll");
+  }
+};

@@ -165,7 +165,7 @@ export const disconnect = createController(
   "/auth/disconnect",
   "post",
   (route) =>
-    route.use(authMiddleware.withAuth("required")).handler((ctx) => {
+    route.use(authMiddleware.withAuth("present")).handler((ctx) => {
       authService.clearTokens(ctx.res);
       return Response.noContent();
     })

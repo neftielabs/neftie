@@ -22,6 +22,7 @@ export const entityOrdersSchema = yup.object({
 export const orderMessage = yup.object({
   orderComposedId: yup.string().required(),
   message: yup.string().min(1).max(500).required(),
+  file: yup.mixed().notRequired(),
 });
 
 export const newOrderAction = yup.object({

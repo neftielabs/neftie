@@ -24,7 +24,7 @@ const ButtonComponent = styled("button", {
   variants: {
     theme: {
       none: {},
-      gray: tw`bg-gray-150 text-gray-800 hover:bg-gray-200`,
+      gray: tw`bg-gray-100 text-gray-800 hover:bg-gray-150`,
       black: tw`bg-brand-black text-brand-white hover:bg-gray-800 disabled:bg-gray-300`,
       white: tw`bg-white text-gray-800 hover:bg-gray-50`,
       outlineWhite: tw`border border-white hover:border-gray-300`,

@@ -25,6 +25,7 @@ export const Text = styled(Box, {
       11: tw`text-11`,
       13: tw`text-13`,
       14: tw`text-14`,
+      15: tw`text-base`,
       sm: tw`text-sm`,
       md: tw`text-md`,
       lg: tw`text-lg`,

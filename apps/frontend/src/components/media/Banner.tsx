@@ -1,17 +1,12 @@
 import React from "react";
 
-import tw, { styled } from "twin.macro";
-
 import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
+import { Container } from "components/ui/Container";
 import { Image } from "components/ui/Image";
 import { Text } from "components/ui/Text";
 
-const BannerContainer = styled(Box, {
-  ...tw`rounded-17 overflow-hidden relative container`,
-});
-
-interface BannerProps extends React.ComponentProps<typeof BannerContainer> {
+interface BannerProps extends React.ComponentProps<typeof Box> {
   imageUrl?: string | null;
   alt?: string;
   isLoading?: boolean;
@@ -30,28 +25,30 @@ export const Banner: React.FC<BannerProps> = ({
   ...props
 }) => {
   return (
-    <BannerContainer {...props}>
+    <Box tw="overflow-hidden relative" {...props}>
       <Box tw="w-full h-full" className="group">
         {isLoading || !imageUrl ? (
           <Box tw="w-full h-full bg-gray-100 absolute top-0 left-0" />
         ) : (
           <Image noContainer src={imageUrl} alt={alt} />
         )}
-        {edit ? (
-          <>
-            <Button
-              theme="white"
-              tw="shadow-md absolute right-3 bottom-2 transform translate-y-20
-            group-hover:translate-y-0 "
-              size="sm"
-              onClick={edit.onClick}
-            >
-              <Text size="13">{edit.buttonText}</Text>
-            </Button>
-          </>
-        ) : null}
-        {children}
+        <Container tw="relative h-full">
+          {edit ? (
+            <Box tw="mb-2 absolute right-3.5 bottom-0">
+              <Button
+                theme="white"
+                tw="shadow-md transform transform[translateY(calc(100% + 20px))]
+                group-hover:translate-y-0"
+                size="sm"
+                onClick={edit.onClick}
+              >
+                <Text size="13">{edit.buttonText}</Text>
+              </Button>
+            </Box>
+          ) : null}
+          {children}
+        </Container>
       </Box>
-    </BannerContainer>
+    </Box>
   );
 };

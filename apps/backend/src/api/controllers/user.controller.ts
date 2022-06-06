@@ -32,6 +32,39 @@ export const getUserByUsername = createController(
         throw new AppError(httpResponse("NOT_FOUND"));
       }
 
-      return Response.ok(userService.toSafeUser(user));
+      const { twitterHandle, websiteUrl, bio, location } = user;
+
+      return Response.ok({
+        ...userService.toSafeUser(user),
+        twitterHandle,
+        websiteUrl,
+        bio,
+        location,
+      });
+    })
+);
+
+/**
+ * Checks if a username already exists
+ */
+export const checkUsernameAvailability = createController(
+  "/users/:username/available",
+  "get",
+  (route) =>
+    route.handler(async (ctx) => {
+      const user = await userProvider.getByUsername(ctx.routeParams.username);
+      return Response.ok({ available: !user });
+    })
+);
+
+/**
+ * Returns stats for a given user
+ */
+export const getUserStats = createController(
+  "/users/:userId/stats",
+  "get",
+  (route) =>
+    route.handler(() => {
+      return Response.ok();
     })
 );

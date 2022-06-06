@@ -7,7 +7,7 @@ import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { useAuth } from "hooks/useAuth";
 import { isStringQueryParam } from "utils/router";
 
-type UseGetUserOptions = {
+export type UseGetUserOptions = {
   from:
     | {
         address: string;
@@ -17,7 +17,8 @@ type UseGetUserOptions = {
       }
     | {
         queryParam: string;
-      };
+      }
+    | { noop: true };
 };
 
 export const useGetUser = (opts: UseQueryOptions & UseGetUserOptions) => {

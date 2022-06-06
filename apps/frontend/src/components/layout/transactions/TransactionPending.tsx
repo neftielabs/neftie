@@ -35,7 +35,7 @@ export const TransactionPending: React.FC<TransactionPendingProps> = ({
 
         {txHash ? (
           <ExternalLink
-            href={getEtherscanLink(txHash)}
+            href={getEtherscanLink({ tx: txHash })}
             variant="dimToBlack"
             tw="text-13 "
           >

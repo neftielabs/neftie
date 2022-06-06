@@ -47,27 +47,27 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
 
   return (
     <Box
-      tw="relative py-1"
+      tw="relative py-1 z-20"
       onMouseEnter={() => setVisible(true)}
       onMouseLeave={() => setVisible(false)}
     >
       <UserAvatar user={user} isLoading={isLoading} />
       {user ? (
         <OverlayWrapper visible={visible}>
-          <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
-            <Link href={routes.user(usernameOrId(user)).index}>
+          <Link href={routes.user(usernameOrId(user)).index}>
+            <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
               <Text weight="bold" color="gray600">
                 Profile
               </Text>
-            </Link>
-          </Button>
-          <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
-            <Link href={routes.me.orders}>
+            </Button>
+          </Link>
+          <Link href={routes.me.orders}>
+            <Button raw tw="py-2 px-2 hover:bg-gray-50 w-full text-left">
               <Text weight="bold" color="gray600">
                 Orders
               </Text>
-            </Link>
-          </Button>
+            </Button>
+          </Link>
         </OverlayWrapper>
       ) : null}
     </Box>

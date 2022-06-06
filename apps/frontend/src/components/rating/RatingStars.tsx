@@ -5,11 +5,11 @@ import { FiStar } from "react-icons/fi";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
 
-interface RatingStarsProps {}
+interface RatingStarsProps extends React.ComponentProps<typeof Flex> {}
 
-export const RatingStars: React.FC<RatingStarsProps> = () => {
+export const RatingStars: React.FC<RatingStarsProps> = (props) => {
   return (
-    <Flex itemsCenter tw="text-gray-600">
+    <Flex itemsCenter tw="text-gray-600" {...props}>
       {new Array(5).fill(null).map((_, i) => (
         <FiStar key={i} size="14" strokeWidth={0.9} />
       ))}

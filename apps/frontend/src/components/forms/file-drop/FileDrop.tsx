@@ -14,6 +14,8 @@ export interface FileDropProps {
   help?: string;
   name: string;
   fileFieldName: string;
+  maxSize?: number;
+  onFileDrop?: () => void;
 }
 
 export const FileDrop: React.FC<FileDropProps> = ({
@@ -21,6 +23,8 @@ export const FileDrop: React.FC<FileDropProps> = ({
   help,
   name,
   fileFieldName,
+  maxSize = 10 * 1000000,
+  onFileDrop,
 }) => {
   const [, , uriHelpers] = useField(name);
   const [, , fileHelpers] = useField(fileFieldName);
@@ -31,20 +35,24 @@ export const FileDrop: React.FC<FileDropProps> = ({
   /**
    * File drop handler
    */
-  const onDrop = useCallback(<T extends File>(acceptedFiles: T[]) => {
-    setError("");
-    setFile(undefined);
+  const onDrop = useCallback(
+    <T extends File>(acceptedFiles: T[]) => {
+      setError("");
+      setFile(undefined);
 
-    const acceptedFile = acceptedFiles[0] || undefined;
+      const acceptedFile = acceptedFiles[0] || undefined;
 
-    if (acceptedFile) {
-      setFile(
-        Object.assign(acceptedFile, {
-          preview: URL.createObjectURL(acceptedFile),
-        })
-      );
-    }
-  }, []);
+      if (acceptedFile) {
+        setFile(
+          Object.assign(acceptedFile, {
+            preview: URL.createObjectURL(acceptedFile),
+          })
+        );
+        onFileDrop?.();
+      }
+    },
+    [onFileDrop]
+  );
 
   const { fileRejections, ...dropzoneState } = useDropzone({
     accept: {
@@ -53,7 +61,7 @@ export const FileDrop: React.FC<FileDropProps> = ({
       "image/jpeg": [".jpeg"],
     },
     multiple: false,
-    maxSize: 10 * 1000000, // 10mb in bytes
+    maxSize,
     onDrop,
   });
 

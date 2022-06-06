@@ -1,5 +1,7 @@
 import type { Server } from "http";
 
+import { deserialize } from "bson";
+import type { RawData, WebSocket } from "ws";
 import { WebSocketServer } from "ws";
 
 import { toChecksum } from "@neftie/common";
@@ -70,6 +72,40 @@ export const createWebSocketServer = (server: Server) => {
   }, 10 * 1000);
 
   /**
+   * Parses an incoming message. They can come either
+   * in JSON format for all standard "endpoints" or as an
+   * ArrayBuffer if they contain a file
+   */
+  const parseIncomingMessage = (ws: WebSocket, data: RawData) => {
+    const stringMessage = data.toString();
+
+    // Filter ping/pong messages
+    if (stringMessage === "pong") {
+      ws.isAlive = true;
+      return null;
+    }
+
+    try {
+      const message = JSON.parse(stringMessage);
+      if (message.op && message.d !== undefined) {
+        return message;
+      }
+    } catch {
+      try {
+        // Probably BSON encoded
+        if (data instanceof Buffer) {
+          const message = deserialize(data, { promoteBuffers: true });
+          if (message.op && message.d !== undefined) {
+            return message;
+          }
+        }
+      } catch {}
+    }
+
+    return null;
+  };
+
+  /**
    * Clear the cleanup interval once the server connection
    * is closed.
    */
@@ -124,42 +160,40 @@ export const createWebSocketServer = (server: Server) => {
       }
 
       try {
-        const message = JSON.parse(data.toString());
+        const message = parseIncomingMessage(ws, data);
 
-        if (message.op && message.d !== undefined) {
-          return delegateWsOp({
-            message,
-            ws,
-            clients: {
-              remove: (close) => {
-                logConn("closed", ws.auth?.userId, true, "(remove)");
+        return delegateWsOp({
+          message,
+          ws,
+          clients: {
+            remove: (close) => {
+              logConn("closed", ws.auth?.userId, true, "(remove)");
 
-                wss.clients.delete(ws);
-                ws.close(close);
-              },
-              broadcast: (op, d, ...ids) => {
-                const broadCastTo = ids.map((i) => toChecksum(i));
-
-                wss.clients.forEach((client) => {
-                  if (
-                    client.auth?.userId &&
-                    broadCastTo.includes(client.auth.userId)
-                  ) {
-                    client.safeSend(op, d);
-                  }
-                });
-              },
-              setAuthenticated: ({ userId, token }) => {
-                ws.auth = {
-                  token,
-                  userId: toChecksum(userId),
-                };
-
-                logConn("open", userId, false, `(${wss.clients.size} clients)`);
-              },
+              wss.clients.delete(ws);
+              ws.close(close);
             },
-          });
-        }
+            broadcast: (op, d, ...ids) => {
+              const broadCastTo = ids.map((i) => toChecksum(i));
+
+              wss.clients.forEach((client) => {
+                if (
+                  client.auth?.userId &&
+                  broadCastTo.includes(client.auth.userId)
+                ) {
+                  client.safeSend(op, d);
+                }
+              });
+            },
+            setAuthenticated: ({ userId, token }) => {
+              ws.auth = {
+                token,
+                userId: toChecksum(userId),
+              };
+
+              logConn("open", userId, false, `(${wss.clients.size} clients)`);
+            },
+          },
+        });
       } catch (error) {
         logger.warn(error);
       }
