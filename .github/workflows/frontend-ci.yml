@@ -79,14 +79,14 @@ jobs:
 
       - name: Lint
         run: |
-          yarn be lint
+          yarn fe lint
 
       - name: Format
         run: |
-          yarn be format
+          yarn fe format
 
   #
-  # Build the backend
+  # Build the frontend
   #
   build:
     runs-on: ubuntu-latest
@@ -110,4 +110,4 @@ jobs:
 
       - name: Build
         run: |
-          yarn be build
+          yarn fe build
