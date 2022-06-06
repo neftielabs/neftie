@@ -23,6 +23,14 @@ on:
     branches:
       - main
 
+#
+# Avoid the same workflow running more
+# than once at the same time
+#
+concurrency:
+  group: admin-stg-${{ github.head_ref }}
+  cancel-in-progress: true
+
 jobs:
   #
   # Cache yarn dependencies by hashing
