@@ -86,6 +86,8 @@ jobs:
         run: |
           yarn cs build
           yarn sg codegen:all
+          yarn sg build
+          yarn pr generate
           yarn be build
 
   #

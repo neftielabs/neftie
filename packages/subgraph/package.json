@@ -9,7 +9,7 @@
     "codegen": "graphql-codegen --config codegen.yml",
     "codegen:graph": "graph codegen",
     "codegen:all": "yarn clean && yarn codegen:graph && yarn codegen",
-    "build": "graph build",
+    "build": "tsc",
     "predeploy": "yarn codegen:graph",
     "deploy:dev": "yarn predeploy && graph deploy --product hosted-service --node https://api.thegraph.com/deploy/ --ipfs https://api.thegraph.com/ipfs/ neftielabs/neftie-dev ./subgraph.yaml"
   },
@@ -23,6 +23,7 @@
     "@graphql-codegen/typescript": "2.4.11",
     "@graphql-codegen/typescript-graphql-request": "4.4.8",
     "@graphql-codegen/typescript-operations": "2.4.0",
-    "rimraf": "3.0.2"
+    "rimraf": "3.0.2",
+    "typescript": "4.7.3"
   }
 }

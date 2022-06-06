@@ -11,14 +11,5 @@
     "lib": ["dom", "ES6"],
     "composite": true
   },
-  "include": ["src"],
-  "exclude": [
-    "node_modules",
-    "dist",
-    "src/**/*.test.ts",
-    "build",
-    "src/mappings",
-    "src/utils",
-    "./generated"
-  ]
+  "include": ["src/generated", "src/index.ts"]
 }
