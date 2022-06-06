@@ -84,6 +84,8 @@ jobs:
 
       - name: Build
         run: |
+          yarn sg codegen:all
+          yarn cs build
           yarn be build
 
   #
