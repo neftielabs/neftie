@@ -32,7 +32,7 @@ on:
 # than once at the same time
 #
 concurrency:
-  group: admin-stg-${{ github.head_ref }}
+  group: admin-be-${{ github.head_ref }}
   cancel-in-progress: true
 
 jobs:
