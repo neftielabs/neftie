@@ -109,7 +109,8 @@ jobs:
 
       - name: Build
         run: |
+          yarn cs build
+          yarn sg codegen:all
           yarn cm build
           yarn ac build
-          yarn cs build
           yarn fe build
