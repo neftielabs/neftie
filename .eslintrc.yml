@@ -55,7 +55,7 @@ settings:
     typescript:
       alwaysTryTypes: true
       project:
-        - tsconfig.base.json
+        - tsconfig.json
         - apps/*/tsconfig.json
         - packages/*/tsconfig.json
 

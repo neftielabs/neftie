@@ -7,8 +7,8 @@ export const fileUpload = yup.object({
 export const editProfile = (
   currentUsername?: string,
   checkUsername?: (username: string) => Promise<{ available: boolean }>
-) =>
-  yup.object({
+) => {
+  return yup.object({
     name: yup
       .string()
       .notRequired()
@@ -68,3 +68,4 @@ export const editProfile = (
     location: yup.string().notRequired().max(30),
     bio: yup.string().notRequired().max(500),
   });
+};

@@ -11,7 +11,6 @@ import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
-import { useModalStore } from "stores/useModalStore";
 import { onlyTrue } from "utils/fp";
 import { getDisplayName, usernameOrId } from "utils/misc";
 
@@ -24,8 +23,6 @@ export const OrderMessage: React.FC<OrderMessageProps> = ({
   message,
   order,
 }) => {
-  const { setActiveModal } = useModalStore();
-
   const user = message.from === "client" ? order.client : order.seller;
 
   const messageFromTo = useMemo(() => {

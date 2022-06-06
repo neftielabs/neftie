@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "@react-hookz/web";
 import tw from "twin.macro";
 
+import type { IListingPreview } from "@neftie/common";
 import { areAddressesEqual } from "@neftie/common";
 import { NotFoundNotice } from "components/alerts/NotFoundNotice";
 import { ListingCard } from "components/cards/ListingCard";
@@ -73,9 +74,9 @@ export const ProfileListings: React.FC<ProfileListingsProps> = ({
       ) : (
         <>
           <Grid tw="grid-cols-4 gap-2" css={listings ? {} : tw`h-30`}>
-            {listings?.pages.map((page, i) => (
+            {listings?.pages?.map((page, i) => (
               <React.Fragment key={i}>
-                {page.items.map((listing) => (
+                {page.items.map((listing: IListingPreview) => (
                   <ListingCard key={listing.id} listing={listing} />
                 ))}
               </React.Fragment>

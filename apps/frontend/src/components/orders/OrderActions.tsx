@@ -12,7 +12,6 @@ import { Flex } from "components/ui/Flex";
 import { Loader } from "components/ui/Loader";
 import { Text } from "components/ui/Text";
 import { useOrderActions } from "hooks/contracts/useOrderActions";
-import { useWs } from "hooks/ws/useWs";
 import { styled } from "stitches.config";
 
 const Overlay = styled(Box, {
@@ -45,8 +44,6 @@ interface OrderActionsProps {
 }
 
 export const OrderActions: React.FC<OrderActionsProps> = ({ order }) => {
-  const { conn } = useWs();
-
   const [visible, toggleVisible] = useToggle(false);
   const ref = useRef<HTMLDivElement>(null);
   useClickOutside(ref, () => visible && toggleVisible());

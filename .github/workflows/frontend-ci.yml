@@ -1,0 +1,113 @@
+name: Frontend CI
+
+on:
+  workflow_dispatch:
+  push:
+    paths:
+      - apps/frontend/**
+      - packages/api-client/**
+      - packages/common/**
+      - packages/contracts/**
+      - .github/workflows/frontend-ci.yml
+      - .yarn.lock
+    branches:
+      - main
+  pull_request:
+    paths:
+      - apps/frontend/**
+      - packages/api-client/**
+      - packages/common/**
+      - packages/contracts/**
+      - .github/workflows/frontend-ci.yml
+      - .yarn.lock
+    branches:
+      - main
+
+jobs:
+  #
+  # Cache yarn dependencies by hashing
+  # the yarn.lock file. This allows for
+  # much faster installs.
+  #
+  install:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Install dependencies
+        if: steps.cache-dependencies.outputs.cache-hit != 'true'
+        run: |
+          yarn install --frozen-lockfile
+
+  #
+  # Run ESLint and Prettier
+  #
+  lint-format:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore yarn dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Lint
+        run: |
+          yarn be lint
+
+      - name: Format
+        run: |
+          yarn be format
+
+  #
+  # Build the backend
+  #
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout commit
+        uses: actions/checkout@v3
+
+      - name: Use Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: 16
+
+      - name: Restore yarn dependencies
+        uses: actions/cache@v3
+        id: cache-dependencies
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-
+
+      - name: Build
+        run: |
+          yarn be build

@@ -3,6 +3,7 @@ import React, { useEffect, useRef } from "react";
 import { useIntersectionObserver } from "@react-hookz/web";
 import { useRouter } from "next/router";
 
+import type { IOrderPreview } from "@neftie/common";
 import { OrderStatus } from "components/pills/OrderStatus";
 import { EthPrice } from "components/typography/EthPrice";
 import { Box } from "components/ui/Box";
@@ -85,7 +86,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
             <tbody tw="divide-y divide-gray-100">
               {orders?.pages.map((page, i) => (
                 <React.Fragment key={i}>
-                  {page.items.map((order) => (
+                  {page.items.map((order: IOrderPreview) => (
                     <tr
                       key={order.id}
                       tw="hover:bg-gray-25 bg-white cursor-pointer"

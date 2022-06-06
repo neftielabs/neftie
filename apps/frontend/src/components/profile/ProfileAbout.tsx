@@ -40,10 +40,11 @@ export const Bio: React.FC<BioProps> = ({
   onEditFinish,
 }) => {
   const { mutateAsync: updateProfile } = useTypedMutation("updateProfile");
+
   const handleSubmit = useCallback(
     async (data: Asserts<ReturnType<typeof meSchema["editProfile"]>>) => {
       try {
-        await updateProfile([data]);
+        await updateProfile([data] as any); // The compiler fails here for no reason
         onEditFinish?.();
       } catch {}
     },
@@ -55,7 +56,7 @@ export const Bio: React.FC<BioProps> = ({
       {isEditing ? (
         <Formik
           onSubmit={handleSubmit}
-          validationSchema={meSchema.editProfile}
+          validationSchema={meSchema.editProfile()}
           initialValues={{ bio: content ?? "" } as any}
         >
           {({ isSubmitting }) => (

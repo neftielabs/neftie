@@ -38,7 +38,7 @@ export const EditProfileModal: React.FC<EditProfileModalProps> = () => {
           Object.entries(data).filter(([_, value]) => !!value)
         ) as typeof data;
 
-        await updateProfile([cleanData]);
+        await updateProfile([cleanData] as any); // The compiler fails here for no reason
 
         if (cleanData.username && cleanData.username !== user?.username) {
           closeModal();

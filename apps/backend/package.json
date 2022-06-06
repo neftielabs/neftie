@@ -10,7 +10,9 @@
   "scripts": {
     "dev": "yarn build && TS_NODE_BASEURL=./dist tsc-watch -b --onSuccess 'nodemon --exec node -r tsconfig-paths/register ./dist/app.js' --noClear",
     "build": "tsc -b",
-    "env:sync": "env2ts --in .env --out ./src/config/constants.ts"
+    "env:sync": "env2ts --in .env --out ./src/config/constants.ts",
+    "lint": "eslint \"./src/**/*.{js,ts}\"",
+    "format": "prettier --check \"./src/**/*.{js,ts}\""
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.83.0",
@@ -28,7 +30,7 @@
     "cookie-parser": "1.4.6",
     "cors": "2.8.5",
     "dotenv": "16.0.1",
-    "ethers": "5.6.6",
+    "ethers": "5.6.8",
     "express": "4.17.3",
     "express-fileupload": "1.3.1",
     "file-type": "16.5.3",
