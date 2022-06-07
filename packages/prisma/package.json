@@ -15,18 +15,21 @@
     "lint": "eslint --ext=ts ./src",
     "format": "prettier --check \"./src/**/*.{js,ts}\"",
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
-    "generate": "yarn prisma generate",
     "db": "yarn prisma db",
-    "push": "yarn db push"
+    "push": "yarn db push",
+    "generate": "yarn prisma generate",
+    "migrate:devn": "yarn prisma migrate dev --name ",
+    "migrate:dev": "yarn prisma migrate dev",
+    "migrate:deploy": "yarn prisma migrate deploy"
   },
   "devDependencies": {
     "@types/node": "17.0.21",
     "eslint": "8.17.0",
-    "prisma": "3.14.0",
     "typescript": "4.6.4"
   },
   "dependencies": {
     "@prisma/client": "3.11.1",
+    "prisma": "3.14.0",
     "prisma-exclude": "1.0.2",
     "rimraf": "3.0.2"
   }

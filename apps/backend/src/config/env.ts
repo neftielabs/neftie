@@ -14,6 +14,7 @@ export const envSchema: yup.SchemaOf<EnvSchema> = yup.object({
   SERVER_ROOT: yup.string().required(),
   BASE_DOMAIN: yup.string().required(),
   MEDIA_SERVER_URL: yup.string().required(),
+  DATABASE_URL: yup.string().required(),
   NODE_ENV: yup
     .string()
     .oneOf(["development", "production", "test"])
