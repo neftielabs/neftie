@@ -9,10 +9,14 @@
   },
   "scripts": {
     "dev": "yarn build && TS_NODE_BASEURL=./dist tsc-watch -b --onSuccess 'nodemon --exec node -r tsconfig-paths/register ./dist/app.js' --noClear",
+    "clean": "rimraf -rf ./dist tsconfig.tsbuildinfo",
     "build": "tsc -b",
     "env:sync": "env2ts --in .env --out ./src/config/constants.ts",
     "lint": "eslint \"./src/**/*.{js,ts}\"",
-    "format": "prettier --check \"./src/**/*.{js,ts}\""
+    "format": "prettier --check \"./src/**/*.{js,ts}\"",
+    "db:migrate": "yarn workspace @neftie/prisma migrate:deploy",
+    "env:pull": "dotenv-vault pull development .env",
+    "env:push": "dotenv-vault push"
   },
   "dependencies": {
     "@aws-sdk/client-s3": "3.83.0",
@@ -45,6 +49,7 @@
     "prisma-exclude": "1.0.2",
     "rate-limiter-flexible": "2.3.6",
     "siwe": "1.1.6",
+    "tsconfig-paths": "4.0.0",
     "typera-express": "2.4.4",
     "winston": "3.6.0",
     "winston-daily-rotate-file": "4.6.1",
@@ -52,7 +57,6 @@
     "yup": "0.32.11"
   },
   "devDependencies": {
-    "@dotenv/cli": "2.2.2",
     "@types/compression": "1.7.2",
     "@types/cookie-parser": "1.4.3",
     "@types/cors": "2.8.12",
@@ -63,12 +67,12 @@
     "@types/node": "17.0.21",
     "@types/ws": "8.5.3",
     "copyfiles": "2.4.1",
+    "dotenv-vault": "1.4.0",
     "env2ts": "1.4.0",
     "eslint": "8.17.0",
     "nodemon": "2.0.16",
     "rimraf": "3.0.2",
     "tsc-watch": "4.6.2",
-    "tsconfig-paths": "4.0.0",
     "typescript": "4.6.4"
   }
 }

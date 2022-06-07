@@ -2,18 +2,6 @@ name: Backend CI
 
 on:
   workflow_dispatch:
-  push:
-    paths:
-      - apps/backend/**
-      - packages/api-client/**
-      - packages/common/**
-      - packages/prisma/**
-      - packages/contracts/**
-      - packages/subgraph/**
-      - .github/workflows/backend-ci.yml
-      - .yarn.lock
-    branches:
-      - main
   pull_request:
     paths:
       - apps/backend/**
