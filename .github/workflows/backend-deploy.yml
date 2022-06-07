@@ -62,13 +62,13 @@ jobs:
     if: ${{ github.event_name != 'pull_request' }}
     steps:
       - name: Deploy to Dokku
-        uses: appleboy/ssh-action@master
+        uses: fifsky/ssh-action@master
         env:
           image-name: ${{ secrets.REGISTRY_SERVER }}/neftie-backend@${{ needs.docker-build.outputs.digest }}
         with:
           host: ${{ secrets.DOKKU_SSH_HOST }}
-          username: ${{ secrets.DOKKU_SSH_USER }}
+          user: ${{ secrets.DOKKU_SSH_USER }}
           key: ${{ secrets.DOKKU_SSH_PRIVATE_KEY }}
           port: 22
-          script: |
+          command: |
             git:from-image backend ${{ env.image-name }}
