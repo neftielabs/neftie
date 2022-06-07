@@ -4,16 +4,16 @@ on:
   workflow_dispatch:
   push:
     paths:
-        - apps/backend/**
-        - packages/api-client/**
-        - packages/common/**
-        - packages/prisma/**
-        - packages/contracts/**
-        - packages/subgraph/**
-        - .github/workflows/backend-ci.yml
-        - .yarn.lock
-      branches:
-        - main
+      - apps/backend/**
+      - packages/api-client/**
+      - packages/common/**
+      - packages/prisma/**
+      - packages/contracts/**
+      - packages/subgraph/**
+      - .github/workflows/backend-deploy.yml
+      - .yarn.lock
+    branches:
+      - main
 
 #
 # Avoid the same workflow running more
@@ -22,7 +22,6 @@ on:
 concurrency:
   group: backend-${{ github.head_ref }}
   cancel-in-progress: true
-
 
 jobs:
   docker-build:
@@ -43,7 +42,7 @@ jobs:
           registry: ${{ secrets.REGISTRY_SERVER }}
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
-      
+
       - name: Build image
         id: build
         uses: docker/build-push-action@v2
@@ -56,7 +55,7 @@ jobs:
           push: ${{ github.event_name != 'pull_request' }}
           cache-from: type=gha,scope=${{ github.workflow }}
           cache-to: type=gha,scope=${{ github.workflow }}
-  
+
   deploy:
     runs-on: ubuntu-latest
     needs: docker-build
