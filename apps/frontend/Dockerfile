@@ -8,7 +8,7 @@
 
 FROM node:16-alpine AS base
 
-RUN apk add --no-cache coreutils
+RUN apk add --no-cache coreutils libc6-compat
 
 ENV CI=true
 
@@ -24,18 +24,6 @@ ENV CI=true
 FROM base AS dependencies
 
 WORKDIR /app
-
-# Copy all required files (package.json from all workspaces).
-# Copying the source and using `find` would be much easier, but then docker won't
-# cache anything when the source changes
-# An example command would be:
-#   COPY ./ ./src
-#   RUN cd src && \
-#     find . -name 'package.json' \! -path '*\.vscode*' | xargs cp --parents -t ../manifests/ && \
-#     cp yarn.lock ../manifests/ && \
-#     cp .yarnrc.yml ../manifests/ && \
-#     cp -R .yarn/releases ../manifests/.yarn && \
-#     cp -R .yarn/plugins ../manifests/.yarn
 
 COPY yarn.lock .yarnrc.yml            .
 COPY .yarn/releases                   .yarn/releases
@@ -53,7 +41,7 @@ COPY packages/cli/package.json        packages/cli/package.json
 
 # Install production dependencies
 
-RUN yarn workspaces focus --production @neftie/backend
+RUN yarn workspaces focus --production @neftie/frontend
 
 # Move production dependencies aside
 
@@ -61,7 +49,7 @@ RUN cp -R node_modules prod_node_modules
 
 # Install all dependencies
 
-RUN yarn workspaces focus @neftie/backend
+RUN yarn workspaces focus @neftie/frontend
 
 # ------------------------------
 # Builder
@@ -87,25 +75,35 @@ COPY --from=dependencies /app/.yarn                                           ./
 COPY --from=dependencies /app/apps                                            ./apps
 COPY --from=dependencies /app/packages                                        ./packages
 
-# Copy sources and run codegen
+# Copy sources and run codegen / build
 
 COPY tsconfig.json        ./
 
 COPY packages/prisma      packages/prisma
-RUN yarn pr generate
+RUN yarn pr generate && \
+  yarn pr build
 
 COPY packages/contracts   packages/contracts
-RUN yarn cs compile
+RUN yarn cs build
 
 COPY packages/subgraph    packages/subgraph
-RUN yarn sg codegen
+RUN yarn sg codegen && \
+  yarn sg build
 
 COPY packages/common      packages/common
-COPY apps/backend         apps/backend
+RUN yarn cm build
 
-# Build everything using `tsc -b`
+COPY packages/api-client  packages/api-client
+RUN yarn ac build
 
-RUN yarn be build
+COPY apps/frontend        apps/frontend
+
+# Build the frontend
+
+ARG SENTRY_AUTH_TOKEN
+ENV SENTRY_AUTH_TOKEN $SENTRY_AUTH_TOKEN
+
+RUN yarn fe build
 
 # ------------------------------
 # Prerunner
@@ -129,14 +127,19 @@ COPY --from=builder       /app/node_modules/@prisma/client                     n
 
 # Copy built packages
 
-RUN mkdir -p apps/backend packages/common packages/contracts packages/prisma packages/subgraph
+RUN mkdir -p apps/frontend packages/common packages/contracts packages/prisma packages/subgraph packages/api-client
 
 COPY --from=builder /app/tsconfig.json                        .
 
-COPY --from=builder /app/apps/backend/package.json            apps/backend/package.json
-COPY --from=builder /app/apps/backend/tsconfig.json           apps/backend/tsconfig.json
-COPY --from=builder /app/apps/backend/dist                    apps/backend/dist
-COPY --from=builder /app/apps/backend/.env.project            apps/backend/.env.project
+COPY --from=builder /app/apps/frontend/.next                    apps/frontend/.next
+COPY --from=builder /app/apps/frontend/public                   apps/frontend/public
+COPY --from=builder /app/apps/frontend/.babelrc.js              apps/frontend
+COPY --from=builder /app/apps/frontend/.env.project             apps/frontend
+COPY --from=builder /app/apps/frontend/next.config.js           apps/frontend
+COPY --from=builder /app/apps/frontend/sentry.client.config.js  apps/frontend
+COPY --from=builder /app/apps/frontend/sentry.server.config.js  apps/frontend
+COPY --from=builder /app/apps/frontend/sentry.properties        apps/frontend
+COPY --from=builder /app/apps/frontend/package.json             apps/frontend
 
 COPY --from=builder /app/packages/common/package.json         packages/common/package.json
 COPY --from=builder /app/packages/common/dist                 packages/common/dist
@@ -146,10 +149,12 @@ COPY --from=builder /app/packages/subgraph/package.json       packages/subgraph/
 COPY --from=builder /app/packages/subgraph/dist               packages/subgraph/dist
 COPY --from=builder /app/packages/prisma/package.json         packages/prisma
 COPY --from=builder /app/packages/prisma/dist                 packages/prisma/dist
-COPY --from=builder /app/packages/prisma/src/migrations       packages/prisma/src/migrations
-COPY --from=builder /app/packages/prisma/src/schema.prisma    packages/prisma/src
+COPY --from=builder /app/packages/api-client/package.json     packages/api-client
+COPY --from=builder /app/packages/api-client/dist             packages/api-client/dist
 
-RUN mkdir -p /app/apps/backend/logs /app/apps/backend/public
+# Create the directory to persist already optimized images
+
+RUN mkdir -p /usr/app/apps/frontend/.next/cache/images
 
 # ------------------------------
 # Runner
@@ -170,11 +175,7 @@ WORKDIR /app/apps/backend
 # Set environment variables
 
 ARG DOTENV_ME
-ARG DATABASE_URL
-ENV DATABASE_URL      $DATABASE_URL
-ENV TS_NODE_BASEURL   ./dist
-ENV NODE_ENV          production
-
+ENV NODE_ENV  production
 
 # Prevent app from running as root
 
@@ -182,10 +183,9 @@ USER node
 
 # Open ports
 
-EXPOSE 5000
+EXPOSE 3000
 
-# Pull env, apply pending db migrations and run app
+# Run app
 
 CMD npx --yes dotenv-vault@latest pull production .env --dotenvMe $DOTENV_ME && \
-  yarn db:migrate && \
-  node -r tsconfig-paths/register ./dist/app.js
+  ../../node_modules/.bin/next start

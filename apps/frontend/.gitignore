@@ -42,3 +42,4 @@ yarn-error.log*
 
 .env*
 !.env.project
+!.env.vault

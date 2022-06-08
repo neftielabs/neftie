@@ -12,6 +12,17 @@ apps/backend/**
 !apps/backend/src/**
 !apps/backend/.env.project
 
+apps/frontend/**
+!apps/frontend/src/**
+!apps/frontend/public/**
+!apps/frontend/*.js
+!apps/frontend/*.ts
+!apps/frontend/*.json
+!apps/frontend/.env.project
+!apps/frontend/.eslintrc.yml
+!apps/frontend/sentry.properties
+
+
 packages/api-client/**
 !packages/api-client/src/**
 !packages/api-client/*.json

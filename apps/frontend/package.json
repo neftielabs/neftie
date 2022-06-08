@@ -9,7 +9,9 @@
     "lint": "eslint \"./src/**/*.{js,ts,tsx,jsx}\"",
     "typecheck": "tsc --project ./tsconfig.json --noEmit",
     "format": "prettier --check \"./src/**/*.{js,ts,tsx,jsx}\"",
-    "env:sync": "env2ts --in .env --out src/lib/constants/env.ts"
+    "env:sync": "env2ts --in .env --out src/lib/constants/env.ts",
+    "env:pull": "dotenv-vault pull development .env",
+    "env:push": "dotenv-vault push"
   },
   "dependencies": {
     "@hookform/resolvers": "2.8.8",
