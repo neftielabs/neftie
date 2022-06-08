@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 
+import { useIsMounted } from "@react-hookz/web";
+import { createPortal } from "react-dom";
 import { FiX } from "react-icons/fi";
 import tw from "twin.macro";
 
@@ -8,6 +10,7 @@ import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Image } from "components/ui/Image";
 import { styled } from "stitches.config";
+import { isServer } from "utils/app";
 import { setPageScrollable } from "utils/misc";
 import { styleUtils } from "utils/style";
 
@@ -32,6 +35,8 @@ export const ExpandableImage: React.FC<ExpandableImageProps> = ({
 }) => {
   const [isExpanded, setExpanded] = useState(false);
 
+  const isMounted = useIsMounted();
+
   useEffect(() => {
     setPageScrollable(!isExpanded);
   }, [isExpanded]);
@@ -41,23 +46,31 @@ export const ExpandableImage: React.FC<ExpandableImageProps> = ({
       <Button raw onClick={() => setExpanded(true)} {...props}>
         <Image {...imageProps} />
       </Button>
-      {isExpanded ? (
-        <ImageWrapper expanded={isExpanded}>
-          <Box
-            tw="max-width[900px] max-height[500px] w-full h-full z-10"
-            css={styleUtils.center.xy}
-          >
-            <Image objectFit="contain" {...imageProps} />
-          </Box>
-          <Button
-            raw
-            tw="absolute top-2 right-4 z-20"
-            onClick={() => setExpanded(false)}
-          >
-            <FiX tw="text-white" size={35} />
-          </Button>
-          <Backdrop visible={isExpanded} onClick={() => setExpanded(false)} />
-        </ImageWrapper>
+      {isExpanded && !isServer && isMounted() ? (
+        <>
+          {createPortal(
+            <ImageWrapper expanded={isExpanded}>
+              <Box
+                tw="max-width[900px] max-height[500px] w-full h-full z-10"
+                css={styleUtils.center.xy}
+              >
+                <Image objectFit="contain" {...imageProps} />
+              </Box>
+              <Button
+                raw
+                tw="absolute top-2 right-4 z-20"
+                onClick={() => setExpanded(false)}
+              >
+                <FiX tw="text-white" size={35} />
+              </Button>
+              <Backdrop
+                visible={isExpanded}
+                onClick={() => setExpanded(false)}
+              />
+            </ImageWrapper>,
+            document.querySelector("#__next")!
+          )}
+        </>
       ) : null}
     </>
   );
