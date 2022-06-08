@@ -40,12 +40,16 @@ jobs:
           username: ${{ secrets.REGISTRY_USER }}
           password: ${{ secrets.REGISTRY_PASSWORD }}
 
+      - name: Pull browser env variables
+        run: |
+          cd apps/frontend
+          npx --yes dotenv-vault@latest pull ci .env --dotenvMe ${{ secrets.DOTENV_ME_FRONTEND }}
+
       - name: Build image
         id: build
         uses: docker/build-push-action@v3
         timeout-minutes: 20
         with:
-          # context: .
           file: apps/frontend/Dockerfile
           tags: ${{ secrets.REGISTRY_SERVER }}/neftie-frontend:latest
           builder: ${{ steps.buildx.outputs.name }}
