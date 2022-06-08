@@ -105,9 +105,8 @@ ENV SENTRY_AUTH_TOKEN $SENTRY_AUTH_TOKEN
 
 # `NEXT_PUBLIC_*` env vars need to be set before build
 
-COPY apps/frontend/.env apps/frontend/.env
-
-RUN yarn fe build
+RUN --mount=type=secret,id=browser_env,dst=/app/apps/frontend/.env \
+  yarn fe build
 
 # ------------------------------
 # Prerunner
