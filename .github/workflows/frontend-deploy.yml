@@ -42,6 +42,9 @@ jobs:
 
       - name: Pull browser env variables
         run: |
+          mkdir -p /tmp/env
+          cd /tmp/env
+          echo "DOTENV_PROJECT=${{ secrets.DOTENV_PRJ_FRONTEND }}" > .env.project
           npx --yes dotenv-vault@latest pull ci /tmp/.env --dotenvMe ${{ secrets.DOTENV_ME_FRONTEND }}
 
       - name: Build image
