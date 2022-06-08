@@ -173,7 +173,7 @@ WORKDIR /app
 
 COPY --from=prerunner /app ./
 
-WORKDIR /app/apps/backend
+WORKDIR /app/apps/frontend
 
 # Set environment variables
 
