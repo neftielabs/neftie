@@ -13,7 +13,7 @@ import type { PageComponent } from "types/tsx";
 interface HomePageProps {}
 
 const HomePage: PageComponent<HomePageProps> = () => {
-  const featured = "0xc0e17754cfac313cf784381b42ff372853cd9d8f";
+  const featured = "0xc4e7545806a0091e54fe73de59d81e8318b1e5ad";
 
   const { data } = useTypedQuery(["getListing", featured], {}, [featured]);
 
