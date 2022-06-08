@@ -83,6 +83,10 @@ export default class S3 {
    * Deletes an object from a bucket.
    */
   public async delete(key: string) {
+    if (key.includes("default_")) {
+      return true;
+    }
+
     logger.debug(`[S3] Deleting object '${key}' in '${this.bucket}'`);
 
     try {

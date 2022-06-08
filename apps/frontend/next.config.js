@@ -4,10 +4,6 @@ const { withSentryConfig } = require("@sentry/nextjs");
 
 const isProd = process.env.NODE_ENV === "production";
 
-const envLoaded = process.env.NEXT_PUBLIC_ENV_TEST;
-
-console.log({ envLoaded });
-
 const withBundleAnalyzer = isProd
   ? null
   : require("@next/bundle-analyzer")({

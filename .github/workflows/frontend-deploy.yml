@@ -45,7 +45,7 @@ jobs:
           mkdir -p /tmp/env
           cd /tmp/env
           echo "DOTENV_PROJECT=${{ secrets.DOTENV_PRJ_FRONTEND }}" > .env.project
-          npx --yes dotenv-vault@latest pull ci /tmp/.env --dotenvMe ${{ secrets.DOTENV_ME_FRONTEND }}
+          npx --yes dotenv-vault@latest pull ci .env --dotenvMe ${{ secrets.DOTENV_ME_FRONTEND }}
 
       - name: Build image
         id: build
@@ -57,7 +57,7 @@ jobs:
           builder: ${{ steps.buildx.outputs.name }}
           push: true
           secret-files: |
-            "browser_env=/tmp/.env"
+            "browser_env=/tmp/env/.env"
           build-args: |
             SENTRY_AUTH_TOKEN=${{ secrets.SENTRY_AUTH_TOKEN }}
           cache-from: type=gha,scope=${{ github.workflow }}
