@@ -168,7 +168,10 @@ FROM base AS runner
 
 WORKDIR /app
 
-COPY --from=prerunner --chown=node:node /app ./
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+COPY --from=prerunner --chown=nextjs:nodejs /app ./
 
 WORKDIR /app/apps/backend
 
@@ -179,7 +182,7 @@ ENV NODE_ENV  production
 
 # Prevent app from running as root
 
-USER node
+USER nextjs
 
 # Open ports
 
