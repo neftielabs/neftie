@@ -12,7 +12,7 @@ const isProdOrStaging = ["production", "staging"].includes(
 Sentry.init({
   dsn:
     SENTRY_DSN ||
-    "https://ce6ebfa12b1449d2b5d3deeecd0f243f@o949069.ingest.sentry.io/6258311",
+    "https://ce6ebfa12b1449d2b5d3deeecd0f243f@o1172138.ingest.sentry.io/6258311",
   tracesSampleRate: 1.0,
   enabled: isProdOrStaging,
 });
