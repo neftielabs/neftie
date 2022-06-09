@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useMemo, useState } from "react";
 
 import { useRouter } from "next/router";
 import { useQueryClient } from "react-query";
-import { useAccount, useNetwork } from "wagmi";
+import { useAccount, useDisconnect, useNetwork } from "wagmi";
 
 import { areAddressesEqual } from "@neftie/common";
 import { WaitForAuth } from "components/layout/WaitForAuth";
@@ -20,7 +20,7 @@ export const AuthContext = React.createContext<{
   disconnect: () => Promise<void>;
   connect: () => Promise<void>;
 }>({
-  isAuthLoading: true,
+  isAuthLoading: false,
   isAuthed: false,
   connectedAddress: undefined,
   disconnect: async () => {},
@@ -35,10 +35,11 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
   requiresAuth,
   children,
 }) => {
-  const [isAuthenticating, setIsAuthenticating] = useState(true);
+  const [isAuthenticating, setIsAuthenticating] = useState(false);
 
   const [token, { setToken }] = useToken();
   const [isWalletLoading] = useWallet();
+  const { disconnect: disconnectWallet } = useDisconnect();
 
   const queryClient = useQueryClient();
   const { mutateAsync: getToken } = useTypedMutation("getAuthToken");
@@ -58,8 +59,31 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     router.replace(redirect);
   }, [router]);
 
+  const logOut = useCallback(
+    () =>
+      disconnect([])
+        .then(() => {
+          setToken(null);
+          disconnectWallet();
+          queryClient.resetQueries();
+
+          if (requiresAuth) {
+            redirectToConnect();
+          }
+        })
+        .catch(),
+    [
+      disconnect,
+      disconnectWallet,
+      queryClient,
+      redirectToConnect,
+      requiresAuth,
+      setToken,
+    ]
+  );
+
   useEffect(() => {
-    if (!token && accountData?.address) {
+    if (!token && accountData?.address && !isAuthenticating) {
       setIsAuthenticating(true);
 
       logger.debug("[Auth] Requesting /token");
@@ -76,20 +100,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
            */
           if (!areAddressesEqual(result.user.id, accountData?.address)) {
             logger.debug(`[Auth] Received address and connected mismatch`);
-
-            /**
-             * No match, call disconnect to clear current token in cookies
-             * and stay logged out
-             */
-            disconnect([])
-              .then(() => {
-                queryClient.resetQueries();
-
-                if (requiresAuth) {
-                  redirectToConnect();
-                }
-              })
-              .catch();
+            logOut();
           } else {
             logger.debug("[Auth] Auth ok, storing token");
             queryClient.resetQueries();
@@ -105,10 +116,6 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
         .catch(() => {
           queryClient.resetQueries();
 
-          /**
-           * If the current page requires auth, redirect to the
-           * connect page and store the intended path in the query params
-           */
           if (requiresAuth) {
             logger.debug("[Auth] Auth error, and auth required");
             redirectToConnect();
@@ -122,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountData?.address]);
+  }, [accountData?.address, requiresAuth, token]);
 
   useEffect(() => {
     if (
@@ -132,33 +139,15 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
       !isWalletLoading
     ) {
       logger.debug("[Auth] Accounts mismatch or wrong chain");
-
-      queryClient.clear();
-
-      /**
-       * Token address and current connected address don't match
-       * clear all tokens (server & client)
-       */
-      disconnect([])
-        .then(() => {
-          setToken(null);
-
-          if (requiresAuth) {
-            redirectToConnect();
-          }
-        })
-        .catch();
+      logOut();
     }
   }, [
     accountData?.address,
     activeChain?.unsupported,
-    disconnect,
     isAuthenticating,
     isWalletLoading,
+    logOut,
     queryClient,
-    redirectToConnect,
-    requiresAuth,
-    setToken,
     token,
   ]);
 
@@ -170,9 +159,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
           isAuthed: isTruthy(token),
           connectedAddress: accountData?.address,
           connect: async () => {},
-          disconnect: async () => {},
+          disconnect: () => logOut(),
         }),
-        [accountData?.address, isAuthenticating, isWalletLoading, token]
+        [accountData?.address, isAuthenticating, isWalletLoading, logOut, token]
       )}
     >
       {requiresAuth ? (

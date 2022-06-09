@@ -8,6 +8,8 @@ export const APP_ENV = process.env.NEXT_PUBLIC_APP_ENV as
   | "development"
   | "production";
 
+export const APP_URL = process.env.NEXT_PUBLIC_APP_URL!;
+
 /**
  * The featured listing on the homepage
  */

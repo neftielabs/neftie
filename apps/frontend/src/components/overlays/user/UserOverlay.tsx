@@ -8,6 +8,7 @@ import { Box } from "components/ui/Box";
 import { Button } from "components/ui/Button";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
+import { useAuth } from "hooks/useAuth";
 import { routes } from "lib/manifests/routes";
 import { styled } from "stitches.config";
 import { usernameOrId } from "utils/misc";
@@ -43,7 +44,8 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
   user,
   isLoading,
 }) => {
-  const [visible, setVisible] = useState(false);
+  const [visible, setVisible] = useState(true);
+  const { disconnect } = useAuth();
 
   return (
     <Box
@@ -68,6 +70,15 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
               </Text>
             </Button>
           </Link>
+          <Button
+            raw
+            tw="py-2 px-2 hover:bg-gray-50 w-full text-left"
+            onClick={() => disconnect()}
+          >
+            <Text weight="bold" color="gray600">
+              Log Out
+            </Text>
+          </Button>
         </OverlayWrapper>
       ) : null}
     </Box>

@@ -20,7 +20,7 @@ export const HeaderNotice: React.FC<HeaderNoticeProps> = () => {
   return (
     <>
       {open ? (
-        <Box tw="w-full z-20 relative py-1 background-color[#def3ff]">
+        <Box tw="w-full z-10 relative py-1 background-color[#def3ff]">
           <Container tw="relative">
             <Text align="center" size="14" weight="medium">
               neftie is in <strong>beta</strong> and only works with the{" "}

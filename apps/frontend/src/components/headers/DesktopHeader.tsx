@@ -1,6 +1,7 @@
 import React from "react";
 
-import { IoFileTray } from "react-icons/io5";
+import { FiSearch } from "react-icons/fi";
+import { IoFileTray, IoNotifications } from "react-icons/io5";
 import tw from "twin.macro";
 
 import { NeftieIcon } from "components/assets/NeftieIcon";
@@ -8,7 +9,6 @@ import { UserHeader } from "components/headers/UserHeader";
 import { Box } from "components/ui/Box";
 import { Flex } from "components/ui/Flex";
 import { Link } from "components/ui/Link";
-import { Text } from "components/ui/Text";
 import { routes } from "lib/manifests/routes";
 import { styled } from "stitches.config";
 
@@ -28,16 +28,19 @@ export const DesktopHeader: React.FC<DesktopHeaderProps> = () => {
             <NeftieIcon />
           </Link>
           <Flex>
-            {["Find talent"].map((e, i) => (
-              <Text weight="bolder" key={i}>
-                {e}
-              </Text>
-            ))}
+            <Flex tw="bg-gray-50 rounded-full pl-2" itemsCenter>
+              <FiSearch />
+              <input
+                type="text"
+                tw="bg-transparent py-1 px-1"
+                placeholder="Search"
+              />
+            </Flex>
           </Flex>
         </Flex>
         <Flex itemsCenter tw="gap-1.5">
           <Flex center tw="w-3.5 h-3.5 border border-gray-200 rounded-full">
-            <IoFileTray size="18" tw="text-gray-400" />
+            <IoNotifications size="18" tw="text-gray-400" />
           </Flex>
           <Flex center tw="w-3.5 h-3.5 border border-gray-200 rounded-full">
             <IoFileTray size="18" tw="text-gray-400" />
