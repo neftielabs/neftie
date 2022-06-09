@@ -44,7 +44,7 @@ export const UserOverlay: React.FC<UserOverlayProps> = ({
   user,
   isLoading,
 }) => {
-  const [visible, setVisible] = useState(true);
+  const [visible, setVisible] = useState(false);
   const { disconnect } = useAuth();
 
   return (
