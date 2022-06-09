@@ -78,6 +78,7 @@ COPY --from=dependencies /app/packages                                        ./
 # Copy sources and run codegen / build
 
 COPY tsconfig.json        ./
+COPY .eslintrc.yml        ./
 
 COPY packages/prisma      packages/prisma
 RUN yarn pr generate && \
