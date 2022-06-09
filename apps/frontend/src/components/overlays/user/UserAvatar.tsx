@@ -4,7 +4,6 @@ import type { UserSafe } from "@neftie/common";
 import { Avatar } from "components/media/Avatar";
 import { Box } from "components/ui/Box";
 import { Loader } from "components/ui/Loader";
-import { useAuth } from "hooks/useAuth";
 import { styleUtils } from "utils/style";
 
 interface UserAvatarProps {
@@ -16,10 +15,8 @@ export const UserAvatar: React.FC<UserAvatarProps> = ({
   user,
   isLoading = false,
 }) => {
-  const { disconnect } = useAuth();
-
   return (
-    <Box tw="rounded-full text-white relative" onClick={() => disconnect()}>
+    <Box tw="rounded-full text-white relative">
       <Avatar
         css={{ opacity: isLoading ? "0" : "1" }}
         avatarUrl={user?.avatarUrl}

@@ -71,16 +71,18 @@ export const ProfileHeader: React.FC<ProfileHeaderProps> = ({
             className="group"
             tw="relative rounded-full overflow-hidden transform -translate-y-1/3"
           >
-            <Button
-              raw
-              tw="flex items-center justify-center w-full h-full absolute top-0 left-0 opacity-0 pointer-events-none
+            {isCurrentUser ? (
+              <Button
+                raw
+                tw="flex items-center justify-center w-full h-full absolute top-0 left-0 opacity-0 pointer-events-none
               transition-opacity z-10 background-color[rgba(0,0,0,0.7)] group-hover:(opacity-70 pointer-events-auto)"
-              onClick={() => uploadAvatarRef.current?.click()}
-            >
-              <Text size="13" color="white" weight="medium">
-                Edit avatar
-              </Text>
-            </Button>
+                onClick={() => uploadAvatarRef.current?.click()}
+              >
+                <Text size="13" color="white" weight="medium">
+                  Edit avatar
+                </Text>
+              </Button>
+            ) : null}
 
             <Avatar tw="" size="xl" border="md" avatarUrl={user.avatarUrl} />
           </Box>
