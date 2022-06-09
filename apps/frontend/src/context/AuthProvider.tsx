@@ -129,7 +129,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({
     }
 
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [accountData?.address, requiresAuth, token]);
+  }, [accountData?.address]);
 
   useEffect(() => {
     if (
