@@ -80,6 +80,19 @@ export default class S3 {
   }
 
   /**
+   * Checks that a file doesn't exceed the 15mb
+   * size.
+   */
+  private isValidFileSize(file: S3ObjectType) {
+    const byteLength = Buffer.byteLength(file as Buffer);
+    const mbSize = byteLength / 1_000_000;
+
+    logger.debug(`[S3] File size: ${mbSize} MB`);
+
+    return mbSize < 15;
+  }
+
+  /**
    * Deletes an object from a bucket.
    */
   public async delete(key: string) {
@@ -130,6 +143,11 @@ export default class S3 {
       });
     }
 
+    if (!this.isValidFileSize(content)) {
+      logger.warn(`[S3] Invalid file size`);
+      return null;
+    }
+
     try {
       logger.debug(`[S3] Creating object '${filename}' in '${this.bucket}'`);
 
@@ -138,6 +156,7 @@ export default class S3 {
           Bucket: this.bucket,
           Body: content,
           Key: filename,
+
           ...this.getUploadParams(),
         })
       );

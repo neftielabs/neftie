@@ -1,9 +1,14 @@
 import { Response, applyMiddleware } from "typera-express";
 
 import { meSchema } from "@neftie/common";
-import { authMiddleware, fileMiddleware } from "api/middleware";
+import {
+  authMiddleware,
+  fileMiddleware,
+  rateLimitMiddleware,
+} from "api/middleware";
 import { withBody, withQuery } from "api/middleware/validation.middleware";
 import { userService } from "api/services";
+import { strictLimiter } from "api/services/rate-limit.service";
 import AppError from "errors/AppError";
 import { createReusableController } from "modules/controller";
 import { isValidSingleFile } from "utils/file";
@@ -44,6 +49,7 @@ export const uploadFile = authController("/me/upload", "post", (route) =>
   route
     .use(fileMiddleware.generic())
     .use(withQuery(meSchema.fileUpload))
+    .use(rateLimitMiddleware.apply(strictLimiter))
     .handler(async (ctx) => {
       const entity = ctx.query.entity as "banner" | "avatar";
       const file = ctx.req.files?.file;

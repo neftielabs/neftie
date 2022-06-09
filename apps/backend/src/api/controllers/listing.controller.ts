@@ -5,9 +5,11 @@ import {
   authMiddleware,
   fileMiddleware,
   filterMiddleware,
+  rateLimitMiddleware,
 } from "api/middleware";
 import { withBody } from "api/middleware/validation.middleware";
 import { listingService } from "api/services";
+import { strictLimiter } from "api/services/rate-limit.service";
 import { createController, createReusableController } from "modules/controller";
 import logger from "modules/Logger/Logger";
 import { isValidSingleFile } from "utils/file";
@@ -51,6 +53,7 @@ export const patchListing = authController(
     route
       .use(withBody(listingSchema.serverEditListing))
       .use(fileMiddleware.generic())
+      .use(rateLimitMiddleware.apply(strictLimiter))
       .handler(async (ctx) => {
         const { userId } = ctx.auth;
         const { description } = ctx.body;
