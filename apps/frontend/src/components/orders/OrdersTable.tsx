@@ -33,7 +33,10 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
     isLoading,
   } = useTypedInfQuery(
     ["getMyOrders", entity],
-    { getNextPageParam: (lastPage) => lastPage.meta?.cursor },
+    {
+      getNextPageParam: (lastPage) => lastPage.meta?.nextPage,
+      staleTime: 30 * 1000,
+    },
     { as: entity.toLowerCase() as "seller" | "client" }
   );
 
@@ -47,7 +50,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
   }, [isLoading, setLoading]);
 
   useEffect(() => {
-    if (intersection?.isIntersecting && !isFetchingNextPage && hasNextPage) {
+    if (!!intersection?.isIntersecting && !isFetchingNextPage && hasNextPage) {
       fetchNextPage();
     }
   }, [
@@ -88,7 +91,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                 <React.Fragment key={i}>
                   {page.items.map((order: IOrderPreview) => (
                     <tr
-                      key={order.id}
+                      key={order.composedId}
                       tw="hover:bg-gray-25 bg-white cursor-pointer"
                       onClick={() =>
                         push(routes.order(order.listing.id, order.id).index)
@@ -97,7 +100,7 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                       <td tw="py-1">
                         <User
                           user={
-                            order[entity.toLowerCase() as "seller" | "client"]
+                            entity === "Client" ? order.seller : order.client
                           }
                           size="sm"
                         />
@@ -111,9 +114,17 @@ export const OrdersTable: React.FC<OrdersTableProps> = ({
                         </Link>
                       </td>
                       <td>
-                        {new Date(
+                        {new Intl.DateTimeFormat("default", {
+                          day: "numeric",
+                          month: "short",
+                          year: "numeric",
+                          hour: "2-digit",
+                          minute: "2-digit",
+                          hour12: false,
+                        }).format(Number(order.lastEventAt) * 1000)}
+                        {/* {new Date(
                           Number(order.lastEventAt) * 1000
-                        ).toLocaleString()}
+                        ).toLocaleString()} */}
                       </td>
                       <td>
                         <EthPrice price={order.listing.price} />

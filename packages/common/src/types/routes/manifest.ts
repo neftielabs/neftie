@@ -8,7 +8,7 @@ import type {
   UserFullSafe,
   UserSafe,
 } from "../models";
-import type { Paginated } from "../utils";
+import type { OffsetPaginated, Paginated } from "../utils";
 
 /**
  * Collection of all the routes, their available
@@ -136,7 +136,7 @@ export type RouteManifest = {
 
   "/me/orders": {
     get: {
-      response: [Response.Ok<Paginated<IOrderPreview[]>>];
+      response: [Response.Ok<OffsetPaginated<IOrderPreview[]>>];
     };
   };
 

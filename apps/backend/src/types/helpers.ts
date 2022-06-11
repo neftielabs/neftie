@@ -25,3 +25,9 @@ export type Pagination = {
   cursor: string;
   limit: number;
 };
+
+export type OffsetPagination = {
+  page: number;
+  skip: number;
+  limit: number;
+};

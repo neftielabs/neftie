@@ -84,6 +84,9 @@ type Order @entity {
   "All events that happened during the order lifecycle"
   events: [OrderEvent!]! @derivedFrom(field: "order")
 
+  "The unix timestamp of tha last event"
+  lastEventAt: BigInt!
+
   "The number of revisions left"
   revisionsLeft: Int!
 

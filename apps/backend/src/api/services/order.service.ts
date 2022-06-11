@@ -9,7 +9,7 @@ import { OrderEventType as OrderEventTypeEnum } from "@neftie/subgraph";
 import { orderProvider, userProvider } from "api/providers";
 import { dataService } from "api/services";
 import { subgraphQuery } from "modules/subgraph-client";
-import type { Pagination, Result } from "types/helpers";
+import type { OffsetPagination, Result } from "types/helpers";
 import { splitOrderId } from "utils/helpers";
 
 /**
@@ -69,7 +69,7 @@ export const onChainOrderExists = async (data: {
 export const getUserOrders = async (data: {
   entity: "client" | "seller";
   userId: string;
-  pagination: Pagination;
+  pagination: OffsetPagination;
 }): Promise<IOrderPreview[]> => {
   const { entity, userId, pagination } = data;
 
@@ -85,7 +85,8 @@ export const getUserOrders = async (data: {
 
     const { orders } = await subgraphQuery("getSellerOrders", {
       sellerId: userId,
-      ...pagination,
+      skip: pagination.skip,
+      limit: pagination.limit,
     });
 
     onChainOrders.push(...orders);
@@ -94,7 +95,8 @@ export const getUserOrders = async (data: {
 
     const { orders } = await subgraphQuery("getClientOrders", {
       clientId: userId,
-      ...pagination,
+      skip: pagination.skip,
+      limit: pagination.limit,
     });
 
     onChainOrders.push(...orders);
@@ -203,13 +205,6 @@ export const lookupOrderEvent = (data: {
     const capitalizedType = string.capitalize(type, true);
 
     const intervalId = setInterval(async () => {
-      console.log("querying", {
-        composedOrderId,
-        type: OrderEventTypeEnum[capitalizedType],
-        minTimestamp: "" + timestamps[0],
-        maxTimestamp: "" + timestamps[1],
-      });
-
       if (retries === 0) {
         reject(new Error("No event found"));
         clearInterval(intervalId);

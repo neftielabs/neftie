@@ -25,7 +25,7 @@ export const orderMethods = (call: Call) => ({
     ) =>
       call("/me/orders", "get", {
         params: {
-          cursor: data.pageParam,
+          page: data.pageParam,
           as: data.as.toLowerCase(),
         },
       }),

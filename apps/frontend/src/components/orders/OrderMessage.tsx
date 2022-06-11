@@ -85,7 +85,7 @@ export const OrderMessage: React.FC<OrderMessageProps> = ({
             <Text color="gray500">{messageFromTo}</Text>
 
             <Text size="13" color="gray400" tw="flex-shrink-0">
-              {new Intl.DateTimeFormat("en-US", {
+              {new Intl.DateTimeFormat("default", {
                 day: "2-digit",
                 month: "short",
                 hour: "2-digit",

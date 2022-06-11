@@ -151,15 +151,10 @@ export const mergeMinimalOrder = async (data: {
     }
   }
 
-  const lastEvent = onChain.events.sort(
-    (a, b) => Number(a.timestamp) - Number(b.timestamp)
-  )[0];
-
   return {
     ...onChain,
     id,
     composedId,
-    lastEventAt: lastEvent.timestamp,
     client: mergeUser({ onChain: onChain.client, offChain: client }),
     seller: mergeUser({ onChain: onChain.seller, offChain: seller }),
   };

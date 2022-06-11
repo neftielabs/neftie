@@ -1,13 +1,13 @@
-import type { Paginated } from "@neftie/common";
+import type { OffsetPaginated, Paginated } from "@neftie/common";
 import type { Result, ResultError } from "types/helpers";
 
 /**
- * Inject pagination data into a response object
+ * Inject cursor-based pagination data into a response object
  * based on the items being sent
  */
 export const withPagination = <T>(
   items: T[],
-  pagination: { cursor: keyof T; limit: number }
+  pagination: { cursor: keyof T | (keyof T)[]; limit: number }
 ): Paginated<T[]> => {
   const { cursor, limit } = pagination;
 
@@ -18,13 +18,19 @@ export const withPagination = <T>(
   }
 
   // Extract last field value
+  let nextCursor: any = null;
 
-  const lastValue = items[items.length - 1][cursor];
+  if (Array.isArray(cursor)) {
+    const values = cursor.map((c) => items[items.length - 1][c]);
+    nextCursor = values.join("__");
+  } else {
+    nextCursor = items[items.length - 1][cursor];
+  }
 
   if (
-    lastValue === undefined ||
-    lastValue === null ||
-    typeof lastValue !== "string"
+    nextCursor === undefined ||
+    nextCursor === null ||
+    typeof nextCursor !== "string"
   ) {
     return {
       items,
@@ -34,7 +40,31 @@ export const withPagination = <T>(
   return {
     items,
     meta: {
-      cursor: lastValue,
+      cursor: nextCursor,
+    },
+  };
+};
+
+/**
+ * Inject offset-based pagination data into a response object
+ * based on the items being sent
+ */
+export const withOffsetPagination = <T>(
+  items: T[],
+  pagination: { page: number; limit: number }
+): OffsetPaginated<T[]> => {
+  const { page, limit } = pagination;
+
+  if (!items.length || items.length < limit) {
+    return {
+      items,
+    };
+  }
+
+  return {
+    items,
+    meta: {
+      nextPage: page + 1,
     },
   };
 };

@@ -6,10 +6,7 @@ fragment orderMinimal on Order {
   id
   status
   tx
-
-  events {
-    timestamp
-  }
+  lastEventAt
 
   client {
     id
@@ -90,11 +87,12 @@ query getMinimalOrdersByTx(
 # Get a all orders received by a seller
 #
 
-query getSellerOrders($sellerId: String!, $cursor: String = "", $limit: Int) {
+query getSellerOrders($sellerId: String!, $limit: Int, $skip: Int = 0) {
   orders(
-    where: { seller: $sellerId, id_gt: $cursor }
+    where: { seller: $sellerId }
     first: $limit
-    orderBy: id
+    skip: $skip
+    orderBy: lastEventAt
     orderDirection: desc
   ) {
     ...orderMinimal
@@ -105,11 +103,12 @@ query getSellerOrders($sellerId: String!, $cursor: String = "", $limit: Int) {
 # Get a all orders placed by a client
 #
 
-query getClientOrders($clientId: String!, $cursor: String = "", $limit: Int) {
+query getClientOrders($clientId: String!, $limit: Int, $skip: Int = 0) {
   orders(
-    where: { client: $clientId, id_gt: $cursor }
+    where: { client: $clientId }
     first: $limit
-    orderBy: id
+    skip: $skip
+    orderBy: lastEventAt
     orderDirection: desc
   ) {
     ...orderMinimal

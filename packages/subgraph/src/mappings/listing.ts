@@ -44,6 +44,7 @@ export function handleOrderPlaced(event: OrderPlaced): void {
   order.bondFeeWithdrawn = false;
   order.underRevision = false;
   order.revisionsLeft = event.params.revisionsLeft.toI32();
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "PLACED", client.id, order.id);
@@ -54,6 +55,7 @@ export function handleOrderApproved(event: OrderApproved): void {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.ONGOING);
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "STARTED", order.seller, order.id);
@@ -64,6 +66,7 @@ export function handleOrderDismissed(event: OrderDismissed): void {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DISMISSED);
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "DISMISSED", event.params.author.toHex(), order.id);
@@ -74,6 +77,7 @@ export function handleOrderCancelled(event: OrderCancelled): void {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.CANCELLED);
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "CANCELLED", event.params.author.toHex(), order.id);
@@ -85,6 +89,7 @@ export function handleOrderDelivered(event: OrderDelivered): void {
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.DELIVERED);
   order.underRevision = false;
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "DELIVERED", order.seller, order.id);
@@ -96,6 +101,7 @@ export function handleRevisionRequested(event: RevisionRequested): void {
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.underRevision = true;
   order.status = mapOrderStatus(OrderStatus.ONGOING);
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "REVISION", order.client, order.id);
@@ -131,6 +137,7 @@ export const handleOrderWithdrawn = (event: OrderWithdrawn): void => {
 
   const order = getOrderEntity(event.params.orderId, listing.id);
   order.status = mapOrderStatus(OrderStatus.COMPLETED);
+  order.lastEventAt = event.block.timestamp;
   order.save();
 
   registerOrderEvent(event, "COMPLETED", order.seller, order.id);

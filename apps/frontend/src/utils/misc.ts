@@ -1,11 +1,16 @@
 import type { InfiniteData } from "react-query";
 
-import type { MergedUser, Paginated, UserSafe } from "@neftie/common";
+import type {
+  MergedUser,
+  OffsetPaginated,
+  Paginated,
+  UserSafe,
+} from "@neftie/common";
 import { isServer } from "utils/app";
 import { shortenAddress } from "utils/web3";
 
 export const hasPaginatedItems = (
-  e: InfiniteData<Paginated<any[]>> | undefined
+  e: InfiniteData<Paginated<any[]> | OffsetPaginated<any[]>> | undefined
 ) => e?.pages[0].items.length !== 0;
 
 /**

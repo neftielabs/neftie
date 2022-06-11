@@ -11,3 +11,10 @@ export type Paginated<T> = {
     cursor?: string;
   };
 };
+
+export type OffsetPaginated<T> = {
+  items: T;
+  meta?: {
+    nextPage?: number;
+  };
+};

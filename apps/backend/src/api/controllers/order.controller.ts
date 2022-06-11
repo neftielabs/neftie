@@ -5,7 +5,7 @@ import { authMiddleware, filterMiddleware } from "api/middleware";
 import { withQuery } from "api/middleware/validation.middleware";
 import { orderService } from "api/services";
 import { createController } from "modules/controller";
-import { isError, withPagination } from "utils/helpers";
+import { isError, withOffsetPagination } from "utils/helpers";
 
 /**
  * Verify an order is available in the subgraph
@@ -43,7 +43,7 @@ export const getUserOrders = createController("/me/orders", "get", (route) =>
   route
     .use(authMiddleware.withAuth("required"))
     .use(withQuery(orderSchema.entityOrdersSchema))
-    .use(filterMiddleware.pagination)
+    .use(filterMiddleware.offsetPagination)
     .handler(async (ctx) => {
       const entity = ctx.query.as as "seller" | "client";
       const orders = await orderService.getUserOrders({
@@ -53,8 +53,8 @@ export const getUserOrders = createController("/me/orders", "get", (route) =>
       });
 
       return Response.ok(
-        withPagination(orders, {
-          cursor: "id",
+        withOffsetPagination(orders, {
+          page: ctx.filters.pagination.page,
           limit: ctx.filters.pagination.limit,
         })
       );

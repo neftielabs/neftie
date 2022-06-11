@@ -122,7 +122,7 @@ export const OrderEvent: React.FC<OrderEventProps> = ({
               {eventFrom} {label}
             </Text>
             <Text size="13" tw="color[rgba(0,0,0,0.3)]">
-              {new Intl.DateTimeFormat("en-US", {
+              {new Intl.DateTimeFormat("default", {
                 day: "2-digit",
                 month: "short",
                 year: "numeric",

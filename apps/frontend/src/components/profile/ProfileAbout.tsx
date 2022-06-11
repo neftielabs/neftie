@@ -163,7 +163,7 @@ export const ProfileAbout: React.FC<ProfileAboutProps> = ({ user }) => {
             ],
             [ensName, <FiSquare key="ens" tw="transform rotate-45" />, null],
             [
-              `Since ${new Intl.DateTimeFormat("en-US", {
+              `Since ${new Intl.DateTimeFormat("default", {
                 month: "long",
                 year: "numeric",
               }).format(new Date(user.createdAt))}`,
