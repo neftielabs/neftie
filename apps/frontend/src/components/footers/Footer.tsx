@@ -1,7 +1,7 @@
 import React from "react";
 
 import { FaDiscord, FaGithub } from "react-icons/fa";
-import { IoLogoFacebook, IoLogoInstagram } from "react-icons/io5";
+import { IoLogoInstagram, IoLogoTwitter } from "react-icons/io5";
 
 import { NeftieLogo } from "components/assets/NeftieLogo";
 import { FooterColumn } from "components/footers/FooterColumn";
@@ -16,14 +16,14 @@ interface FooterProps {}
 export const Footer: React.FC<FooterProps> = () => {
   const socials = [
     {
-      icon: <IoLogoFacebook />,
-      alt: "Facebook",
-      url: "https://facebook.com",
+      icon: <IoLogoTwitter />,
+      alt: "Instagram",
+      url: "https://twitter.com/neftieio",
     },
     {
       icon: <IoLogoInstagram />,
       alt: "Instagram",
-      url: "https://instagram.com/neftie.io",
+      url: "https://instagram.com/neftieio",
     },
     {
       icon: <FaDiscord />,
