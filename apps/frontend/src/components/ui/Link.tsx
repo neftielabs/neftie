@@ -58,6 +58,14 @@ export const Link: React.FC<AnchorLinkProps | DivLinkProps> = ({
   ...props
 }) => {
   if ("href" in props) {
+    if (!props.href) {
+      return (
+        <DivElement variant={variant} underline={underline}>
+          {children}
+        </DivElement>
+      );
+    }
+
     return (
       <NextLink
         {...nextLinkProps}

@@ -1,5 +1,6 @@
 import React from "react";
 
+import { ListingCard } from "components/cards/ListingCard";
 import { ListingShowcaseCard } from "components/cards/ListingShowcaseCard";
 import { Page } from "components/Page";
 import { Box } from "components/ui/Box";
@@ -8,14 +9,20 @@ import { Container } from "components/ui/Container";
 import { Flex } from "components/ui/Flex";
 import { Text } from "components/ui/Text";
 import { useTypedQuery } from "hooks/http/useTypedQuery";
+import {
+  HOME_FEATURED_LISTING,
+  HOME_TRENDING_LISTINGS,
+} from "lib/constants/app";
 import type { PageComponent } from "types/tsx";
 
 interface HomePageProps {}
 
 const HomePage: PageComponent<HomePageProps> = () => {
-  const featured = "0xc4e7545806a0091e54fe73de59d81e8318b1e5ad";
-
-  const { data } = useTypedQuery(["getListing", featured], {}, [featured]);
+  const { data: featured } = useTypedQuery(
+    ["getListing", HOME_FEATURED_LISTING],
+    {},
+    [HOME_FEATURED_LISTING]
+  );
 
   return (
     <Page>
@@ -24,7 +31,7 @@ const HomePage: PageComponent<HomePageProps> = () => {
           <Box
             tw="absolute top-0 left-0 w-full h-full opacity[0.17] z-index[0]"
             css={{
-              background: `url(${data?.coverUrl}) no-repeat center/cover`,
+              background: `url(${featured?.coverUrl}) no-repeat center/cover`,
               filter: "blur(15px)",
               mask: "linear-gradient(180deg, #FFF, 80%, transparent)",
             }}
@@ -55,12 +62,33 @@ const HomePage: PageComponent<HomePageProps> = () => {
                   <Button tw="mt-2.5">Learn more</Button>
                 </Box>
                 <Box tw="flex-basis[43%]">
-                  <ListingShowcaseCard listing={data} />
+                  <ListingShowcaseCard listing={featured} />
                 </Box>
               </Flex>
             </Container>
           </Container>
         </Box>
+        <Container>
+          <Flex column itemsCenter tw="mt-10 relative z-10 w-full">
+            <Text weight="bold" size="xl">
+              Trending right now
+            </Text>
+            <Flex center tw="w-full mt-3">
+              <ListingCard
+                tw="flex-basis[30%] scale-90"
+                listing={HOME_TRENDING_LISTINGS[0]}
+              />
+              <ListingCard
+                tw="flex-basis[40%]"
+                listing={HOME_TRENDING_LISTINGS[1]}
+              />
+              <ListingCard
+                tw="flex-basis[30%] scale-90"
+                listing={HOME_TRENDING_LISTINGS[2]}
+              />
+            </Flex>
+          </Flex>
+        </Container>
       </Box>
     </Page>
   );

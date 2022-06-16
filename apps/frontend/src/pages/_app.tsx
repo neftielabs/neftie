@@ -1,3 +1,4 @@
+import * as amplitude from "@amplitude/analytics-browser";
 import { Router } from "next/router";
 import nProgress from "nprogress";
 import { QueryClientProvider } from "react-query";
@@ -26,6 +27,10 @@ nProgress.configure({
 Router.events.on("routeChangeStart", () => nProgress.start());
 Router.events.on("routeChangeComplete", () => nProgress.done());
 Router.events.on("routeChangeError", () => nProgress.done());
+
+// amplitude
+
+amplitude.init(process.env.NEXT_PUBLIC_AMPLITUDE_API_KEY || "");
 
 const App = ({ Component, pageProps }: AppPropsWithLayout) => {
   styles();

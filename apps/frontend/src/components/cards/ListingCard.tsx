@@ -1,6 +1,7 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 
 import { FiStar } from "react-icons/fi";
+import Skeleton from "react-loading-skeleton";
 
 import type { IListingFull, IListingPreview } from "@neftie/common";
 import { ImagePlaceholder } from "components/assets/ImagePlaceholder";
@@ -12,44 +13,78 @@ import { Image } from "components/ui/Image";
 import { Link } from "components/ui/Link";
 import { Text } from "components/ui/Text";
 import { User } from "components/users/User";
+import { useTypedQuery } from "hooks/http/useTypedQuery";
 import { routes } from "lib/manifests/routes";
 
 type ListingCardProps = React.ComponentProps<typeof Link> & {
-  listing: IListingFull | IListingPreview;
+  listing: IListingFull | IListingPreview | string;
 };
 
 export const ListingCard: React.FC<ListingCardProps> = ({
-  listing,
+  listing: providedListing,
   ...props
 }) => {
+  const [listing, setListing] = useState<IListingFull | IListingPreview>();
+
+  const shouldFetch = typeof providedListing === "string";
+  const { data: fetchedListing } = useTypedQuery(
+    ["getListing", shouldFetch ? providedListing : "noop"],
+    {
+      enabled: shouldFetch,
+    },
+    [shouldFetch ? providedListing : "noop"]
+  );
+
+  useEffect(() => {
+    if (!shouldFetch) {
+      setListing(providedListing);
+    } else if (fetchedListing) {
+      setListing(fetchedListing);
+    }
+  }, [fetchedListing, providedListing, shouldFetch]);
+
   return (
-    <Link href={routes.listing(listing.id).index} tw="h-full" {...props}>
+    <Link
+      href={listing ? routes.listing(listing.id).index : undefined}
+      tw="h-full"
+      {...props}
+    >
       <BaseCard as={Flex} column shadow tw="pb-1.5 h-full gap-1.5">
         <Box tw="h-15 bg-gray-100">
-          {listing.coverUrl ? (
-            <Image src={listing.coverUrl} />
+          {listing ? (
+            <>
+              {listing.coverUrl ? (
+                <Image src={listing.coverUrl} />
+              ) : (
+                <ImagePlaceholder />
+              )}
+            </>
           ) : (
-            <ImagePlaceholder />
+            <Skeleton count={1} tw="h-full line-height[1.4]" />
           )}
         </Box>
 
         <Flex column justifyBetween grow tw="px-1.5 gap-1.5">
           <Flex column tw="gap-1.5">
-            <User user={listing.seller} size="xs" />
+            <User user={listing?.seller} size="xs" />
 
             <Flex column tw="pr-0.5">
               <Text weight="medium" size="14">
-                {listing.title}
+                {listing?.title}
               </Text>
             </Flex>
           </Flex>
           <Flex justifyBetween tw="mt-0.5">
             <Flex itemsCenter tw="gap-0.7">
-              <EthPrice
-                price={listing.price}
-                size="14"
-                svgProps={{ width: 8 }}
-              />
+              {listing?.price ? (
+                <EthPrice
+                  price={listing.price}
+                  size="14"
+                  svgProps={{ width: 8 }}
+                />
+              ) : (
+                <Skeleton tw="w-7 h-2" />
+              )}
             </Flex>
 
             <Flex itemsCenter tw="text-gray-600">
