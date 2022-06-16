@@ -20,7 +20,7 @@ export const expressLoader = (app: express.Application) => {
    *
    */
   Sentry.init({
-    dsn: "https://0ec4afc5da5847cd861c9951b34879ad@o1069630.ingest.sentry.io/6064819",
+    dsn: "https://4bab0a51408e49d1b917c85a854ff9a7@o1172138.ingest.sentry.io/6267017",
     integrations: [
       // Enable HTTP calls tracing
       new Sentry.Integrations.Http({ tracing: true }),
