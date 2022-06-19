@@ -3326,7 +3326,7 @@ __metadata:
     "@types/draft-js": 0.11.9
     "@types/node": 17.0.21
     "@types/nprogress": 0.2.0
-    "@types/react": 17.0.45
+    "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
     "@vespaiach/axios-fetch-adapter": 0.3.0
     autoprefixer: 10.4.7
@@ -4804,14 +4804,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/react@npm:17.0.45":
-  version: 17.0.45
-  resolution: "@types/react@npm:17.0.45"
+"@types/react@npm:17.0.47":
+  version: 17.0.47
+  resolution: "@types/react@npm:17.0.47"
   dependencies:
     "@types/prop-types": "*"
     "@types/scheduler": "*"
     csstype: ^3.0.2
-  checksum: 3cc13a02824c13f6fa4807a83abd065ac1d9943359e76bd995cc7cd2b4148c1176ebd54a30a9f4eb8a0f141ff359d712876f256c4fee707e4290607ef8410b3e
+  checksum: 2e7fe0eb630cb77da03b6da308c58728c01b38e878118e9ff5cd8045181c8d4f32dc936e328f46a62cadb56e1fe4c5a911b5113584f93a99e1f35df7f059246b
   languageName: node
   linkType: hard
 
