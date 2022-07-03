@@ -45,7 +45,7 @@
     "http-status": "1.5.0",
     "jsonwebtoken": "8.5.1",
     "morgan": "1.10.0",
-    "parse-url": "5.0.7",
+    "parse-url": "7.0.2",
     "prisma-exclude": "1.0.2",
     "rate-limiter-flexible": "2.3.6",
     "siwe": "1.1.6",
