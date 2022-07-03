@@ -3175,7 +3175,7 @@ __metadata:
     axios: 0.26.1
     eslint: 8.17.0
     form-data: 4.0.0
-    isomorphic-ws: 4.0.1
+    isomorphic-ws: 5.0.0
     reconnecting-websocket: 4.4.0
     rimraf: 3.0.2
     typescript: 4.7.3
@@ -3344,7 +3344,7 @@ __metadata:
     formik: 2.2.9
     fp-ts: 2.11.9
     fp-ts-std: 0.13.1
-    isomorphic-ws: 4.0.1
+    isomorphic-ws: 5.0.0
     monocle-ts: 2.3.12
     newtype-ts: 0.3.5
     next: 12.1.2
@@ -14768,7 +14768,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"isomorphic-ws@npm:4.0.1, isomorphic-ws@npm:^4.0.1":
+"isomorphic-ws@npm:5.0.0":
+  version: 5.0.0
+  resolution: "isomorphic-ws@npm:5.0.0"
+  peerDependencies:
+    ws: "*"
+  checksum: e20eb2aee09ba96247465fda40c6d22c1153394c0144fa34fe6609f341af4c8c564f60ea3ba762335a7a9c306809349f9b863c8beedf2beea09b299834ad5398
+  languageName: node
+  linkType: hard
+
+"isomorphic-ws@npm:^4.0.1":
   version: 4.0.1
   resolution: "isomorphic-ws@npm:4.0.1"
   peerDependencies:
