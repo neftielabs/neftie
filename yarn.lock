@@ -3319,7 +3319,7 @@ __metadata:
     ethers: 5.6.9
     hardhat: 2.9.9
     hardhat-gas-reporter: 1.0.8
-    prettier-plugin-solidity: ^1.0.0-beta.13
+    prettier-plugin-solidity: 1.0.0-dev.21
     rimraf: 3.0.2
     solhint: 3.3.7
     solidity-coverage: 0.7.21
@@ -19016,7 +19016,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"prettier-plugin-solidity@npm:^1.0.0-beta.13":
+"prettier-plugin-solidity@npm:1.0.0-dev.21":
   version: 1.0.0-dev.21
   resolution: "prettier-plugin-solidity@npm:1.0.0-dev.21"
   dependencies:
