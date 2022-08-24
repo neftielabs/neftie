@@ -1,7 +1,7 @@
 {
   "name": "neftie",
   "private": true,
-  "packageManager": "yarn@3.2.1",
+  "packageManager": "yarn@3.2.3",
   "workspaces": {
     "packages": [
       "apps/*",
