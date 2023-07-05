@@ -25,7 +25,7 @@
     "@types/react-dom": "17.0.17",
     "@vespaiach/axios-fetch-adapter": "0.3.0",
     "axios": "0.26.1",
-    "bson": "4.6.4",
+    "bson": "5.4.0",
     "draft-js": "0.11.7",
     "ethers": "5.6.8",
     "form-data": "4.0.0",
