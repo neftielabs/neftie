@@ -3458,7 +3458,7 @@ __metadata:
     "@openzeppelin/contracts-upgradeable": 4.7.1
     "@openzeppelin/hardhat-upgrades": 1.19.0
     "@typechain/ethers-v5": 10.1.0
-    "@typechain/hardhat": 6.1.2
+    "@typechain/hardhat": 9.1.0
     "@types/chai": 4.3.1
     "@types/mocha": 9.1.1
     "@types/node": 17.0.21
@@ -4552,20 +4552,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@typechain/hardhat@npm:6.1.2":
-  version: 6.1.2
-  resolution: "@typechain/hardhat@npm:6.1.2"
+"@typechain/hardhat@npm:9.1.0":
+  version: 9.1.0
+  resolution: "@typechain/hardhat@npm:9.1.0"
   dependencies:
     fs-extra: ^9.1.0
-    lodash: ^4.17.15
   peerDependencies:
-    "@ethersproject/abi": ^5.4.7
-    "@ethersproject/providers": ^5.4.7
-    "@typechain/ethers-v5": ^10.1.0
-    ethers: ^5.4.7
+    "@typechain/ethers-v6": ^0.5.1
+    ethers: ^6.1.0
     hardhat: ^2.9.9
-    typechain: ^8.1.0
-  checksum: 875753de831825c95c30e6792949f38f69fcee888c1936042414c8d030ecc181817cc0f5cbf6f1764f30779b5f840201eb29addda45713fd0b58a71693102a2c
+    typechain: ^8.3.2
+  checksum: a05998ce89bb4a297f233f4489e4af2a3ad0abcedd75392096745a378d7c5bab9650fcd5dd778c9deaf790bf16e3a849b3ed91a6ae916173df6dfc9e574efcbc
   languageName: node
   linkType: hard
 
