@@ -3340,7 +3340,7 @@ __metadata:
   resolution: "@neftie/api-client@workspace:packages/api-client"
   dependencies:
     "@neftie/common": "*"
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     "@types/uuid": 8.3.4
     axios: 0.26.1
     eslint: 8.20.0
@@ -3374,7 +3374,7 @@ __metadata:
     "@types/hpp": 0.2.2
     "@types/jsonwebtoken": 8.5.8
     "@types/morgan": 1.9.3
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     "@types/ws": 8.5.3
     axios: 0.26.1
     bson: 4.6.4
@@ -3418,7 +3418,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@neftie/cli@workspace:packages/cli"
   dependencies:
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     "@types/yargs": 17.0.10
     chalk: 4.1.2
     commander: 9.4.0
@@ -3437,7 +3437,7 @@ __metadata:
   dependencies:
     "@neftie/prisma": "*"
     "@neftie/subgraph": "*"
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     eslint: 8.20.0
     ethers: 5.6.8
     rimraf: 3.0.2
@@ -3461,7 +3461,7 @@ __metadata:
     "@typechain/hardhat": 6.1.2
     "@types/chai": 4.3.1
     "@types/mocha": 9.1.1
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     chai: 4.3.6
     dotenv: 16.0.1
     eslint: 8.20.0
@@ -3494,7 +3494,7 @@ __metadata:
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
     "@types/draft-js": 0.11.9
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     "@types/nprogress": 0.2.0
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
@@ -3543,7 +3543,7 @@ __metadata:
   resolution: "@neftie/prisma@workspace:packages/prisma"
   dependencies:
     "@prisma/client": 3.11.1
-    "@types/node": 17.0.21
+    "@types/node": 18.18.6
     eslint: 8.20.0
     prisma: 3.14.0
     prisma-exclude: 1.0.2
@@ -4868,10 +4868,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:17.0.21":
-  version: 17.0.21
-  resolution: "@types/node@npm:17.0.21"
-  checksum: 89dcd2fe82f21d3634266f8384e9c865cf8af49685639fbdbd799bdd1040480fb1e8eeda2d3b9fce41edbe704d2a4be9f427118c4ae872e8d9bb7cbeb3c41a94
+"@types/node@npm:18.18.6":
+  version: 18.18.6
+  resolution: "@types/node@npm:18.18.6"
+  checksum: a847639b8455fd3dfa6dbc2917274c82c9db789f1d41aaf69f94ac6c9e54c3c1dd29be6e1e1ccd7c17e54db3d78d7011bc4e70544c6447ceca253dccc0a187e1
   languageName: node
   linkType: hard
 
