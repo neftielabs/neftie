@@ -6,7 +6,7 @@
 #
 # ---------------------------------------------------------------------------
 
-FROM node:16-alpine AS base
+FROM node:21-alpine AS base
 
 RUN apk add --no-cache coreutils libc6-compat
 
