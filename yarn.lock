@@ -3400,7 +3400,7 @@ __metadata:
     nodemon: 2.0.19
     parse-url: 5.0.7
     prisma-exclude: 1.0.2
-    rate-limiter-flexible: 2.3.6
+    rate-limiter-flexible: 4.0.1
     rimraf: 3.0.2
     siwe: 1.1.6
     tsc-watch: 4.6.2
@@ -19445,10 +19445,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"rate-limiter-flexible@npm:2.3.6":
-  version: 2.3.6
-  resolution: "rate-limiter-flexible@npm:2.3.6"
-  checksum: c008c7bcc17832645d4c06caa08a5f52e093108d4f3bcca5df15344150a38fca6b823a6718091a8cf887861989c61fd91d7179426d277d7867fb76b723fd0dbc
+"rate-limiter-flexible@npm:4.0.1":
+  version: 4.0.1
+  resolution: "rate-limiter-flexible@npm:4.0.1"
+  checksum: 88cb4ae4c6a94646eb4987f08ae203896fc340d84038e145958607ab711d9c703e47e55f177a4bf9bab4c637c73ee2254fffe2ec4e289d41389c8502194ca868
   languageName: node
   linkType: hard
 
