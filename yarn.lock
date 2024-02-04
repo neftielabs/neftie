@@ -3489,7 +3489,7 @@ __metadata:
     "@neftie/common": "*"
     "@neftie/contracts": "*"
     "@next/bundle-analyzer": 12.2.3
-    "@react-hookz/web": 13.1.0
+    "@react-hookz/web": 24.0.4
     "@sentry/cli": 2.5.0
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
@@ -3995,26 +3995,26 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-hookz/deep-equal@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "@react-hookz/deep-equal@npm:1.0.2"
-  checksum: a5d3f5012c34fae3d573e9245d00f2162b0f35a163700a325459090f18996408211f30ad51692fcec3d1de50859d496900ddffe18696f4a9e843623f95c2e6a3
+"@react-hookz/deep-equal@npm:^1.0.4":
+  version: 1.0.4
+  resolution: "@react-hookz/deep-equal@npm:1.0.4"
+  checksum: 0923e364d309e32ee54e0850471a86488faf149d7a04ee838552cf5d54f493964623a8d742880ec82410cc1105530123f056e66dfc72b7da235d4cc93fad708f
   languageName: node
   linkType: hard
 
-"@react-hookz/web@npm:13.1.0":
-  version: 13.1.0
-  resolution: "@react-hookz/web@npm:13.1.0"
+"@react-hookz/web@npm:24.0.4":
+  version: 24.0.4
+  resolution: "@react-hookz/web@npm:24.0.4"
   dependencies:
-    "@react-hookz/deep-equal": ^1.0.1
+    "@react-hookz/deep-equal": ^1.0.4
   peerDependencies:
-    js-cookie: ^3.0.1
+    js-cookie: ^3.0.5
     react: ^16.8 || ^17 || ^18
     react-dom: ^16.8 || ^17 || ^18
   peerDependenciesMeta:
     js-cookie:
       optional: true
-  checksum: d9d07cafd52fab1f1462348f77b0fd6300b54f4640d645448a530c5753f35922a9de62bcd93e7d7567888757f848ad2783997b980131cfe9923a2c5f57b8ade2
+  checksum: 842dd51a2c875814c7468632315d756e79fcdff2882d7224e8e06c630f95ab788b6a59c29c0318cb049a18be97537803be8e3dbae12de34b2ae1290ababe266a
   languageName: node
   linkType: hard
 
