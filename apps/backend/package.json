@@ -52,7 +52,7 @@
     "tsconfig-paths": "4.0.0",
     "typera-express": "2.4.4",
     "winston": "3.6.0",
-    "winston-daily-rotate-file": "4.6.1",
+    "winston-daily-rotate-file": "5.0.0",
     "ws": "8.7.0",
     "yup": "0.32.11"
   },
