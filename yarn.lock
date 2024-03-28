@@ -3403,7 +3403,7 @@ __metadata:
     rate-limiter-flexible: 2.3.6
     rimraf: 3.0.2
     siwe: 1.1.6
-    tsc-watch: 4.6.2
+    tsc-watch: 6.2.0
     tsconfig-paths: 4.0.0
     typera-express: 2.4.4
     typescript: 4.7.4
@@ -21491,13 +21491,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"string-argv@npm:^0.1.1":
-  version: 0.1.2
-  resolution: "string-argv@npm:0.1.2"
-  checksum: 6877bd72af145f6e6eafa932818014a57b2f39225c924562b7fccb50f1fcee73717bbcd5e528fd4d86cec32835c14749c32a9d35f06e0bf96637d1e73158203f
-  languageName: node
-  linkType: hard
-
 "string-argv@npm:^0.3.1":
   version: 0.3.1
   resolution: "string-argv@npm:0.3.1"
@@ -22524,20 +22517,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tsc-watch@npm:4.6.2":
-  version: 4.6.2
-  resolution: "tsc-watch@npm:4.6.2"
+"tsc-watch@npm:6.2.0":
+  version: 6.2.0
+  resolution: "tsc-watch@npm:6.2.0"
   dependencies:
     cross-spawn: ^7.0.3
     node-cleanup: ^2.1.2
     ps-tree: ^1.2.0
-    string-argv: ^0.1.1
-    strip-ansi: ^6.0.0
+    string-argv: ^0.3.1
   peerDependencies:
     typescript: "*"
   bin:
-    tsc-watch: index.js
-  checksum: 36cf74d45c7c32d2db70f784d153d36c5a010d0d9e138a835c6e7d804a8593f6784688a64deb818e74f84c622c4b73695d1380630e7b24a24ca7d96aeeea5ea5
+    tsc-watch: dist/lib/tsc-watch.js
+  checksum: e1028c45a4e47ae28e0ad68370f95d7410de2e0feaa8cf0ed4a701488a538eccef99b3d6bb2d11b995fbdc4f5a9e938c78037e345c6b3ee46b58d7cef781efb9
   languageName: node
   linkType: hard
 
