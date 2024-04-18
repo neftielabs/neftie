@@ -45,7 +45,7 @@
     "react-query": "3.34.19",
     "reconnecting-websocket": "4.4.0",
     "sharp": "0.30.3",
-    "siwe": "1.1.6",
+    "siwe": "2.3.2",
     "wagmi": "0.4.1",
     "yup": "0.32.11",
     "zustand": "3.7.1"

@@ -3402,7 +3402,7 @@ __metadata:
     prisma-exclude: 1.0.2
     rate-limiter-flexible: 2.3.6
     rimraf: 3.0.2
-    siwe: 1.1.6
+    siwe: 2.3.2
     tsc-watch: 4.6.2
     tsconfig-paths: 4.0.0
     typera-express: 2.4.4
@@ -3528,7 +3528,7 @@ __metadata:
     react-query: 3.34.19
     reconnecting-websocket: 4.4.0
     sharp: 0.30.3
-    siwe: 1.1.6
+    siwe: 2.3.2
     tailwindcss: 2.2.19
     twin.macro: 2.8.2
     typescript: 4.7.4
@@ -3682,6 +3682,13 @@ __metadata:
   version: 1.0.0
   resolution: "@noble/hashes@npm:1.0.0"
   checksum: bdf1c28a4b587e72ec6b0c504903239c6f96680b2c15a6d90d367512f468eeca12f2ee7bd25967a9529be2bedbf3f8d0a50c33368937f8dfef2a973d0661c7b5
+  languageName: node
+  linkType: hard
+
+"@noble/hashes@npm:^1.1.2":
+  version: 1.4.0
+  resolution: "@noble/hashes@npm:1.4.0"
+  checksum: 8ba816ae26c90764b8c42493eea383716396096c5f7ba6bea559993194f49d80a73c081f315f4c367e51bd2d5891700bcdfa816b421d24ab45b41cb03e4f3342
   languageName: node
   linkType: hard
 
@@ -4392,12 +4399,15 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@spruceid/siwe-parser@npm:^1.1.3":
-  version: 1.1.3
-  resolution: "@spruceid/siwe-parser@npm:1.1.3"
+"@spruceid/siwe-parser@npm:^2.1.2":
+  version: 2.1.2
+  resolution: "@spruceid/siwe-parser@npm:2.1.2"
   dependencies:
-    apg-js: ^4.1.1
-  checksum: 708786ba2f10987c45c1fd8a6243ba6572ee7f320531616d71ff66044828bc24af66f5537ce09c9272bdae93fcc35b566a7804fe7997284f2ee5445a36e6add2
+    "@noble/hashes": ^1.1.2
+    apg-js: ^4.3.0
+    uri-js: ^4.4.1
+    valid-url: ^1.0.9
+  checksum: feb0806ed3da945192245e6ac20108a1e4ef79184a04967bf251307e7315ca824862b016bd8e2100a739e8ee76ef768f088314601adbf3e847bb7692fcb33ac0
   languageName: node
   linkType: hard
 
@@ -5984,10 +5994,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"apg-js@npm:^4.1.1":
-  version: 4.1.2
-  resolution: "apg-js@npm:4.1.2"
-  checksum: 54eefdd2e870395458e1419f09a5a5029c0c4ea1471d7b53014f41f4c219ec7d87150fa709f77bc6b6349aec885af061f354d8644eb5ec028789c8f18513589c
+"apg-js@npm:^4.3.0":
+  version: 4.3.0
+  resolution: "apg-js@npm:4.3.0"
+  checksum: cc2de379b1683587e6459cab2e7ef9b7b1990dee9e1ced0496b0ceb6c0807a2330ddd4d2b2758f6c3fa9e379a33e55f4b3ad6c1db175f8c32c66cb8e35a651f8
   languageName: node
   linkType: hard
 
@@ -20900,16 +20910,17 @@ __metadata:
   languageName: node
   linkType: hard
 
-"siwe@npm:1.1.6":
-  version: 1.1.6
-  resolution: "siwe@npm:1.1.6"
+"siwe@npm:2.3.2":
+  version: 2.3.2
+  resolution: "siwe@npm:2.3.2"
   dependencies:
-    "@spruceid/siwe-parser": ^1.1.3
+    "@spruceid/siwe-parser": ^2.1.2
     "@stablelib/random": ^1.0.1
-    apg-js: ^4.1.1
+    uri-js: ^4.4.1
+    valid-url: ^1.0.9
   peerDependencies:
-    ethers: 5.5.1
-  checksum: 067517d2dd37c034f6c81011cf2d9cd821d44710030161990f630cf0228dcf327d02343e59cd00c761836aa3497f1e9f2d975f9d887db6174d611b3b3a6190f5
+    ethers: ^5.6.8 || ^6.0.8
+  checksum: f49356ceaf2dff256cb5379a41cd75461dcd67cc478e0f3338943aa094d4d92d35b8295e6a987afbd16fdb6c870ffb4d43adf9ff79085aaddab58084df8f188c
   languageName: node
   linkType: hard
 
@@ -23056,7 +23067,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"uri-js@npm:^4.2.2":
+"uri-js@npm:^4.2.2, uri-js@npm:^4.4.1":
   version: 4.4.1
   resolution: "uri-js@npm:4.4.1"
   dependencies:
@@ -23255,6 +23266,13 @@ __metadata:
   version: 2.3.0
   resolution: "v8-compile-cache@npm:2.3.0"
   checksum: adb0a271eaa2297f2f4c536acbfee872d0dd26ec2d76f66921aa7fc437319132773483344207bdbeee169225f4739016d8d2dbf0553913a52bb34da6d0334f8e
+  languageName: node
+  linkType: hard
+
+"valid-url@npm:^1.0.9":
+  version: 1.0.9
+  resolution: "valid-url@npm:1.0.9"
+  checksum: 3ecb030559404441c2cf104cbabab8770efb0f36d117db03d1081052ef133015a68806148ce954bb4dd0b5c42c14b709a88783c93d66b0916cb67ba771c98702
   languageName: node
   linkType: hard
 
