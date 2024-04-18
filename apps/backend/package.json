@@ -48,7 +48,7 @@
     "parse-url": "5.0.7",
     "prisma-exclude": "1.0.2",
     "rate-limiter-flexible": "2.3.6",
-    "siwe": "1.1.6",
+    "siwe": "2.3.2",
     "tsconfig-paths": "4.0.0",
     "typera-express": "2.4.4",
     "winston": "3.6.0",
