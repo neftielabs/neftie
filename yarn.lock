@@ -3493,6 +3493,7 @@ __metadata:
     "@sentry/cli": 2.5.0
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
+    "@tanstack/react-query": 4.0.5
     "@types/draft-js": 0.11.9
     "@types/node": 17.0.21
     "@types/nprogress": 0.2.0
@@ -3525,7 +3526,6 @@ __metadata:
     react-dropzone: 14.0.1
     react-icons: 4.3.1
     react-loading-skeleton: 3.1.0
-    react-query: 3.34.19
     reconnecting-websocket: 4.4.0
     sharp: 0.30.3
     siwe: 1.1.6
@@ -4449,6 +4449,33 @@ __metadata:
   dependencies:
     defer-to-connect: ^1.0.1
   checksum: 4d9158061c5f397c57b4988cde33a163244e4f02df16364f103971957a32886beb104d6180902cbe8b38cb940e234d9f98a4e486200deca621923f62f50a06fe
+  languageName: node
+  linkType: hard
+
+"@tanstack/query-core@npm:^4.0.0-beta.1":
+  version: 4.36.1
+  resolution: "@tanstack/query-core@npm:4.36.1"
+  checksum: 47672094da20d89402d9fe03bb7b0462be73a76ff9ca715169738bc600a719d064d106d083a8eedae22a2c22de22f87d5eb5d31ef447aba771d9190f2117ed10
+  languageName: node
+  linkType: hard
+
+"@tanstack/react-query@npm:4.0.5":
+  version: 4.0.5
+  resolution: "@tanstack/react-query@npm:4.0.5"
+  dependencies:
+    "@tanstack/query-core": ^4.0.0-beta.1
+    "@types/use-sync-external-store": ^0.0.3
+    use-sync-external-store: ^1.2.0
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-dom: ^16.8.0 || ^17.0.0 || ^18.0.0
+    react-native: "*"
+  peerDependenciesMeta:
+    react-dom:
+      optional: true
+    react-native:
+      optional: true
+  checksum: c555d2dce19a57ba254855f19a06e4968ae21a08d5cd8890635d9771f77d5aef2e889b23a300b25d1e09b52edeb3fdf7b4579679c43cf9449692463a45a689b8
   languageName: node
   linkType: hard
 
@@ -19548,24 +19575,6 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-query@npm:3.34.19":
-  version: 3.34.19
-  resolution: "react-query@npm:3.34.19"
-  dependencies:
-    "@babel/runtime": ^7.5.5
-    broadcast-channel: ^3.4.1
-    match-sorter: ^6.0.2
-  peerDependencies:
-    react: ^16.8.0 || ^17.0.0
-  peerDependenciesMeta:
-    react-dom:
-      optional: true
-    react-native:
-      optional: true
-  checksum: 765bec81e521a78ef04a8feb6710041ce838ef82bf6e1d35c7e9327cc242b232b242fd89f3604adf6747dce2df055d12b15e8e4208687cc5eb493c1c0bf71d34
-  languageName: node
-  linkType: hard
-
 "react-query@npm:4.0.0-beta.12":
   version: 4.0.0-beta.12
   resolution: "react-query@npm:4.0.0-beta.12"
@@ -23142,6 +23151,15 @@ __metadata:
   peerDependencies:
     react: ^16.8.0 || ^17.0.0 || ^18.0.0
   checksum: 8993a0b642f91d7fcdbb02b7b3ac984bd3af4769686f38291fe7fcfe73dfb73d6c64d20dfb7e5e7fbf5a6da8f5392d6f8e5b00c243a04975595946e82c02b883
+  languageName: node
+  linkType: hard
+
+"use-sync-external-store@npm:^1.2.0":
+  version: 1.2.2
+  resolution: "use-sync-external-store@npm:1.2.2"
+  peerDependencies:
+    react: ^16.8.0 || ^17.0.0 || ^18.0.0
+  checksum: fe07c071c4da3645f112c38c0e57beb479a8838616ff4e92598256ecce527f2888c08febc7f9b2f0ce2f0e18540ba3cde41eb2035e4fafcb4f52955037098a81
   languageName: node
   linkType: hard
 
