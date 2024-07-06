@@ -15,7 +15,7 @@
   },
   "dependencies": {
     "@amplitude/analytics-browser": "0.4.1",
-    "@hookform/resolvers": "2.8.8",
+    "@hookform/resolvers": "3.9.0",
     "@neftie/api-client": "*",
     "@neftie/common": "*",
     "@neftie/contracts": "*",
