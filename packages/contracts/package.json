@@ -34,7 +34,7 @@
     "hardhat-gas-reporter": "1.0.8",
     "prettier-plugin-solidity": "1.0.0-dev.23",
     "rimraf": "3.0.2",
-    "solhint": "3.3.7",
+    "solhint": "5.0.3",
     "solidity-coverage": "0.7.21",
     "ts-node": "10.9.1",
     "typechain": "8.1.0",
