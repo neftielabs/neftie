@@ -19,7 +19,7 @@
   },
   "dependencies": {
     "@neftie/common": "*",
-    "axios": "0.26.1",
+    "axios": "1.7.7",
     "form-data": "4.0.0",
     "isomorphic-ws": "4.0.1",
     "reconnecting-websocket": "4.4.0",
