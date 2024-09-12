@@ -23,7 +23,7 @@
     "eslint-plugin-import": "2.26.0",
     "eslint-plugin-tsdoc": "0.2.16",
     "eslint-plugin-unused-imports": "2.0.0",
-    "husky": "8.0.1",
+    "husky": "9.1.6",
     "lint-staged": "12.5.0",
     "prettier": "2.7.1"
   },
