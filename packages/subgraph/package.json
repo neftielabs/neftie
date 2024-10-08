@@ -20,11 +20,11 @@
     "graphql-tag": "2.12.6"
   },
   "devDependencies": {
-    "@graphql-codegen/cli": "2.10.0",
-    "@graphql-codegen/typescript": "2.7.2",
-    "@graphql-codegen/typescript-graphql-request": "4.5.2",
-    "@graphql-codegen/typescript-operations": "2.5.2",
+    "@graphql-codegen/cli": "2.16.5",
+    "@graphql-codegen/typescript": "2.8.8",
+    "@graphql-codegen/typescript-graphql-request": "4.5.9",
+    "@graphql-codegen/typescript-operations": "2.5.13",
     "rimraf": "3.0.2",
-    "typescript": "4.7.4"
+    "typescript": "4.9.5"
   }
 }
