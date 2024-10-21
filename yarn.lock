@@ -3377,7 +3377,7 @@ __metadata:
     "@types/node": 17.0.21
     "@types/ws": 8.5.3
     axios: 0.26.1
-    bson: 4.6.4
+    bson: 6.9.0
     compression: 1.7.4
     cookie-parser: 1.4.6
     copyfiles: 2.4.1
@@ -3503,7 +3503,7 @@ __metadata:
     axios: 0.26.1
     babel-plugin-macros: 3.1.0
     babel-plugin-twin: 1.0.2
-    bson: 4.6.4
+    bson: 6.9.0
     dotenv-vault: 1.11.0
     draft-js: 0.11.7
     env2ts: 1.4.0
@@ -7713,12 +7713,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"bson@npm:4.6.4":
-  version: 4.6.4
-  resolution: "bson@npm:4.6.4"
-  dependencies:
-    buffer: ^5.6.0
-  checksum: f56375865c8fc048179075296019a0d2e058edbbb6692e54e2751da738840968de678a48a2276faf2ec8f8b36c5c26f14670ab4d414fe68f0169215efe15d570
+"bson@npm:6.9.0":
+  version: 6.9.0
+  resolution: "bson@npm:6.9.0"
+  checksum: 42ba21fc6108c04a4ecc047a40f95f6fefd474365c8a8f00fb20fb0422187d54b17e08bdcbfb0c8d3fb153d3ba71a0f1b690b8edf954c3f731c8d7f50678a13b
   languageName: node
   linkType: hard
 
