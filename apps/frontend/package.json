@@ -14,7 +14,7 @@
     "env:push": "dotenv-vault push"
   },
   "dependencies": {
-    "@amplitude/analytics-browser": "0.4.1",
+    "@amplitude/analytics-browser": "2.11.8",
     "@hookform/resolvers": "2.8.8",
     "@neftie/api-client": "*",
     "@neftie/common": "*",
