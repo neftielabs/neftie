@@ -3340,7 +3340,7 @@ __metadata:
   resolution: "@neftie/api-client@workspace:packages/api-client"
   dependencies:
     "@neftie/common": "*"
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     "@types/uuid": 8.3.4
     axios: 0.26.1
     eslint: 8.20.0
@@ -3374,7 +3374,7 @@ __metadata:
     "@types/hpp": 0.2.2
     "@types/jsonwebtoken": 8.5.8
     "@types/morgan": 1.9.3
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     "@types/ws": 8.5.3
     axios: 0.26.1
     bson: 4.6.4
@@ -3418,7 +3418,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@neftie/cli@workspace:packages/cli"
   dependencies:
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     "@types/yargs": 17.0.10
     chalk: 4.1.2
     commander: 9.4.0
@@ -3437,7 +3437,7 @@ __metadata:
   dependencies:
     "@neftie/prisma": "*"
     "@neftie/subgraph": "*"
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     eslint: 8.20.0
     ethers: 5.6.8
     rimraf: 3.0.2
@@ -3461,7 +3461,7 @@ __metadata:
     "@typechain/hardhat": 6.1.2
     "@types/chai": 4.3.1
     "@types/mocha": 9.1.1
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     chai: 4.3.6
     dotenv: 16.0.1
     eslint: 8.20.0
@@ -3494,7 +3494,7 @@ __metadata:
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
     "@types/draft-js": 0.11.9
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     "@types/nprogress": 0.2.0
     "@types/react": 17.0.47
     "@types/react-dom": 17.0.17
@@ -3543,7 +3543,7 @@ __metadata:
   resolution: "@neftie/prisma@workspace:packages/prisma"
   dependencies:
     "@prisma/client": 3.11.1
-    "@types/node": 17.0.21
+    "@types/node": 20.17.0
     eslint: 8.20.0
     prisma: 3.14.0
     prisma-exclude: 1.0.2
@@ -4868,10 +4868,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@types/node@npm:17.0.21":
-  version: 17.0.21
-  resolution: "@types/node@npm:17.0.21"
-  checksum: 89dcd2fe82f21d3634266f8384e9c865cf8af49685639fbdbd799bdd1040480fb1e8eeda2d3b9fce41edbe704d2a4be9f427118c4ae872e8d9bb7cbeb3c41a94
+"@types/node@npm:20.17.0":
+  version: 20.17.0
+  resolution: "@types/node@npm:20.17.0"
+  dependencies:
+    undici-types: ~6.19.2
+  checksum: 01234eb8a5ba7e3e4324f74c6b7354d8f37fc8eb29eddaf595bcf172bdfb32184be0a5721ee54bc8440562a4037f322eb967550e3b0b6402d0e14fcb7eb6d98b
   languageName: node
   linkType: hard
 
@@ -22913,6 +22915,13 @@ __metadata:
   version: 1.9.1
   resolution: "underscore@npm:1.9.1"
   checksum: bee6f587661a6a9ca2f77e611896141e0287af51d8ca6034b11d0d4163ddbdd181a9720078ddbe94d265b7694f4880bc7f4c2ad260cfb8985ee2f9adcf13df03
+  languageName: node
+  linkType: hard
+
+"undici-types@npm:~6.19.2":
+  version: 6.19.8
+  resolution: "undici-types@npm:6.19.8"
+  checksum: de51f1b447d22571cf155dfe14ff6d12c5bdaec237c765085b439c38ca8518fc360e88c70f99469162bf2e14188a7b0bcb06e1ed2dc031042b984b0bb9544017
   languageName: node
   linkType: hard
 
