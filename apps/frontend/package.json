@@ -35,7 +35,7 @@
     "isomorphic-ws": "4.0.1",
     "monocle-ts": "2.3.12",
     "newtype-ts": "0.3.5",
-    "next": "12.1.2",
+    "next": "15.0.1",
     "nprogress": "0.2.0",
     "react": "17.0.2",
     "react-dom": "17.0.2",
@@ -51,7 +51,7 @@
     "zustand": "3.7.1"
   },
   "devDependencies": {
-    "@next/bundle-analyzer": "12.2.3",
+    "@next/bundle-analyzer": "15.0.1",
     "@sentry/cli": "2.5.0",
     "@types/draft-js": "0.11.9",
     "@types/node": "17.0.21",
@@ -63,7 +63,7 @@
     "dotenv-vault": "1.11.0",
     "env2ts": "1.4.0",
     "eslint": "8.20.0",
-    "eslint-config-next": "12.2.3",
+    "eslint-config-next": "15.0.1",
     "postcss": "8.4.14",
     "tailwindcss": "2.2.19",
     "twin.macro": "2.8.2",
