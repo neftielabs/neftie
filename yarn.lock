@@ -3394,7 +3394,7 @@ __metadata:
     graphql-request: 4.2.0
     helmet: 5.0.2
     hpp: 0.2.3
-    http-status: 1.5.0
+    http-status: 2.1.0
     jsonwebtoken: 8.5.1
     morgan: 1.10.0
     nodemon: 2.0.19
@@ -13595,10 +13595,10 @@ __metadata:
   languageName: node
   linkType: hard
 
-"http-status@npm:1.5.0":
-  version: 1.5.0
-  resolution: "http-status@npm:1.5.0"
-  checksum: d311aacdfb5156fb2c073a00e8e69d5b7adf9995e5f420bc2fb2b57639ea1796343956584607718ba6b1975d38cb6aee829f32d12e26980c36dd7da6046c1aa8
+"http-status@npm:2.1.0":
+  version: 2.1.0
+  resolution: "http-status@npm:2.1.0"
+  checksum: bb2aad7938297d11d06b80aac9255c11e71e0d8a37a0ac270cf8821f606e63ff53940895b75da2c494e200fc62072787b33e9ce0017b0e6bec2ee5cbf0cb3a52
   languageName: node
   linkType: hard
 
