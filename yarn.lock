@@ -3489,7 +3489,7 @@ __metadata:
     "@neftie/common": "*"
     "@neftie/contracts": "*"
     "@next/bundle-analyzer": 12.2.3
-    "@react-hookz/web": 13.1.0
+    "@react-hookz/web": 25.2.0
     "@sentry/cli": 2.5.0
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
@@ -3995,26 +3995,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@react-hookz/deep-equal@npm:^1.0.1":
-  version: 1.0.2
-  resolution: "@react-hookz/deep-equal@npm:1.0.2"
-  checksum: a5d3f5012c34fae3d573e9245d00f2162b0f35a163700a325459090f18996408211f30ad51692fcec3d1de50859d496900ddffe18696f4a9e843623f95c2e6a3
-  languageName: node
-  linkType: hard
-
-"@react-hookz/web@npm:13.1.0":
-  version: 13.1.0
-  resolution: "@react-hookz/web@npm:13.1.0"
+"@react-hookz/web@npm:25.2.0":
+  version: 25.2.0
+  resolution: "@react-hookz/web@npm:25.2.0"
   dependencies:
-    "@react-hookz/deep-equal": ^1.0.1
+    "@ver0/deep-equal": ^1.0.0
   peerDependencies:
-    js-cookie: ^3.0.1
-    react: ^16.8 || ^17 || ^18
-    react-dom: ^16.8 || ^17 || ^18
+    js-cookie: ^3.0.5
+    react: ^16.8 || ^17 || ^18 || ^19
+    react-dom: ^16.8 || ^17 || ^18 || ^19
   peerDependenciesMeta:
     js-cookie:
       optional: true
-  checksum: d9d07cafd52fab1f1462348f77b0fd6300b54f4640d645448a530c5753f35922a9de62bcd93e7d7567888757f848ad2783997b980131cfe9923a2c5f57b8ade2
+  checksum: 4e59e65d298b6e3eddcf8afc6526e55ed896c852f17367d567352a3293ca1a8b778b93e94b7b098e21f80b8dc9b655c979bdf52c7496d3d7daed63cedca468e9
   languageName: node
   linkType: hard
 
@@ -5276,6 +5269,13 @@ __metadata:
   version: 1.1.2
   resolution: "@ungap/promise-all-settled@npm:1.1.2"
   checksum: 08d37fdfa23a6fe8139f1305313562ebad973f3fac01bcce2773b2bda5bcb0146dfdcf3cb6a722cf0a5f2ca0bc56a827eac8f1e7b3beddc548f654addf1fc34c
+  languageName: node
+  linkType: hard
+
+"@ver0/deep-equal@npm:^1.0.0":
+  version: 1.0.1
+  resolution: "@ver0/deep-equal@npm:1.0.1"
+  checksum: 659c6b1f5ce049db8eb2503c827cdecd223c84ea9fb854a1c03e6d0ff8f7257b47b71429c24ac20f4ebb2dd92b2f4a49f435112d37bfda408cc89dc93e30a13d
   languageName: node
   linkType: hard
 
