@@ -3523,7 +3523,7 @@ __metadata:
     react: 17.0.2
     react-dom: 17.0.2
     react-dropzone: 14.0.1
-    react-icons: 4.3.1
+    react-icons: 5.6.0
     react-loading-skeleton: 3.1.0
     react-query: 3.34.19
     reconnecting-websocket: 4.4.0
@@ -19523,12 +19523,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"react-icons@npm:4.3.1":
-  version: 4.3.1
-  resolution: "react-icons@npm:4.3.1"
+"react-icons@npm:5.6.0":
+  version: 5.6.0
+  resolution: "react-icons@npm:5.6.0"
   peerDependencies:
     react: "*"
-  checksum: 2cc608acdd3e906aa3aaee290b8398220639677c949382d86e554020e5dab6a9f1ed7484418aa5272cb5c5c018e1fc9a323d433d901697a76530029f9ecb1263
+  checksum: 332358dff0926650b82c352c7af1b6da14848738356c7b6d7dc09b9a84d53d2486b38f33c6fea8b1b802a29d5543fc6cfaffd82ca71a11021f1c59128daa8361
   languageName: node
   linkType: hard
 
