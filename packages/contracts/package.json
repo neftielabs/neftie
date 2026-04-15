@@ -26,7 +26,7 @@
     "@types/mocha": "9.1.1",
     "@types/node": "17.0.21",
     "chai": "4.3.6",
-    "dotenv": "16.0.1",
+    "dotenv": "17.4.2",
     "eslint": "8.20.0",
     "ethereum-waffle": "3.4.4",
     "ethers": "5.6.9",
