@@ -3529,7 +3529,7 @@ __metadata:
     reconnecting-websocket: 4.4.0
     sharp: 0.30.3
     siwe: 1.1.6
-    tailwindcss: 2.2.19
+    tailwindcss: 4.3.0
     twin.macro: 2.8.2
     typescript: 4.7.4
     wagmi: 0.4.1
@@ -21950,7 +21950,14 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tailwindcss@npm:2.2.19, tailwindcss@npm:^2.2.7":
+"tailwindcss@npm:4.3.0":
+  version: 4.3.0
+  resolution: "tailwindcss@npm:4.3.0"
+  checksum: 8233922ff1a54e4691d5c70d3f4cf176d60e05d9dc85b2e0f890843cd14a5571f084222ccf9084ad2e2f079a7d7f834073439eafdbdb1a6e7aa0c75a15bd2663
+  languageName: node
+  linkType: hard
+
+"tailwindcss@npm:^2.2.7":
   version: 2.2.19
   resolution: "tailwindcss@npm:2.2.19"
   dependencies:
