@@ -3490,7 +3490,7 @@ __metadata:
     "@neftie/contracts": "*"
     "@next/bundle-analyzer": 12.2.3
     "@react-hookz/web": 13.1.0
-    "@sentry/cli": 2.5.0
+    "@sentry/cli": 3.4.2
     "@sentry/nextjs": 6.19.2
     "@stitches/react": 1.2.8
     "@types/draft-js": 0.11.9
@@ -4110,19 +4110,98 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@sentry/cli@npm:2.5.0":
-  version: 2.5.0
-  resolution: "@sentry/cli@npm:2.5.0"
+"@sentry/cli-darwin@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-darwin@npm:3.4.2"
+  conditions: os=darwin
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-arm64@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-linux-arm64@npm:3.4.2"
+  conditions: (os=linux | os=freebsd | os=android) & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-arm@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-linux-arm@npm:3.4.2"
+  conditions: (os=linux | os=freebsd | os=android) & cpu=arm
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-i686@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-linux-i686@npm:3.4.2"
+  conditions: (os=linux | os=freebsd | os=android) & (cpu=x86 | cpu=ia32)
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-linux-x64@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-linux-x64@npm:3.4.2"
+  conditions: (os=linux | os=freebsd | os=android) & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-win32-arm64@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-win32-arm64@npm:3.4.2"
+  conditions: os=win32 & cpu=arm64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-win32-i686@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-win32-i686@npm:3.4.2"
+  conditions: os=win32 & (cpu=x86 | cpu=ia32)
+  languageName: node
+  linkType: hard
+
+"@sentry/cli-win32-x64@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli-win32-x64@npm:3.4.2"
+  conditions: os=win32 & cpu=x64
+  languageName: node
+  linkType: hard
+
+"@sentry/cli@npm:3.4.2":
+  version: 3.4.2
+  resolution: "@sentry/cli@npm:3.4.2"
   dependencies:
-    https-proxy-agent: ^5.0.0
-    node-fetch: ^2.6.7
-    npmlog: ^6.0.1
+    "@sentry/cli-darwin": 3.4.2
+    "@sentry/cli-linux-arm": 3.4.2
+    "@sentry/cli-linux-arm64": 3.4.2
+    "@sentry/cli-linux-i686": 3.4.2
+    "@sentry/cli-linux-x64": 3.4.2
+    "@sentry/cli-win32-arm64": 3.4.2
+    "@sentry/cli-win32-i686": 3.4.2
+    "@sentry/cli-win32-x64": 3.4.2
     progress: ^2.0.3
     proxy-from-env: ^1.1.0
+    undici: ^6.22.0
     which: ^2.0.2
+  dependenciesMeta:
+    "@sentry/cli-darwin":
+      optional: true
+    "@sentry/cli-linux-arm":
+      optional: true
+    "@sentry/cli-linux-arm64":
+      optional: true
+    "@sentry/cli-linux-i686":
+      optional: true
+    "@sentry/cli-linux-x64":
+      optional: true
+    "@sentry/cli-win32-arm64":
+      optional: true
+    "@sentry/cli-win32-i686":
+      optional: true
+    "@sentry/cli-win32-x64":
+      optional: true
   bin:
     sentry-cli: bin/sentry-cli
-  checksum: cd70133067375b15cc5e7e43e3c32729b356889a4a1c557181e031768780e7fbf1c8b7a41461cf22aa43a23284c136e7d168c0fcf32f78237ee3702c8ab83bc5
+  checksum: 4491e02af63e9b33f7127518d590b26185a786a17b12268fc84a69a6ecde7434bda7bc2f17e3fb5ec1ea2e8e65721f9481121994597bb220f574b9dbb21eb1be
   languageName: node
   linkType: hard
 
@@ -17684,7 +17763,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"npmlog@npm:^6.0.0, npmlog@npm:^6.0.1":
+"npmlog@npm:^6.0.0":
   version: 6.0.2
   resolution: "npmlog@npm:6.0.2"
   dependencies:
@@ -22927,6 +23006,13 @@ __metadata:
   version: 5.4.0
   resolution: "undici@npm:5.4.0"
   checksum: 2852397ee1dbb2b3ad58166520ec30f4f0143895f6e7b157dbedfac4e43b522a710a3927be61a67b2ae791190973f206d30785564ece7675e08133427cebaaa1
+  languageName: node
+  linkType: hard
+
+"undici@npm:^6.22.0":
+  version: 6.25.0
+  resolution: "undici@npm:6.25.0"
+  checksum: aed372e1b0f16045696c878e46b03e97dfd1c6dd650fb2355d48adeecc730c990ab15ab2de5a5855dbfe04c9af403a3d4f702234d3e25e72c475d1fb3a72fcfe
   languageName: node
   linkType: hard
 
